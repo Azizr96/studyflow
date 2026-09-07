@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+    <title>Login | StudyFlow</title>
+</head>
+
+<body>
+    <main>
+        <h1>StudyFlow Login</h1>
+
+        {% if messages %}
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+
+        {% if user.is_authenticated %}
+            <p>
+                You are signed in as
+                <strong>{{ user.username }}</strong>.
+            </p>
+
+            {% if user.profile.role %}
+                <p>
+                    Role: {{ user.profile.role.name }}
+                </p>
+            {% endif %}
+        {% else %}
+            <form method="POST">
+                {% csrf_token %}
+
+                <div>
+                    <label for="username">
+                        Username
+                    </label>
+
+                    <input
+                        type="text"
+                        id="username"
+                        name="username"
+                        required
+                        autocomplete="username"
+                    >
+                </div>
+
+                <div>
+                    <label for="password">
+                        Password
+                    </label>
+
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        required
+                        autocomplete="current-password"
+                    >
+                </div>
+
+                <button type="submit">
+                    Login
+                </button>
+            </form>
+
+            <p>
+                Don't have an account?
+                <a href="{% url 'accounts:register' %}">
+                    Register
+                </a>
+            </p>
+        {% endif %}
+    </main>
+</body>
+</html>

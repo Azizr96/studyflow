@@ -6,6 +6,7 @@ app_name = "accounts"
 
 urlpatterns = [
     path("register/", views.register, name="register"),
+    path("login/", views.user_login, name="login"),
     path("pending-users/", views.pending_users, name="pending_users"),
     path(
         "approve-user/<int:user_id>/",

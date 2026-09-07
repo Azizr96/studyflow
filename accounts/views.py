@@ -2,6 +2,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, redirect, render
+from django.contrib.auth import authenticate, login
 from .forms import RegistrationForm
 from .models import Role
 
@@ -142,3 +143,62 @@ def reject_user(request, user_id):
         )
 
     return redirect("accounts:pending_users")
+
+def user_login(request):
+    if request.user.is_authenticated:
+        return render(
+            request,
+            "accounts/login.html",
+        )
+
+    if request.method == "POST":
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+
+        user = authenticate(
+            request,
+            username=username,
+            password=password,
+        )
+
+        if user is None:
+            messages.error(
+                request,
+                "Invalid username or password.",
+            )
+            return redirect("accounts:login")
+
+        if not hasattr(user, "profile"):
+            messages.error(
+                request,
+                "Your account is not configured correctly.",
+            )
+            return redirect("accounts:login")
+
+        if not user.profile.is_approved:
+            messages.error(
+                request,
+                "Your account is awaiting approval.",
+            )
+            return redirect("accounts:login")
+
+        if not user.profile.role:
+            messages.error(
+                request,
+                "Your account does not have an assigned role.",
+            )
+            return redirect("accounts:login")
+
+        login(request, user)
+
+        messages.success(
+            request,
+            f"Welcome back, {user.first_name or user.username}.",
+        )
+
+        return redirect("accounts:login")
+
+    return render(
+        request,
+        "accounts/login.html",
+    )
