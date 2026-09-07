@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+    <title>Pending Users | StudyFlow</title>
+</head>
+
+<body>
+    <main>
+        <h1>Pending User Registrations</h1>
+
+        {% if messages %}
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+
+        {% if users %}
+            {% for user in users %}
+                <section>
+                    <h2>
+                        {{ user.first_name }}
+                        {{ user.last_name }}
+                    </h2>
+
+                    <p>
+                        Username: {{ user.username }}
+                    </p>
+
+                    <p>
+                        Email: {{ user.email }}
+                    </p>
+
+                    <form
+                        method="POST"
+                        action="{% url 'accounts:approve_user' user.id %}"
+                    >
+                        {% csrf_token %}
+
+                        <button type="submit">
+                            Approve
+                        </button>
+                    </form>
+
+                    <form
+                        method="POST"
+                        action="{% url 'accounts:reject_user' user.id %}"
+                    >
+                        {% csrf_token %}
+
+                        <button type="submit">
+                            Reject
+                        </button>
+                    </form>
+                </section>
+            {% endfor %}
+        {% else %}
+            <p>No pending registrations.</p>
+        {% endif %}
+    </main>
+</body>
+</html>
