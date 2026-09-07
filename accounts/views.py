@@ -2,8 +2,8 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, redirect, render
-
 from .forms import RegistrationForm
+from .models import Role
 
 def can_manage_users(user):
     if not user.is_authenticated:
@@ -57,6 +57,9 @@ def pending_users(request):
         )
         return redirect("accounts:register")
 
+    
+    
+
     users = User.objects.filter(
         profile__is_approved=False,
     ).select_related(
@@ -64,15 +67,24 @@ def pending_users(request):
         "profile__role",
     )
 
-    context = {
-        "users": users,
-    }
+    if request.user.is_superuser:
+        roles = Role.objects.all()
+    else:
+        roles = Role.objects.filter(
+            is_admin=False,
+            can_manage_users=False,
+        )
 
+    context = {
+            'users': users,
+            'roles': roles,
+        }
     return render(
         request,
         "accounts/pending_users.html",
         context,
     )
+
 
 @login_required
 def approve_user(request, user_id):
@@ -86,15 +98,28 @@ def approve_user(request, user_id):
     user = get_object_or_404(User, id=user_id)
 
     if request.method == "POST":
+        role_id = request.POST.get("role")
+
+        if not role_id:
+            messages.error(
+                request,
+                "Please select a role before approving the user.",
+            )
+            return redirect("accounts:pending_users")
+
+        role = get_object_or_404(Role, id=role_id)
+
+        user.profile.role = role
         user.profile.is_approved = True
         user.profile.save()
 
         messages.success(
             request,
-            f"{user.username} has been approved.",
+            f"{user.username} has been approved as {role.name}.",
         )
 
     return redirect("accounts:pending_users")
+
 
 @login_required
 def reject_user(request, user_id):
