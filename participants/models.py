@@ -48,3 +48,57 @@ class Participant(models.Model):
               f"{self.participant_number} - "
               f"{self.first_name} {self.last_name}"
           )
+
+
+class Visit(models.Model):
+
+    class VisitType(models.TextChoices):
+        SCREENING = "Screening", "Screening"
+        BASELINE = "Baseline", "Baseline"
+        FOLLOW_UP = "Follow Up", "Follow Up"
+        UNSCHEDULED = "Unscheduled", "Unscheduled"
+        END_OF_STUDY = "End of Study", "End of Study"
+
+    class Status(models.TextChoices):
+        SCHEDULED = "Scheduled", "Scheduled"
+        COMPLETED = "Completed", "Completed"
+        MISSED = "Missed", "Missed"
+        CANCELLED = "Cancelled", "Cancelled"
+
+    participant = models.ForeignKey(
+        Participant,
+        on_delete=models.CASCADE,
+        related_name="visits",
+    )
+    visit_number = models.PositiveIntegerField()
+    visit_type = models.CharField(
+        max_length=50,
+        choices=VisitType.choices,
+    )
+    scheduled_date = models.DateField()
+    actual_date = models.DateField(
+        null=True,
+        blank=True,
+    )
+    status = models.CharField(
+        max_length=50,
+        choices=Status.choices,
+        default=Status.SCHEDULED,
+    )
+    notes = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["participant", "visit_number"],
+                name="unique_participant_visit_number",
+            )
+        ]
+
+    def __str__(self):
+        return (
+            f"{self.participant.participant_number} - "
+            f"Visit {self.visit_number}"
+        )
