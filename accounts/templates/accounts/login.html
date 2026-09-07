@@ -1,94 +1,71 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-    <title>Login | StudyFlow</title>
-</head>
+{% extends "base.html" %}
 
-<body>
-    <main>
-        <h1>StudyFlow Login</h1>
+{% block title %}
+    Login | StudyFlow
+{% endblock %}
 
-        {% if messages %}
-            {% for message in messages %}
-                <p>{{ message }}</p>
-            {% endfor %}
+{% block content %}
+
+    <h1>StudyFlow Login</h1>
+
+    {% if user.is_authenticated %}
+
+        <p>
+            You are signed in as
+            <strong>{{ user.username }}</strong>.
+        </p>
+
+        {% if user.profile.role %}
+            <p>
+                Role: {{ user.profile.role.name }}
+            </p>
         {% endif %}
 
-        {% if user.is_authenticated %}
+    {% else %}
 
-            <p>
-                You are signed in as
-                <strong>{{ user.username }}</strong>.
-            </p>
+        <form method="POST">
+            {% csrf_token %}
 
-            {% if user.profile.role %}
-                <p>
-                    Role: {{ user.profile.role.name }}
-                </p>
-            {% endif %}
+            <div>
+                <label for="username">
+                    Username
+                </label>
 
-            <form
-                method="POST"
-                action="{% url 'accounts:logout' %}"
-            >
-                {% csrf_token %}
+                <input
+                    type="text"
+                    id="username"
+                    name="username"
+                    required
+                    autocomplete="username"
+                >
+            </div>
 
-                <button type="submit">
-                    Logout
-                </button>
-            </form>
+            <div>
+                <label for="password">
+                    Password
+                </label>
 
-        {% else %}
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    required
+                    autocomplete="current-password"
+                >
+            </div>
 
-            <form method="POST">
-                {% csrf_token %}
+            <button type="submit">
+                Login
+            </button>
+        </form>
 
-                <div>
-                    <label for="username">
-                        Username
-                    </label>
+        <p>
+            Don't have an account?
+            <a href="{% url 'accounts:register' %}">
+                Register
+            </a>
+        </p>
 
-                    <input
-                        type="text"
-                        id="username"
-                        name="username"
-                        required
-                        autocomplete="username"
-                    >
-                </div>
+    {% endif %}
 
-                <div>
-                    <label for="password">
-                        Password
-                    </label>
-
-                    <input
-                        type="password"
-                        id="password"
-                        name="password"
-                        required
-                        autocomplete="current-password"
-                    >
-                </div>
-
-                <button type="submit">
-                    Login
-                </button>
-            </form>
-
-            <p>
-                Don't have an account?
-                <a href="{% url 'accounts:register' %}">
-                    Register
-                </a>
-            </p>
-
-        {% endif %}
-    </main>
-</body>
-</html>
+{% endblock %}

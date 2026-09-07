@@ -1,38 +1,33 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-    <title>Register | StudyFlow</title>
-</head>
+{% extends "base.html" %}
 
-<body>
-    <main>
-        <h1>Create your StudyFlow account</h1>
+{% block title %}
+    Register | StudyFlow
+{% endblock %}
 
-        <p>
-            Register below. Your account must be approved
-            before you can access StudyFlow.
-        </p>
+{% block content %}
 
-        {% if messages %}
-            {% for message in messages %}
-                <p>{{ message }}</p>
-            {% endfor %}
-        {% endif %}
+    <h1>Create your StudyFlow account</h1>
 
-        <form method="POST">
-            {% csrf_token %}
+    <p>
+        Register below. Your account must be approved
+        before you can access StudyFlow.
+    </p>
 
-            {{ form.as_p }}
+    <form method="POST">
+        {% csrf_token %}
 
-            <button type="submit">
-                Register
-            </button>
-        </form>
-    </main>
-</body>
-</html>
+        {{ form.as_p }}
+
+        <button type="submit">
+            Register
+        </button>
+    </form>
+
+    <p>
+        Already have an account?
+        <a href="{% url 'accounts:login' %}">
+            Login
+        </a>
+    </p>
+
+{% endblock %}

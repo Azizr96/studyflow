@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        {% block title %}StudyFlow{% endblock %}
+    </title>
+</head>
+
+<body>
+
+    <header>
+        <nav aria-label="Main navigation">
+
+            <a href="{% url 'accounts:login' %}">
+                StudyFlow
+            </a>
+
+            {% if user.is_authenticated %}
+
+                <span>
+                    {{ user.first_name|default:user.username }}
+                </span>
+
+                {% if user.profile.role %}
+                    <span>
+                        {{ user.profile.role.name }}
+                    </span>
+                {% endif %}
+
+                {% if user.profile.role.can_manage_users %}
+                    <a href="{% url 'accounts:pending_users' %}">
+                        Users
+                    </a>
+                {% endif %}
+
+                <form
+                    method="POST"
+                    action="{% url 'accounts:logout' %}"
+                >
+                    {% csrf_token %}
+
+                    <button type="submit">
+                        Logout
+                    </button>
+                </form>
+
+            {% else %}
+
+                <a href="{% url 'accounts:login' %}">
+                    Login
+                </a>
+
+                <a href="{% url 'accounts:register' %}">
+                    Register
+                </a>
+
+            {% endif %}
+
+        </nav>
+    </header>
+
+    <main>
+
+        {% if messages %}
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+
+        {% block content %}
+        {% endblock %}
+
+    </main>
+
+</body>
+</html>

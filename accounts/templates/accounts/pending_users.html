@@ -1,86 +1,80 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-    <title>Pending Users | StudyFlow</title>
-</head>
+{% extends "base.html" %}
 
-<body>
-    <main>
-        <h1>Pending User Registrations</h1>
+{% block title %}
+    Pending Users | StudyFlow
+{% endblock %}
 
-        {% if messages %}
-            {% for message in messages %}
-                <p>{{ message }}</p>
-            {% endfor %}
-        {% endif %}
+{% block content %}
 
-        {% if users %}
-            {% for user in users %}
-                <section>
-                    <h2>
-                        {{ user.first_name }}
-                        {{ user.last_name }}
-                    </h2>
+    <h1>Pending User Registrations</h1>
 
-                    <p>
-                        Username: {{ user.username }}
-                    </p>
+    {% if users %}
 
-                    <p>
-                        Email: {{ user.email }}
-                    </p>
+        {% for user in users %}
+            <section>
 
-                    <form
-                        method="POST"
-                        action="{% url 'accounts:approve_user' user.id %}"
+                <h2>
+                    {{ user.first_name }}
+                    {{ user.last_name }}
+                </h2>
+
+                <p>
+                    Username: {{ user.username }}
+                </p>
+
+                <p>
+                    Email: {{ user.email }}
+                </p>
+
+                <form
+                    method="POST"
+                    action="{% url 'accounts:approve_user' user.id %}"
+                >
+                    {% csrf_token %}
+
+                    <label for="role-{{ user.id }}">
+                        Assign role
+                    </label>
+
+                    <select
+                        id="role-{{ user.id }}"
+                        name="role"
+                        required
                     >
-                        {% csrf_token %}
+                        <option value="">
+                            Select a role
+                        </option>
 
-                        <label for="role-{{ user.id }}">
-                            Assign role
-                        </label>
-
-                        <select
-                            id="role-{{ user.id }}"
-                            name="role"
-                            required
-                        >
-                            <option value="">
-                                Select a role
+                        {% for role in roles %}
+                            <option value="{{ role.id }}">
+                                {{ role.name }}
                             </option>
+                        {% endfor %}
+                    </select>
 
-                            {% for role in roles %}
-                                <option value="{{ role.id }}">
-                                    {{ role.name }}
-                                </option>
-                            {% endfor %}
-                        </select>
+                    <button type="submit">
+                        Approve
+                    </button>
+                </form>
 
-                        <button type="submit">
-                            Approve
-                        </button>
-                    </form>
+                <form
+                    method="POST"
+                    action="{% url 'accounts:reject_user' user.id %}"
+                >
+                    {% csrf_token %}
 
-                    <form
-                        method="POST"
-                        action="{% url 'accounts:reject_user' user.id %}"
-                    >
-                        {% csrf_token %}
+                    <button type="submit">
+                        Reject
+                    </button>
+                </form>
 
-                        <button type="submit">
-                            Reject
-                        </button>
-                    </form>
-                </section>
-            {% endfor %}
-        {% else %}
-            <p>No pending registrations.</p>
-        {% endif %}
-    </main>
-</body>
-</html>
+            </section>
+        {% endfor %}
+
+    {% else %}
+
+        <p>No pending registrations.</p>
+
+    {% endif %}
+
+{% endblock %}
