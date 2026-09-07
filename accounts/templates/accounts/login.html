@@ -20,6 +20,7 @@
         {% endif %}
 
         {% if user.is_authenticated %}
+
             <p>
                 You are signed in as
                 <strong>{{ user.username }}</strong>.
@@ -30,7 +31,20 @@
                     Role: {{ user.profile.role.name }}
                 </p>
             {% endif %}
+
+            <form
+                method="POST"
+                action="{% url 'accounts:logout' %}"
+            >
+                {% csrf_token %}
+
+                <button type="submit">
+                    Logout
+                </button>
+            </form>
+
         {% else %}
+
             <form method="POST">
                 {% csrf_token %}
 
@@ -73,6 +87,7 @@
                     Register
                 </a>
             </p>
+
         {% endif %}
     </main>
 </body>

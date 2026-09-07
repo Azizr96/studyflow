@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, redirect, render
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from .forms import RegistrationForm
 from .models import Role
 
@@ -202,3 +202,15 @@ def user_login(request):
         request,
         "accounts/login.html",
     )
+
+@login_required
+def user_logout(request):
+    if request.method == "POST":
+        logout(request)
+
+        messages.success(
+            request,
+            "You have been logged out successfully.",
+        )
+
+    return redirect("accounts:login")
