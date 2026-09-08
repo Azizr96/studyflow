@@ -1,9 +1,8 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
-
 from .forms import StudyForm
-
+from .models import Study
 
 def can_manage_studies(user):
     if not user.is_authenticated:
@@ -53,5 +52,27 @@ def create_study(request):
     return render(
         request,
         "studies/create_study.html",
+        context,
+    )
+
+
+@login_required
+def study_list(request):
+    if not can_manage_studies(request.user):
+        messages.error(
+            request,
+            "You do not have permission to view all studies.",
+        )
+        return redirect("accounts:login")
+
+    studies = Study.objects.all().order_by("protocol_number")
+
+    context = {
+        "studies": studies,
+    }
+
+    return render(
+        request,
+        "studies/study_list.html",
         context,
     )

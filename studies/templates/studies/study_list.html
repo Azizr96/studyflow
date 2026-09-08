@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Studies | StudyFlow
+{% endblock %}
+
+{% block content %}
+
+    <h1>Studies</h1>
+
+    <p>
+        View all clinical studies
+    </p>
+
+    {% if user.profile.role.can_manage_studies %}
+        <p>
+            <a href="{% url 'studies:create_study' %}">
+                Add Study
+            </a>
+        </p>
+    {% endif %}
+
+    {% if studies %}
+
+        <table>
+            <thead>
+                <tr>
+                    <th scope="col">Protocol</th>
+                    <th scope="col">Study Title</th>
+                    <th scope="col">Phase</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Start Date</th>
+                    <th scope="col">End Date</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for study in studies %}
+
+                    <tr>
+                        <td>
+                            {{ study.protocol_number }}
+                        </td>
+
+                        <td>
+                            {{ study.title }}
+                        </td>
+
+                        <td>
+                            {{ study.phase }}
+                        </td>
+
+                        <td>
+                            {{ study.status }}
+                        </td>
+
+                        <td>
+                            {{ study.start_date|default:"Not set" }}
+                        </td>
+
+                        <td>
+                            {{ study.end_date|default:"Not set" }}
+                        </td>
+                    </tr>
+
+                {% endfor %}
+
+            </tbody>
+        </table>
+
+    {% else %}
+
+        <p>
+            No studies have been created yet.
+        </p>
+
+    {% endif %}
+
+{% endblock %}
