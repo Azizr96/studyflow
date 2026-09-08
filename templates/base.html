@@ -39,7 +39,13 @@
                         Users
                     </a>
                 {% endif %}
-
+                
+                {% if user.profile.role.can_manage_studies %}
+                    <a href="{% url 'studies:create_study' %}">
+                        Add Study
+                    </a>
+                {% endif %}
+                
                 <form
                     method="POST"
                     action="{% url 'accounts:logout' %}"
