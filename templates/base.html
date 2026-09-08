@@ -40,11 +40,13 @@
                     </a>
                 {% endif %}
                 
-                {% if user.profile.role.can_manage_studies %}
+                {% if user.profile.role %}
                     <a href="{% url 'studies:study_list' %}">
                         Studies
                     </a>
+                {% endif %}
 
+                {% if user.profile.role.can_manage_studies %}
                     <a href="{% url 'studies:create_study' %}">
                         Add Study
                     </a>

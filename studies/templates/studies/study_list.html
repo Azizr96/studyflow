@@ -8,9 +8,15 @@
 
     <h1>Studies</h1>
 
-    <p>
-        View all clinical studies
-    </p>
+    {% if user.profile.role.can_manage_studies %}
+        <p>
+            View all clinical studies
+        </p>
+    {% else %}
+        <p>
+            View the clinical studies assigned to you.
+        </p>
+    {% endif %}
 
     {% if user.profile.role.can_manage_studies %}
         <p>
@@ -71,9 +77,15 @@
 
     {% else %}
 
-        <p>
-            No studies have been created yet.
-        </p>
+        {% if user.profile.role.can_manage_studies %}
+            <p>
+                No studies have been created yet.
+            </p>
+        {% else %}
+            <p>
+                You are not currently assigned to any studies.
+            </p>
+        {% endif %}
 
     {% endif %}
 

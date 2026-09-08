@@ -58,14 +58,31 @@ def create_study(request):
 
 @login_required
 def study_list(request):
-    if not can_manage_studies(request.user):
+    if not hasattr(request.user, "profile"):
         messages.error(
             request,
-            "You do not have permission to view all studies.",
+            "Your account profile could not be found.",
         )
         return redirect("accounts:login")
 
-    studies = Study.objects.all().order_by("protocol_number")
+    if not request.user.profile.role:
+        messages.error(
+            request,
+            "Your account does not have a role assigned.",
+        )
+        return redirect("accounts:login")
+
+    if request.user.profile.role.can_manage_studies:
+        studies = Study.objects.all().order_by(
+            "protocol_number"
+        )
+    else:
+        studies = Study.objects.filter(
+            user_assignments__user=request.user,
+            user_assignments__is_active=True,
+        ).order_by(
+            "protocol_number"
+        )
 
     context = {
         "studies": studies,
