@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Users | StudyFlow
+{% endblock %}
+
+{% block content %}
+
+    <h1>User Management</h1>
+
+    <section>
+        <h2>Search Users</h2>
+
+        <form method="GET">
+            <label for="user-search">
+                Search by name, username, email or role
+            </label>
+
+            <input
+                type="search"
+                id="user-search"
+                name="q"
+                value="{{ search_query }}"
+                placeholder="Search users"
+            >
+
+            <button type="submit">
+                Search
+            </button>
+
+            {% if search_query %}
+                <a href="{% url 'accounts:user_list' %}">
+                    Clear search
+                </a>
+            {% endif %}
+        </form>
+    </section>
+
+    <section>
+        <h2>
+            Pending Registrations
+            ({{ pending_users|length }})
+        </h2>
+
+        {% if pending_users %}
+
+            {% for pending_user in pending_users %}
+                <article>
+
+                    <h3>
+                        {{ pending_user.first_name }}
+                        {{ pending_user.last_name }}
+                    </h3>
+
+                    <p>
+                        Username:
+                        {{ pending_user.username }}
+                    </p>
+
+                    <p>
+                        Email:
+                        {{ pending_user.email }}
+                    </p>
+
+                    <a href="{% url 'accounts:pending_users' %}">
+                        Review registration
+                    </a>
+
+                </article>
+            {% endfor %}
+
+        {% else %}
+
+            <p>No pending registrations.</p>
+
+        {% endif %}
+    </section>
+
+    <section>
+        <h2>Current Users</h2>
+
+        {% if users %}
+
+            <table>
+                <thead>
+                    <tr>
+                        <th scope="col">
+                            Name
+                        </th>
+
+                        <th scope="col">
+                            Username
+                        </th>
+
+                        <th scope="col">
+                            Email
+                        </th>
+
+                        <th scope="col">
+                            Role
+                        </th>
+
+                        <th scope="col">
+                            Status
+                        </th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for account in users %}
+                        <tr>
+                            <td>
+                                {{ account.first_name }}
+                                {{ account.last_name }}
+                            </td>
+
+                            <td>
+                                {{ account.username }}
+                            </td>
+
+                            <td>
+                                {{ account.email }}
+                            </td>
+
+                            <td>
+                                {% if account.profile.role %}
+                                    {{ account.profile.role.name }}
+                                {% else %}
+                                    No role assigned
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                {% if account.profile.is_approved %}
+                                    Approved
+                                {% else %}
+                                    Pending
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+
+                </tbody>
+            </table>
+
+        {% else %}
+
+            {% if search_query %}
+                <p>
+                    No users found matching
+                    "{{ search_query }}".
+                </p>
+            {% else %}
+                <p>No users found.</p>
+            {% endif %}
+
+        {% endif %}
+    </section>
+
+{% endblock %}

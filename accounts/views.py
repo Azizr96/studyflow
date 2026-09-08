@@ -5,6 +5,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth import authenticate, login, logout
 from .forms import RegistrationForm
 from .models import Role
+from django.db.models import Q
 
 def can_manage_users(user):
     if not user.is_authenticated:
@@ -214,3 +215,49 @@ def user_logout(request):
         )
 
     return redirect("accounts:login")
+
+@login_required
+def user_list(request):
+    if not can_manage_users(request.user):
+        messages.error(
+            request,
+            "You do not have permission to manage users.",
+        )
+        return redirect("accounts:login")
+
+    search_query = request.GET.get("q", "").strip()
+
+    users = User.objects.filter(
+        profile__is_approved=True,
+    ).select_related(
+        "profile",
+        "profile__role",
+    )
+
+    if search_query:
+        users = users.filter(
+            Q(username__icontains=search_query)
+            | Q(first_name__icontains=search_query)
+            | Q(last_name__icontains=search_query)
+            | Q(email__icontains=search_query)
+            | Q(profile__role__name__icontains=search_query)
+        )
+
+    pending_users = User.objects.filter(
+        profile__is_approved=False,
+    ).select_related(
+        "profile",
+        "profile__role",
+    )
+
+    context = {
+        "users": users,
+        "pending_users": pending_users,
+        "search_query": search_query,
+    }
+
+    return render(
+        request,
+        "accounts/user_list.html",
+        context,
+    )
