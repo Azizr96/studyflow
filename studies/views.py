@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import redirect, render
-from .forms import StudyForm
+from django.shortcuts import redirect, render, get_object_or_404
+from .forms import StudyForm, StudyDocumentForm
 from .models import Study
 
 def can_manage_studies(user):
@@ -15,6 +15,24 @@ def can_manage_studies(user):
         return False
 
     return user.profile.role.can_manage_studies
+
+def can_access_study(user, study):
+    if not user.is_authenticated:
+        return False
+
+    if not hasattr(user, "profile"):
+        return False
+
+    if not user.profile.role:
+        return False
+
+    if user.profile.role.can_manage_studies:
+        return True
+
+    return study.user_assignments.filter(
+        user=user,
+        is_active=True,
+    ).exists()
 
 
 @login_required
@@ -91,5 +109,62 @@ def study_list(request):
     return render(
         request,
         "studies/study_list.html",
+        context,
+    )
+
+@login_required
+def study_detail(request, study_id):
+    study = get_object_or_404(
+        Study,
+        id=study_id,
+    )
+
+    if not can_access_study(request.user, study):
+        messages.error(
+            request,
+            "You do not have permission to access this study.",
+        )
+        return redirect("studies:study_list")
+
+    if request.method == "POST":
+        form = StudyDocumentForm(
+            request.POST,
+            request.FILES,
+        )
+
+        if form.is_valid():
+            document = form.save(commit=False)
+            document.study = study
+            document.uploaded_by = request.user
+            document.save()
+
+            messages.success(
+                request,
+                "Study document uploaded successfully.",
+            )
+
+            return redirect(
+                "studies:study_detail",
+                study_id=study.id,
+            )
+
+    else:
+        form = StudyDocumentForm()
+
+    documents = study.documents.select_related(
+        "uploaded_by"
+    ).order_by(
+        "-uploaded_at"
+    )
+
+    context = {
+        "study": study,
+        "documents": documents,
+        "form": form,
+    }
+
+    return render(
+        request,
+        "studies/study_detail.html",
         context,
     )

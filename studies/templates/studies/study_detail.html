@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{ study.protocol_number }} | StudyFlow
+{% endblock %}
+
+{% block content %}
+
+    <h1>
+        {{ study.protocol_number }}
+    </h1>
+
+    <h2>
+        {{ study.title }}
+    </h2>
+
+    <section>
+        <h3>Study Information</h3>
+
+        <dl>
+            <dt>Protocol Number</dt>
+            <dd>{{ study.protocol_number }}</dd>
+
+            <dt>Title</dt>
+            <dd>{{ study.title }}</dd>
+
+            <dt>Description</dt>
+            <dd>
+                {{ study.description|default:"No description provided." }}
+            </dd>
+
+            <dt>Phase</dt>
+            <dd>{{ study.phase }}</dd>
+
+            <dt>Status</dt>
+            <dd>{{ study.status }}</dd>
+
+            <dt>Start Date</dt>
+            <dd>{{ study.start_date|default:"Not set" }}</dd>
+
+            <dt>End Date</dt>
+            <dd>{{ study.end_date|default:"Not set" }}</dd>
+        </dl>
+    </section>
+
+    <section>
+        <h3>Study Documents</h3>
+
+        {% if documents %}
+
+            <table>
+                <thead>
+                    <tr>
+                        <th scope="col">File</th>
+                        <th scope="col">Category</th>
+                        <th scope="col">Version</th>
+                        <th scope="col">Uploaded By</th>
+                        <th scope="col">Uploaded</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for document in documents %}
+
+                        <tr>
+                            <td>
+                                <a
+                                    href="{{ document.file.url }}"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    {{ document.file.name }}
+                                </a>
+                            </td>
+
+                            <td>
+                                {{ document.category }}
+                            </td>
+
+                            <td>
+                                {{ document.version }}
+                            </td>
+
+                            <td>
+                                {% if document.uploaded_by %}
+                                    {{ document.uploaded_by.username }}
+                                {% else %}
+                                    Unknown
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                {{ document.uploaded_at }}
+                            </td>
+                        </tr>
+
+                    {% endfor %}
+
+                </tbody>
+            </table>
+
+        {% else %}
+
+            <p>
+                No documents have been uploaded for this study.
+            </p>
+
+        {% endif %}
+    </section>
+
+    <section>
+        <h3>Upload Document</h3>
+
+        <p>
+            Accepted file types: PDF, Word, and Excel.
+            Maximum file size: 10 MB.
+        </p>
+
+        <form
+            method="POST"
+            enctype="multipart/form-data"
+        >
+            {% csrf_token %}
+
+            {{ form.non_field_errors }}
+
+            <div>
+                {{ form.file.label_tag }}
+                {{ form.file }}
+                {{ form.file.errors }}
+            </div>
+
+            <div>
+                {{ form.category.label_tag }}
+                {{ form.category }}
+                {{ form.category.errors }}
+            </div>
+
+            <div>
+                {{ form.version.label_tag }}
+                {{ form.version }}
+                {{ form.version.errors }}
+            </div>
+
+            <button type="submit">
+                Upload Document
+            </button>
+        </form>
+    </section>
+
+    <p>
+        <a href="{% url 'studies:study_list' %}">
+            Back to Studies
+        </a>
+    </p>
+
+{% endblock %}

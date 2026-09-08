@@ -1,5 +1,5 @@
 from django import forms
-from .models import Study
+from .models import Study, StudyDocument
 
 
 class StudyForm(forms.ModelForm):
@@ -37,3 +37,47 @@ class StudyForm(forms.ModelForm):
                 )
 
         return cleaned_data
+
+
+class StudyDocumentForm(forms.ModelForm):
+
+    class Meta:
+        model = StudyDocument
+        fields = [
+            "file",
+            "category",
+            "version",
+        ]
+
+    def clean_file(self):
+        uploaded_file = self.cleaned_data.get("file")
+
+        if not uploaded_file:
+            return uploaded_file
+
+        allowed_extensions = [
+            ".pdf",
+            ".doc",
+            ".docx",
+            ".xls",
+            ".xlsx",
+        ]
+
+        file_name = uploaded_file.name.lower()
+
+        if not any(
+            file_name.endswith(extension)
+            for extension in allowed_extensions
+        ):
+            raise forms.ValidationError(
+                "Only PDF, Word, and Excel documents are allowed."
+            )
+
+        max_file_size = 10 * 1024 * 1024
+
+        if uploaded_file.size > max_file_size:
+            raise forms.ValidationError(
+                "The file must be 10 MB or smaller."
+            )
+
+        return uploaded_file

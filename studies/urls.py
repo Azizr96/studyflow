@@ -15,5 +15,10 @@ urlpatterns = [
         views.create_study,
         name="create_study",
     ),
+    path(
+        "<int:study_id>/",
+        views.study_detail,
+        name="study_detail",
+    ),
     
 ]

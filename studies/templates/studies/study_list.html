@@ -46,7 +46,9 @@
 
                     <tr>
                         <td>
-                            {{ study.protocol_number }}
+                            <a href="{% url 'studies:study_detail' study.id %}">
+                                {{ study.protocol_number }}
+                            </a>
                         </td>
 
                         <td>
