@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Delete User | StudyFlow
+{% endblock %}
+
+{% block content %}
+
+    <h1>Delete User</h1>
+
+    <section>
+        <h2>Warning</h2>
+
+        <p>
+            You are about to permanently delete:
+        </p>
+
+        <p>
+            <strong>
+                {{ user_to_delete.first_name }}
+                {{ user_to_delete.last_name }}
+            </strong>
+        </p>
+
+        <p>
+            Username: {{ user_to_delete.username }}
+        </p>
+
+        <p>
+            Email: {{ user_to_delete.email }}
+        </p>
+
+        <p>
+            This action cannot be undone.
+        </p>
+    </section>
+
+    <section>
+        <h2>Final Confirmation</h2>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <div>
+                <label for="confirm-delete">
+                    Type DELETE to confirm
+                </label>
+
+                <input
+                    type="text"
+                    id="confirm-delete"
+                    name="confirm_delete"
+                    required
+                    autocomplete="off"
+                >
+            </div>
+
+            <div>
+                <label for="password">
+                    Enter your password
+                </label>
+
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    required
+                    autocomplete="current-password"
+                >
+            </div>
+
+            <button type="submit">
+                Permanently Delete User
+            </button>
+
+            <a href="{% url 'accounts:user_list' %}">
+                Cancel
+            </a>
+        </form>
+    </section>
+
+{% endblock %}

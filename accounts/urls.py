@@ -25,4 +25,9 @@ urlpatterns = [
         views.assign_user_to_study,
         name="assign_user_to_study",
     ),
+    path(
+        "delete-user/<int:user_id>/",
+        views.delete_user,
+        name="delete_user",
+    ),
 ]

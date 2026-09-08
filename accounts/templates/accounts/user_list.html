@@ -107,6 +107,10 @@
                         <th scope="col">
                             Study Assignment
                         </th>
+
+                        <th scope="col">
+                            Actions
+                        </th>
                     </tr>
                 </thead>
 
@@ -178,6 +182,16 @@
                                         Assign
                                     </button>
                                 </form>
+                            </td>
+                            <!-- this section to delete user  -->
+                            <td>
+                                {% if account != user %}
+                                    <a href="{% url 'accounts:delete_user' account.id %}">
+                                        Delete
+                                    </a>
+                                {% else %}
+                                    Current user
+                                {% endif %}
                             </td>
                         </tr>
                     {% endfor %}

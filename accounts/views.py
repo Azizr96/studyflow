@@ -330,3 +330,72 @@ def assign_user_to_study(request, user_id):
                 )
 
     return redirect("accounts:user_list")
+
+
+@login_required
+def delete_user(request, user_id):
+    if not can_manage_users(request.user):
+        messages.error(
+            request,
+            "You do not have permission to delete users.",
+        )
+        return redirect("accounts:user_list")
+
+    user_to_delete = get_object_or_404(User, id=user_id)
+
+    if user_to_delete == request.user:
+        messages.error(
+            request,
+            "You cannot delete your own account.",
+        )
+        return redirect("accounts:user_list")
+
+    if request.method == "POST":
+        password = request.POST.get("password")
+        confirmation = request.POST.get("confirm_delete")
+
+        if confirmation != "DELETE":
+            messages.error(
+                request,
+                "Please confirm that you want to delete this user.",
+            )
+            return redirect(
+                "accounts:delete_user",
+                user_id=user_to_delete.id,
+            )
+
+        authenticated_user = authenticate(
+            request,
+            username=request.user.username,
+            password=password,
+        )
+
+        if authenticated_user is None:
+            messages.error(
+                request,
+                "Your password was incorrect. User was not deleted.",
+            )
+            return redirect(
+                "accounts:delete_user",
+                user_id=user_to_delete.id,
+            )
+
+        username = user_to_delete.username
+        user_to_delete.delete()
+
+        messages.success(
+            request,
+            f"{username} has been deleted successfully.",
+        )
+
+        return redirect("accounts:user_list")
+
+    context = {
+        "user_to_delete": user_to_delete,
+    }
+
+    return render(
+        request,
+        "accounts/delete_user.html",
+        context,
+    )
