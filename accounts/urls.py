@@ -20,4 +20,9 @@ urlpatterns = [
         views.reject_user,
         name="reject_user",
     ),
+    path(
+        "assign-study/<int:user_id>/",
+        views.assign_user_to_study,
+        name="assign_user_to_study",
+    ),
 ]

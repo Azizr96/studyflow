@@ -103,6 +103,10 @@
                         <th scope="col">
                             Status
                         </th>
+
+                        <th scope="col">
+                            Study Assignment
+                        </th>
                     </tr>
                 </thead>
 
@@ -137,6 +141,43 @@
                                 {% else %}
                                     Pending
                                 {% endif %}
+                            </td>
+                            <!-- this section assigns user to study -->
+                            <td>
+                                <form
+                                    method="POST"
+                                    action="{% url 'accounts:assign_user_to_study' account.id %}"
+                                >
+                                    {% csrf_token %}
+
+                                    <label
+                                        for="study-{{ account.id }}"
+                                    >
+                                        Assign study
+                                    </label>
+
+                                    <select
+                                        id="study-{{ account.id }}"
+                                        name="study"
+                                        required
+                                    >
+                                        <option value="">
+                                            Select study
+                                        </option>
+
+                                        {% for study in studies %}
+                                            <option value="{{ study.id }}">
+                                                {{ study.protocol_number }}
+                                                -
+                                                {{ study.title }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+
+                                    <button type="submit">
+                                        Assign
+                                    </button>
+                                </form>
                             </td>
                         </tr>
                     {% endfor %}

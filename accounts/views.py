@@ -4,7 +4,8 @@ from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth import authenticate, login, logout
 from .forms import RegistrationForm
-from .models import Role
+from .models import Role, UserStudy
+from studies.models import Study
 from django.db.models import Q
 
 def can_manage_users(user):
@@ -250,10 +251,13 @@ def user_list(request):
         "profile__role",
     )
 
+    studies = Study.objects.all().order_by("protocol_number")
+
     context = {
         "users": users,
         "pending_users": pending_users,
         "search_query": search_query,
+        "studies": studies,
     }
 
     return render(
@@ -261,3 +265,68 @@ def user_list(request):
         "accounts/user_list.html",
         context,
     )
+
+
+@login_required
+def assign_user_to_study(request, user_id):
+    if not can_manage_users(request.user):
+        messages.error(
+            request,
+            "You do not have permission to assign users to studies.",
+        )
+        return redirect("accounts:user_list")
+
+    user = get_object_or_404(User, id=user_id)
+
+    if request.method == "POST":
+        study_id = request.POST.get("study")
+
+        if not study_id:
+            messages.error(
+                request,
+                "Please select a study.",
+            )
+            return redirect("accounts:user_list")
+
+        study = get_object_or_404(Study, id=study_id)
+
+        assignment, created = UserStudy.objects.get_or_create(
+            user=user,
+            study=study,
+            defaults={
+                "assigned_by": request.user,
+                "is_active": True,
+            },
+        )
+
+        if created:
+            messages.success(
+                request,
+                (
+                    f"{user.username} has been assigned "
+                    f"to {study.protocol_number}."
+                ),
+            )
+        else:
+            if assignment.is_active:
+                messages.info(
+                    request,
+                    (
+                        f"{user.username} is already assigned "
+                        f"to {study.protocol_number}."
+                    ),
+                )
+            else:
+                assignment.is_active = True
+                assignment.assigned_by = request.user
+                assignment.save()
+
+                messages.success(
+                    request,
+                    (
+                        f"{user.username} has been reassigned "
+                        f"to {study.protocol_number}."
+                    ),
+                )
+
+    return redirect("accounts:user_list")
