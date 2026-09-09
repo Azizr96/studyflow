@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 from studies.models import Study
 from .forms import ParticipantForm
+from .models import Participant
 
 
 def can_access_study(user, study):
@@ -72,5 +73,47 @@ def add_participant(request, study_id):
     return render(
         request,
         "participants/add_participant.html",
+        context,
+    )
+
+@login_required
+def participant_list(request):
+    if not hasattr(request.user, "profile"):
+        messages.error(
+            request,
+            "Your account profile could not be found.",
+        )
+        return redirect("accounts:login")
+
+    if not request.user.profile.role:
+        messages.error(
+            request,
+            "Your account does not have a role assigned.",
+        )
+        return redirect("accounts:login")
+
+    if request.user.profile.role.can_manage_studies:
+        participants = Participant.objects.select_related(
+            "study"
+        ).all().order_by(
+            "participant_number"
+        )
+    else:
+        participants = Participant.objects.select_related(
+            "study"
+        ).filter(
+            study__user_assignments__user=request.user,
+            study__user_assignments__is_active=True,
+        ).order_by(
+            "participant_number"
+        )
+
+    context = {
+        "participants": participants,
+    }
+
+    return render(
+        request,
+        "participants/participant_list.html",
         context,
     )

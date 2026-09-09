@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Participants | StudyFlow
+{% endblock %}
+
+{% block content %}
+
+    <h1>Participants</h1>
+
+    {% if user.profile.role.can_manage_studies %}
+        <p>
+            View participants across all studies.
+        </p>
+    {% else %}
+        <p>
+            View participants from your assigned studies.
+        </p>
+    {% endif %}
+
+    <p>
+        StudyFlow is an educational project.
+        All participant information is fictional.
+    </p>
+
+    {% if participants %}
+
+        <table>
+            <thead>
+                <tr>
+                    <th scope="col">
+                        Participant Number
+                    </th>
+
+                    <th scope="col">
+                        Name
+                    </th>
+
+                    <th scope="col">
+                        Study
+                    </th>
+
+                    <th scope="col">
+                        Sex
+                    </th>
+
+                    <th scope="col">
+                        Status
+                    </th>
+
+                    <th scope="col">
+                        Enrolled Date
+                    </th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for participant in participants %}
+
+                    <tr>
+                        <td>
+                            {{ participant.participant_number }}
+                        </td>
+
+                        <td>
+                            {{ participant.first_name }}
+                            {{ participant.last_name }}
+                        </td>
+
+                        <td>
+                            <a
+                                href="{% url 'studies:study_detail' participant.study.id %}"
+                            >
+                                {{ participant.study.protocol_number }}
+                            </a>
+                        </td>
+
+                        <td>
+                            {{ participant.sex }}
+                        </td>
+
+                        <td>
+                            {{ participant.status }}
+                        </td>
+
+                        <td>
+                            {{ participant.enrolled_date }}
+                        </td>
+                    </tr>
+
+                {% endfor %}
+
+            </tbody>
+        </table>
+
+    {% else %}
+
+        {% if user.profile.role.can_manage_studies %}
+            <p>
+                No participants have been added yet.
+            </p>
+        {% else %}
+            <p>
+                No participants are available in your assigned studies.
+            </p>
+        {% endif %}
+
+    {% endif %}
+
+{% endblock %}

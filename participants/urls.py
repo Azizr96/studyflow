@@ -6,6 +6,11 @@ app_name = "participants"
 
 urlpatterns = [
     path(
+        "",
+        views.participant_list,
+        name="participant_list",
+    ),
+    path(
         "study/<int:study_id>/add/",
         views.add_participant,
         name="add_participant",

@@ -46,6 +46,12 @@
                     </a>
                 {% endif %}
 
+                {% if user.profile.role %}
+                    <a href="{% url 'participants:participant_list' %}">
+                        Participants
+                    </a>
+                {% endif %}
+
                 {% if user.profile.role.can_manage_studies %}
                     <a href="{% url 'studies:create_study' %}">
                         Add Study
