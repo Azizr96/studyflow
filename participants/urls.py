@@ -15,4 +15,9 @@ urlpatterns = [
         views.add_participant,
         name="add_participant",
     ),
+    path(
+        "<int:participant_id>/update/",
+        views.update_participant,
+        name="update_participant",
+    ),
 ]

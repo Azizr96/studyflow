@@ -51,6 +51,10 @@
                     <th scope="col">
                         Enrolled Date
                     </th>
+
+                    <th scope="col">
+                        Actions
+                    </th>
                 </tr>
             </thead>
 
@@ -86,6 +90,14 @@
 
                         <td>
                             {{ participant.enrolled_date }}
+                        </td>
+
+                        <td>
+                            <a
+                                href="{% url 'participants:update_participant' participant.id %}"
+                            >
+                                Edit
+                            </a>
                         </td>
                     </tr>
 

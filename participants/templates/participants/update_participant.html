@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Update Participant | StudyFlow
+{% endblock %}
+
+{% block content %}
+
+    <h1>Update Participant</h1>
+
+    <p>
+        Study:
+        <strong>
+            {{ study.protocol_number }}
+            -
+            {{ study.title }}
+        </strong>
+    </p>
+
+    <p>
+        Participant:
+        <strong>
+            {{ participant.participant_number }}
+        </strong>
+    </p>
+
+    <p>
+        StudyFlow is an educational project.
+        Only fictional participant information should be used.
+    </p>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        {{ form.non_field_errors }}
+
+        <div>
+            {{ form.participant_number.label_tag }}
+            {{ form.participant_number }}
+            {{ form.participant_number.errors }}
+        </div>
+
+        <div>
+            {{ form.first_name.label_tag }}
+            {{ form.first_name }}
+            {{ form.first_name.errors }}
+        </div>
+
+        <div>
+            {{ form.last_name.label_tag }}
+            {{ form.last_name }}
+            {{ form.last_name.errors }}
+        </div>
+
+        <div>
+            {{ form.date_of_birth.label_tag }}
+            {{ form.date_of_birth }}
+            {{ form.date_of_birth.errors }}
+        </div>
+
+        <div>
+            {{ form.sex.label_tag }}
+            {{ form.sex }}
+            {{ form.sex.errors }}
+        </div>
+
+        <div>
+            {{ form.status.label_tag }}
+            {{ form.status }}
+            {{ form.status.errors }}
+        </div>
+
+        <div>
+            {{ form.enrolled_date.label_tag }}
+            {{ form.enrolled_date }}
+            {{ form.enrolled_date.errors }}
+        </div>
+
+        <button type="submit">
+            Save Changes
+        </button>
+
+        <a
+            href="{% url 'studies:study_detail' study.id %}"
+        >
+            Cancel
+        </a>
+    </form>
+
+{% endblock %}

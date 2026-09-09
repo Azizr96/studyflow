@@ -117,3 +117,62 @@ def participant_list(request):
         "participants/participant_list.html",
         context,
     )
+
+@login_required
+def update_participant(request, participant_id):
+    participant = get_object_or_404(
+        Participant.objects.select_related("study"),
+        id=participant_id,
+    )
+
+    if not can_access_study(
+        request.user,
+        participant.study,
+    ):
+        messages.error(
+            request,
+            "You do not have permission to update this participant.",
+        )
+        return redirect(
+            "participants:participant_list"
+        )
+
+    if request.method == "POST":
+        form = ParticipantForm(
+            request.POST,
+            instance=participant,
+        )
+
+        if form.is_valid():
+            participant = form.save()
+
+            messages.success(
+                request,
+                (
+                    f"Participant "
+                    f"{participant.participant_number} "
+                    "has been updated successfully."
+                ),
+            )
+
+            return redirect(
+                "studies:study_detail",
+                study_id=participant.study.id,
+            )
+
+    else:
+        form = ParticipantForm(
+            instance=participant,
+        )
+
+    context = {
+        "form": form,
+        "participant": participant,
+        "study": participant.study,
+    }
+
+    return render(
+        request,
+        "participants/update_participant.html",
+        context,
+    )
