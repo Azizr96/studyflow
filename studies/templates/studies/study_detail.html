@@ -44,6 +44,18 @@
     </section>
 
     <section>
+        <h3>Participants</h3>
+
+        <p>
+            <a
+                href="{% url 'participants:add_participant' study.id %}"
+            >
+                Add Participant
+            </a>
+        </p>
+    </section>
+
+    <section>
         <h3>Study Documents</h3>
 
         {% if documents %}
