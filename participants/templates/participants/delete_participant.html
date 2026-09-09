@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Delete Participant | StudyFlow
+{% endblock %}
+
+{% block content %}
+
+    <h1>Delete Participant</h1>
+
+    <section>
+        <h2>Warning</h2>
+
+        <p>
+            You are about to permanently delete:
+        </p>
+
+        <p>
+            <strong>
+                {{ participant.participant_number }}
+            </strong>
+        </p>
+
+        <p>
+            {{ participant.first_name }}
+            {{ participant.last_name }}
+        </p>
+
+        <p>
+            Study:
+            {{ study.protocol_number }}
+            -
+            {{ study.title }}
+        </p>
+
+        <p>
+            This action cannot be undone.
+        </p>
+    </section>
+
+    <section>
+        <h2>Final Confirmation</h2>
+
+        <p>
+            To continue, type
+            <strong>DELETE</strong>
+            and enter your current password.
+        </p>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <div>
+                <label for="confirm-delete">
+                    Type DELETE to confirm
+                </label>
+
+                <input
+                    type="text"
+                    id="confirm-delete"
+                    name="confirm_delete"
+                    required
+                    autocomplete="off"
+                >
+            </div>
+
+            <div>
+                <label for="password">
+                    Enter your password
+                </label>
+
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    required
+                    autocomplete="current-password"
+                >
+            </div>
+
+            <button type="submit">
+                Permanently Delete Participant
+            </button>
+
+            <a
+                href="{% url 'studies:study_detail' study.id %}"
+            >
+                Cancel
+            </a>
+        </form>
+    </section>
+
+{% endblock %}

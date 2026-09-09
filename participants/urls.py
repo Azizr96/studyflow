@@ -20,4 +20,9 @@ urlpatterns = [
         views.update_participant,
         name="update_participant",
     ),
+    path(
+        "<int:participant_id>/delete/",
+        views.delete_participant,
+        name="delete_participant",
+    ),
 ]

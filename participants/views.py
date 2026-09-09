@@ -4,6 +4,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from studies.models import Study
 from .forms import ParticipantForm
 from .models import Participant
+from django.contrib.auth import authenticate
 
 
 def can_access_study(user, study):
@@ -176,3 +177,82 @@ def update_participant(request, participant_id):
         "participants/update_participant.html",
         context,
     )
+
+@login_required
+def delete_participant(request, participant_id):
+    participant = get_object_or_404(
+        Participant.objects.select_related("study"),
+        id=participant_id,
+    )
+
+    if not can_access_study(
+        request.user,
+        participant.study,
+    ):
+        messages.error(
+            request,
+            "You do not have permission to delete this participant.",
+        )
+        return redirect(
+            "participants:participant_list"
+        )
+
+    if request.method == "POST":
+        confirmation = request.POST.get("confirm_delete")
+        password = request.POST.get("password")
+
+        if confirmation != "DELETE":
+            messages.error(
+                request,
+                "Please type DELETE to confirm deletion.",
+            )
+            return redirect(
+                "participants:delete_participant",
+                participant_id=participant.id,
+            )
+
+        authenticated_user = authenticate(
+            request,
+            username=request.user.username,
+            password=password,
+        )
+
+        if authenticated_user is None:
+            messages.error(
+                request,
+                "Your password was incorrect. Participant was not deleted.",
+            )
+            return redirect(
+                "participants:delete_participant",
+                participant_id=participant.id,
+            )
+
+        participant_number = participant.participant_number
+        study_id = participant.study.id
+
+        participant.delete()
+
+        messages.success(
+            request,
+            (
+                f"Participant {participant_number} "
+                "has been deleted successfully."
+            ),
+        )
+
+        return redirect(
+            "studies:study_detail",
+            study_id=study_id,
+        )
+
+    context = {
+        "participant": participant,
+        "study": participant.study,
+    }
+
+    return render(
+        request,
+        "participants/delete_participant.html",
+        context,
+    )
+
