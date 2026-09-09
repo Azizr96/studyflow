@@ -53,6 +53,74 @@
                 Add Participant
             </a>
         </p>
+
+        {% if participants %}
+
+            <table>
+                <thead>
+                    <tr>
+                        <th scope="col">
+                            Participant Number
+                        </th>
+
+                        <th scope="col">
+                            Name
+                        </th>
+
+                        <th scope="col">
+                            Sex
+                        </th>
+
+                        <th scope="col">
+                            Status
+                        </th>
+
+                        <th scope="col">
+                            Enrolled Date
+                        </th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for participant in participants %}
+
+                        <tr>
+                            <td>
+                                {{ participant.participant_number }}
+                            </td>
+
+                            <td>
+                                {{ participant.first_name }}
+                                {{ participant.last_name }}
+                            </td>
+
+                            <td>
+                                {{ participant.sex }}
+                            </td>
+
+                            <td>
+                                {{ participant.status }}
+                            </td>
+
+                            <td>
+                                {{ participant.enrolled_date }}
+                            </td>
+                        </tr>
+
+                    {% endfor %}
+
+                </tbody>
+            </table>
+
+        {% else %}
+
+            <p>
+                No participants have been added to this study yet.
+            </p>
+
+        {% endif %}
+
     </section>
 
     <section>

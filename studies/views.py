@@ -157,9 +157,13 @@ def study_detail(request, study_id):
         "-uploaded_at"
     )
 
+    participants = study.participants.all().order_by(
+        "participant_number"
+    )
     context = {
         "study": study,
         "documents": documents,
+        "participants": participants,
         "form": form,
     }
 
