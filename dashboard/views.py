@@ -16,43 +16,84 @@ def dashboard_home(request):
     if not role:
         return redirect("accounts:login")
 
+    today = timezone.localdate()
+
     is_elevated = (
         role.is_admin
         or role.can_manage_users
         or role.can_manage_studies
     )
 
-    if not is_elevated:
-        return redirect("studies:study_list")
+    if is_elevated:
+        total_studies = Study.objects.count()
+        total_participants = Participant.objects.count()
+        total_visits = Visit.objects.count()
 
-    today = timezone.localdate()
+        pending_users = UserProfile.objects.filter(
+            is_approved=False,
+        ).count()
 
-    total_studies = Study.objects.count()
-    total_participants = Participant.objects.count()
-    total_visits = Visit.objects.count()
+        upcoming_visits = Visit.objects.select_related(
+            "participant",
+            "participant__study",
+        ).filter(
+            scheduled_date__gte=today,
+            status=Visit.Status.SCHEDULED,
+        ).order_by(
+            "scheduled_date",
+        )[:5]
 
-    pending_users = UserProfile.objects.filter(
-        is_approved=False,
-    ).count()
+        recent_documents = StudyDocument.objects.select_related(
+            "study",
+            "uploaded_by",
+        ).order_by(
+            "-uploaded_at",
+        )[:5]
 
-    upcoming_visits = Visit.objects.select_related(
-        "participant",
-        "participant__study",
-    ).filter(
-        scheduled_date__gte=today,
-        status=Visit.Status.SCHEDULED,
-    ).order_by(
-        "scheduled_date",
-    )[:5]
+        dashboard_type = "elevated"
 
-    recent_documents = StudyDocument.objects.select_related(
-        "study",
-        "uploaded_by",
-    ).order_by(
-        "-uploaded_at",
-    )[:5]
+    else:
+        assigned_studies = Study.objects.filter(
+            user_assignments__user=request.user,
+            user_assignments__is_active=True,
+        ).distinct()
+
+        total_studies = assigned_studies.count()
+
+        total_participants = Participant.objects.filter(
+            study__in=assigned_studies,
+        ).count()
+
+        total_visits = Visit.objects.filter(
+            participant__study__in=assigned_studies,
+        ).count()
+
+        pending_users = None
+
+        upcoming_visits = Visit.objects.select_related(
+            "participant",
+            "participant__study",
+        ).filter(
+            participant__study__in=assigned_studies,
+            scheduled_date__gte=today,
+            status=Visit.Status.SCHEDULED,
+        ).order_by(
+            "scheduled_date",
+        )[:5]
+
+        recent_documents = StudyDocument.objects.select_related(
+            "study",
+            "uploaded_by",
+        ).filter(
+            study__in=assigned_studies,
+        ).order_by(
+            "-uploaded_at",
+        )[:5]
+
+        dashboard_type = "standard"
 
     context = {
+        "dashboard_type": dashboard_type,
         "total_studies": total_studies,
         "total_participants": total_participants,
         "total_visits": total_visits,
