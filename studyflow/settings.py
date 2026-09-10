@@ -47,7 +47,8 @@ INSTALLED_APPS = [
     'accounts',
     'studies',
     'participants',
-    'notifications'
+    'notifications',
+    'dashboard'
 ]
 
 MIDDLEWARE = [

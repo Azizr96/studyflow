@@ -25,4 +25,5 @@ urlpatterns = [
         "participants/",
         include("participants.urls"),
     ),
+    path('', include('dashboard.urls')),
 ]
