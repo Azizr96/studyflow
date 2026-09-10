@@ -16,6 +16,7 @@
                 <th>Scheduled Date</th>
                 <th>Actual Date</th>
                 <th>Status</th>
+                <th>Actions</th>
             </tr>
         </thead>
 
@@ -52,6 +53,12 @@
 
                     <td>
                         {{ visit.status }}
+                    </td>
+
+                    <td>
+                        <a href="{% url 'participants:update_visit' visit.id %}">
+                            Edit
+                        </a>
                     </td>
                 </tr>
             {% endfor %}
