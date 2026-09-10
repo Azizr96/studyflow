@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Update Visit</h1>
+
+<p>
+    <strong>Participant:</strong>
+    {{ participant.participant_number }} -
+    {{ participant.first_name }} {{ participant.last_name }}
+</p>
+
+<p>
+    <strong>Study:</strong>
+    {{ study.protocol_number }} - {{ study.title }}
+</p>
+
+<form method="post">
+    {% csrf_token %}
+
+    {{ form.as_p }}
+
+    <button type="submit">
+        Save Changes
+    </button>
+
+    <a href="{% url 'participants:visit_list' %}">
+        Cancel
+    </a>
+</form>
+
+{% endblock %}
