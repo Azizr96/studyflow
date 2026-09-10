@@ -6,7 +6,7 @@ from django.contrib.auth import authenticate, login, logout
 from .forms import RegistrationForm
 from .models import Role, UserStudy, UserProfile
 from studies.models import Study
-from django.db.models import Q
+from django.db.models import Q, Prefetch
 
 def can_manage_users(user):
     if not user.is_authenticated:
@@ -233,6 +233,14 @@ def user_list(request):
     ).select_related(
         "profile",
         "profile__role",
+    ).prefetch_related(
+        Prefetch(
+            "study_assignments",
+            queryset=UserStudy.objects.filter(
+                is_active=True,
+            ).select_related("study"),
+            to_attr="active_study_assignments",
+        )
     )
 
     if search_query:

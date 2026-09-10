@@ -147,41 +147,78 @@
                                 {% endif %}
                             </td>
                             <!-- this section assigns user to study -->
+                            <!-- this section manages user study assignments -->
                             <td>
-                                <form
-                                    method="POST"
-                                    action="{% url 'accounts:assign_user_to_study' account.id %}"
-                                >
-                                    {% csrf_token %}
 
-                                    <label
-                                        for="study-{{ account.id }}"
+                                <div>
+                                    <strong>Assigned studies</strong>
+
+                                    {% if account.active_study_assignments %}
+
+                                        <ul>
+                                            {% for assignment in account.active_study_assignments %}
+                                                <li>
+                                                    {{ assignment.study.protocol_number }}
+                                                    -
+                                                    {{ assignment.study.title }}
+
+                                                    <form
+                                                        method="POST"
+                                                        action="{% url 'accounts:unassign_user_from_study' assignment.id %}"
+                                                        style="display: inline;"
+                                                    >
+                                                        {% csrf_token %}
+
+                                                        <button type="submit">
+                                                            Unassign
+                                                        </button>
+                                                    </form>
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+
+                                    {% else %}
+
+                                        <p>No studies assigned.</p>
+
+                                    {% endif %}
+                                </div>
+
+                                <div>
+                                    <form
+                                        method="POST"
+                                        action="{% url 'accounts:assign_user_to_study' account.id %}"
                                     >
-                                        Assign study
-                                    </label>
+                                        {% csrf_token %}
 
-                                    <select
-                                        id="study-{{ account.id }}"
-                                        name="study"
-                                        required
-                                    >
-                                        <option value="">
-                                            Select study
-                                        </option>
+                                        <label for="study-{{ account.id }}">
+                                            Assign another study
+                                        </label>
 
-                                        {% for study in studies %}
-                                            <option value="{{ study.id }}">
-                                                {{ study.protocol_number }}
-                                                -
-                                                {{ study.title }}
+                                        <select
+                                            id="study-{{ account.id }}"
+                                            name="study"
+                                            required
+                                        >
+                                            <option value="">
+                                                Select study
                                             </option>
-                                        {% endfor %}
-                                    </select>
 
-                                    <button type="submit">
-                                        Assign
-                                    </button>
-                                </form>
+                                            {% for study in studies %}
+                                                <option value="{{ study.id }}">
+                                                    {{ study.protocol_number }}
+                                                    -
+                                                    {{ study.title }}
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+
+                                        <button type="submit">
+                                            Assign
+                                        </button>
+                                    </form>
+                                </div>
+
                             </td>
                             <!-- this section to delete user  -->
                             <td>
