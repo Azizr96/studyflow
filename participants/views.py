@@ -2,8 +2,8 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 from studies.models import Study
-from .forms import ParticipantForm
-from .models import Participant
+from .forms import ParticipantForm, VisitForm
+from .models import Participant, Visit
 from django.contrib.auth import authenticate
 
 
@@ -256,3 +256,49 @@ def delete_participant(request, participant_id):
         context,
     )
 
+@login_required
+def add_visit(request, participant_id):
+    participant = get_object_or_404(
+        Participant.objects.select_related("study"),
+        id=participant_id,
+    )
+
+    study = participant.study
+
+    if not can_access_study(request.user, study):
+        messages.error(
+            request,
+            "You do not have permission to add visits to this participant.",
+        )
+        return redirect("participants:participant_list")
+
+    if request.method == "POST":
+        form = VisitForm(request.POST)
+
+        if form.is_valid():
+            visit = form.save(commit=False)
+            visit.participant = participant
+            visit.save()
+
+            messages.success(
+                request,
+                f"Visit {visit.visit_number} was added successfully.",
+            )
+
+            return redirect(
+                "studies:study_detail",
+                study_id=study.id,
+            )
+
+    else:
+        form = VisitForm()
+
+    return render(
+        request,
+        "participants/add_visit.html",
+        {
+            "form": form,
+            "participant": participant,
+            "study": study,
+        },
+    )
