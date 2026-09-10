@@ -35,4 +35,9 @@ urlpatterns = [
         views.visit_list,
         name="visit_list",
     ),
+    path(
+        "visits/<int:visit_id>/update/",
+        views.update_visit,
+        name="update_visit",
+    ),
 ]
