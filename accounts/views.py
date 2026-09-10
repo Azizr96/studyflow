@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth import authenticate, login, logout
 from .forms import RegistrationForm
-from .models import Role, UserStudy
+from .models import Role, UserStudy, UserProfile
 from studies.models import Study
 from django.db.models import Q
 
@@ -328,6 +328,34 @@ def assign_user_to_study(request, user_id):
                         f"to {study.protocol_number}."
                     ),
                 )
+
+    return redirect("accounts:user_list")
+
+
+@login_required
+def unassign_user_from_study(request, assignment_id):
+    if not can_manage_users(request.user):
+        messages.error(
+            request,
+            "You do not have permission to manage users.",
+        )
+        return redirect("dashboard:home")
+
+    assignment = get_object_or_404(
+        UserStudy,
+        id=assignment_id,
+        is_active=True,
+    )
+
+    if request.method == "POST":
+        assignment.is_active = False
+        assignment.save()
+
+        messages.success(
+            request,
+            f"{assignment.user.username} was unassigned from "
+            f"{assignment.study.protocol_number}.",
+        )
 
     return redirect("accounts:user_list")
 
