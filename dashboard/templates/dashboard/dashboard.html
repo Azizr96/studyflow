@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Dashboard | StudyFlow
+{% endblock %}
+
+{% block content %}
+
+<h1>Dashboard</h1>
+
+<p>
+    Welcome,
+    {{ request.user.first_name|default:request.user.username }}.
+</p>
+
+<section>
+    <h2>System Overview</h2>
+
+    <div>
+        <p>
+            <strong>Total Studies:</strong>
+            {{ total_studies }}
+        </p>
+
+        <p>
+            <strong>Total Participants:</strong>
+            {{ total_participants }}
+        </p>
+
+        <p>
+            <strong>Total Visits:</strong>
+            {{ total_visits }}
+        </p>
+
+        <p>
+            <strong>Pending User Approvals:</strong>
+            {{ pending_users }}
+        </p>
+    </div>
+</section>
+
+<section>
+    <h2>Upcoming Visits</h2>
+
+    {% if upcoming_visits %}
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Participant</th>
+                    <th>Study</th>
+                    <th>Visit</th>
+                    <th>Type</th>
+                    <th>Scheduled Date</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for visit in upcoming_visits %}
+                    <tr>
+                        <td>
+                            {{ visit.participant.participant_number }}
+                        </td>
+
+                        <td>
+                            {{ visit.participant.study.protocol_number }}
+                        </td>
+
+                        <td>
+                            Visit {{ visit.visit_number }}
+                        </td>
+
+                        <td>
+                            {{ visit.visit_type }}
+                        </td>
+
+                        <td>
+                            {{ visit.scheduled_date }}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    {% else %}
+
+        <p>No upcoming scheduled visits.</p>
+
+    {% endif %}
+</section>
+
+<section>
+    <h2>Recent Documents</h2>
+
+    {% if recent_documents %}
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Study</th>
+                    <th>Category</th>
+                    <th>Version</th>
+                    <th>Uploaded By</th>
+                    <th>Uploaded</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for document in recent_documents %}
+                    <tr>
+                        <td>
+                            {{ document.study.protocol_number }}
+                        </td>
+
+                        <td>
+                            {{ document.category }}
+                        </td>
+
+                        <td>
+                            {{ document.version }}
+                        </td>
+
+                        <td>
+                            {% if document.uploaded_by %}
+                                {{ document.uploaded_by.username }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            {{ document.uploaded_at }}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    {% else %}
+
+        <p>No study documents have been uploaded yet.</p>
+
+    {% endif %}
+</section>
+
+{% endblock %}

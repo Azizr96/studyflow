@@ -34,6 +34,12 @@
                     </span>
                 {% endif %}
 
+                {% if user.profile.role %}
+                    <a href="{% url 'dashboard:home' %}">
+                        Dashboard
+                    </a>
+                {% endif %}
+
                 {% if user.profile.role.can_manage_users %}
                     <a href="{% url 'accounts:user_list' %}">
                         Users
