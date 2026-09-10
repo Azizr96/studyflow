@@ -25,4 +25,9 @@ urlpatterns = [
         views.delete_participant,
         name="delete_participant",
     ),
+    path(
+        "<int:participant_id>/visits/add/",
+        views.add_visit,
+        name="add_visit",
+    ),
 ]
