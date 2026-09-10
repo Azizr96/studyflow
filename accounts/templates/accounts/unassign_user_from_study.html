@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Confirm Unassignment | StudyFlow
+{% endblock %}
+
+{% block content %}
+
+    <h1>Confirm Study Unassignment</h1>
+
+    <p>
+        Are you sure you want to unassign
+        <strong>
+            {{ assignment.user.first_name }}
+            {{ assignment.user.last_name }}
+        </strong>
+        from
+        <strong>
+            {{ assignment.study.protocol_number }}
+            -
+            {{ assignment.study.title }}
+        </strong>?
+    </p>
+
+    <p>
+        The user will immediately lose access to this study.
+        They can be reassigned later if needed.
+    </p>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <button type="submit">
+            Confirm Unassign
+        </button>
+
+        <a href="{% url 'accounts:user_list' %}">
+            Cancel
+        </a>
+    </form>
+
+{% endblock %}

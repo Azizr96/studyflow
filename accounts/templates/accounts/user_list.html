@@ -162,17 +162,9 @@
                                                     -
                                                     {{ assignment.study.title }}
 
-                                                    <form
-                                                        method="POST"
-                                                        action="{% url 'accounts:unassign_user_from_study' assignment.id %}"
-                                                        style="display: inline;"
-                                                    >
-                                                        {% csrf_token %}
-
-                                                        <button type="submit">
-                                                            Unassign
-                                                        </button>
-                                                    </form>
+                                                    <a href="{% url 'accounts:unassign_user_from_study' assignment.id %}">
+                                                        Unassign
+                                                    </a>
                                                 </li>
                                             {% endfor %}
                                         </ul>

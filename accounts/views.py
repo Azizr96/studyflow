@@ -347,25 +347,39 @@ def unassign_user_from_study(request, assignment_id):
             request,
             "You do not have permission to manage users.",
         )
-        return redirect("dashboard:home")
+        return redirect("accounts:user_list")
 
     assignment = get_object_or_404(
-        UserStudy,
+        UserStudy.objects.select_related(
+            "user",
+            "study",
+        ),
         id=assignment_id,
         is_active=True,
     )
 
     if request.method == "POST":
         assignment.is_active = False
+        assignment.assigned_by = request.user
         assignment.save()
 
         messages.success(
             request,
-            f"{assignment.user.username} was unassigned from "
-            f"{assignment.study.protocol_number}.",
+            (
+                f"{assignment.user.username} has been unassigned "
+                f"from {assignment.study.protocol_number}."
+            ),
         )
 
-    return redirect("accounts:user_list")
+        return redirect("accounts:user_list")
+
+    return render(
+        request,
+        "accounts/unassign_user_from_study.html",
+        {
+            "assignment": assignment,
+        },
+    )
 
 
 @login_required
