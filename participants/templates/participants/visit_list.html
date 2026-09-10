@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Visits</h1>
+
+{% if visits %}
+
+    <table>
+        <thead>
+            <tr>
+                <th>Participant</th>
+                <th>Study</th>
+                <th>Visit</th>
+                <th>Type</th>
+                <th>Scheduled Date</th>
+                <th>Actual Date</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for visit in visits %}
+                <tr>
+                    <td>
+                        {{ visit.participant.participant_number }}
+                    </td>
+
+                    <td>
+                        {{ visit.participant.study.protocol_number }}
+                    </td>
+
+                    <td>
+                        Visit {{ visit.visit_number }}
+                    </td>
+
+                    <td>
+                        {{ visit.visit_type }}
+                    </td>
+
+                    <td>
+                        {{ visit.scheduled_date }}
+                    </td>
+
+                    <td>
+                        {% if visit.actual_date %}
+                            {{ visit.actual_date }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        {{ visit.status }}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% else %}
+
+    <p>No visits are currently available.</p>
+
+{% endif %}
+
+{% endblock %}
