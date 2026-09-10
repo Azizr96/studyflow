@@ -402,3 +402,84 @@ def update_visit(request, visit_id):
             "study": study,
         },
     )
+
+@login_required
+def delete_visit(request, visit_id):
+    visit = get_object_or_404(
+        Visit.objects.select_related(
+            "participant",
+            "participant__study",
+        ),
+        id=visit_id,
+    )
+
+    participant = visit.participant
+    study = participant.study
+
+    if not can_access_study(request.user, study):
+        messages.error(
+            request,
+            "You do not have permission to delete this visit.",
+        )
+        return redirect("participants:visit_list")
+
+    if request.method == "POST":
+        confirm_delete = request.POST.get("confirm_delete", "").strip()
+        password = request.POST.get("password", "")
+
+        if confirm_delete != "DELETE":
+            messages.error(
+                request,
+                "You must type DELETE exactly to confirm.",
+            )
+            return render(
+                request,
+                "participants/delete_visit.html",
+                {
+                    "visit": visit,
+                    "participant": participant,
+                    "study": study,
+                },
+            )
+
+        authenticated_user = authenticate(
+            request,
+            username=request.user.username,
+            password=password,
+        )
+
+        if authenticated_user is None:
+            messages.error(
+                request,
+                "Your password was incorrect.",
+            )
+            return render(
+                request,
+                "participants/delete_visit.html",
+                {
+                    "visit": visit,
+                    "participant": participant,
+                    "study": study,
+                },
+            )
+
+        visit_number = visit.visit_number
+
+        visit.delete()
+
+        messages.success(
+            request,
+            f"Visit {visit_number} was deleted successfully.",
+        )
+
+        return redirect("participants:visit_list")
+
+    return render(
+        request,
+        "participants/delete_visit.html",
+        {
+            "visit": visit,
+            "participant": participant,
+            "study": study,
+        },
+    )
