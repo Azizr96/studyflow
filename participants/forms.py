@@ -73,6 +73,31 @@ class VisitForm(forms.ModelForm):
             "actual_date": forms.DateInput(attrs={"type": "date"}),
         }
 
+    def __init__(self, *args, participant=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.participant = participant
+
+    def clean_visit_number(self):
+        visit_number = self.cleaned_data.get("visit_number")
+
+        if self.participant and visit_number:
+            existing_visit = Visit.objects.filter(
+                participant=self.participant,
+                visit_number=visit_number,
+            )
+
+            if self.instance.pk:
+                existing_visit = existing_visit.exclude(
+                    pk=self.instance.pk,
+                )
+
+            if existing_visit.exists():
+                raise forms.ValidationError(
+                    f"Visit {visit_number} already exists for this participant."
+                )
+
+        return visit_number
+
     def clean(self):
         cleaned_data = super().clean()
 
