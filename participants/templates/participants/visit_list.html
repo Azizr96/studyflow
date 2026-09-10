@@ -63,6 +63,10 @@
                         <a href="{% url 'participants:update_visit' visit.id %}">
                             Edit
                         </a>
+                        
+                        <a href="{% url 'participants:delete_visit' visit.id %}">
+                            Delete
+                        </a>
                     </td>
                 </tr>
             {% endfor %}
