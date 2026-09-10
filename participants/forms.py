@@ -1,5 +1,5 @@
 from django import forms
-from .models import Participant
+from .models import Participant, Visit
 
 
 class ParticipantForm(forms.ModelForm):
@@ -52,5 +52,43 @@ class ParticipantForm(forms.ModelForm):
                     "The enrolled date must be after "
                     "the participant's date of birth."
                 )
+
+        return cleaned_data
+
+
+class VisitForm(forms.ModelForm):
+    class Meta:
+        model = Visit
+        fields = [
+            "visit_number",
+            "visit_type",
+            "scheduled_date",
+            "actual_date",
+            "status",
+            "notes",
+        ]
+
+        widgets = {
+            "scheduled_date": forms.DateInput(attrs={"type": "date"}),
+            "actual_date": forms.DateInput(attrs={"type": "date"}),
+        }
+
+    def clean(self):
+        cleaned_data = super().clean()
+
+        scheduled_date = cleaned_data.get("scheduled_date")
+        actual_date = cleaned_data.get("actual_date")
+        status = cleaned_data.get("status")
+
+        if actual_date and scheduled_date:
+            if actual_date < scheduled_date:
+                raise forms.ValidationError(
+                    "The actual visit date cannot be before the scheduled date."
+                )
+
+        if status == Visit.Status.COMPLETED and not actual_date:
+            raise forms.ValidationError(
+                "A completed visit must have an actual visit date."
+            )
 
         return cleaned_data
