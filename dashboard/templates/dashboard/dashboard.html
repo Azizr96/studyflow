@@ -13,6 +13,16 @@
     {{ request.user.first_name|default:request.user.username }}.
 </p>
 
+{% if dashboard_type == "elevated" %}
+    <p>
+        You are viewing system-wide StudyFlow data.
+    </p>
+{% else %}
+    <p>
+        You are viewing data from your assigned studies.
+    </p>
+{% endif %}
+
 <section>
     <h2>System Overview</h2>
 
@@ -32,10 +42,12 @@
             {{ total_visits }}
         </p>
 
-        <p>
-            <strong>Pending User Approvals:</strong>
-            {{ pending_users }}
-        </p>
+        {% if dashboard_type == "elevated" %}
+            <p>
+                <strong>Pending User Approvals:</strong>
+                {{ pending_users }}
+            </p>
+        {% endif %}
     </div>
 </section>
 
