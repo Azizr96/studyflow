@@ -112,6 +112,10 @@
                             </td>
 
                             <td>
+                                <a href="{% url 'participants:add_visit' participant.id %}">
+                                    Add Visit
+                                </a>
+                                
                                 <a
                                     href="{% url 'participants:update_participant' participant.id %}"
                                 >
