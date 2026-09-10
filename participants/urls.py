@@ -40,4 +40,9 @@ urlpatterns = [
         views.update_visit,
         name="update_visit",
     ),
+    path(
+        "visits/<int:visit_id>/delete/",
+        views.delete_visit,
+        name="delete_visit",
+    ),
 ]
