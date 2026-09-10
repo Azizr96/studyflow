@@ -30,4 +30,9 @@ urlpatterns = [
         views.add_visit,
         name="add_visit",
     ),
+    path(
+        "visits/",
+        views.visit_list,
+        name="visit_list",
+    ),
 ]
