@@ -198,7 +198,7 @@ def user_login(request):
             f"Welcome back, {user.first_name or user.username}.",
         )
 
-        return redirect("accounts:login")
+        return redirect("dashboard:home")
 
     return render(
         request,
