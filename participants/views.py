@@ -273,7 +273,10 @@ def add_visit(request, participant_id):
         return redirect("participants:participant_list")
 
     if request.method == "POST":
-        form = VisitForm(request.POST)
+        form = VisitForm(
+            request.POST,
+            participant=participant,
+        )
 
         if form.is_valid():
             visit = form.save(commit=False)
@@ -291,7 +294,9 @@ def add_visit(request, participant_id):
             )
 
     else:
-        form = VisitForm()
+        form = VisitForm(
+            participant=participant,
+        )
 
     return render(
         request,
