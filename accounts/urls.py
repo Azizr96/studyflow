@@ -26,6 +26,11 @@ urlpatterns = [
         name="assign_user_to_study",
     ),
     path(
+        "users/assignments/<int:assignment_id>/remove/",
+        views.unassign_user_from_study,
+        name="unassign_user_from_study",
+    ),
+    path(
         "delete-user/<int:user_id>/",
         views.delete_user,
         name="delete_user",
