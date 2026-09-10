@@ -302,3 +302,44 @@ def add_visit(request, participant_id):
             "study": study,
         },
     )
+
+@login_required
+def visit_list(request):
+    try:
+        role = request.user.profile.role
+    except AttributeError:
+        role = None
+
+    if not role:
+        messages.error(
+            request,
+            "You do not have permission to view visits.",
+        )
+        return redirect("accounts:login")
+
+    if role.can_manage_studies:
+        visits = Visit.objects.select_related(
+            "participant",
+            "participant__study",
+        ).all()
+    else:
+        visits = Visit.objects.select_related(
+            "participant",
+            "participant__study",
+        ).filter(
+            participant__study__user_assignments__user=request.user,
+            participant__study__user_assignments__is_active=True,
+        )
+
+    visits = visits.order_by(
+        "scheduled_date",
+        "participant__participant_number",
+    )
+
+    return render(
+        request,
+        "participants/visit_list.html",
+        {
+            "visits": visits,
+        },
+    )
