@@ -348,3 +348,57 @@ def visit_list(request):
             "visits": visits,
         },
     )
+
+@login_required
+def update_visit(request, visit_id):
+    visit = get_object_or_404(
+        Visit.objects.select_related(
+            "participant",
+            "participant__study",
+        ),
+        id=visit_id,
+    )
+
+    participant = visit.participant
+    study = participant.study
+
+    if not can_access_study(request.user, study):
+        messages.error(
+            request,
+            "You do not have permission to update this visit.",
+        )
+        return redirect("participants:visit_list")
+
+    if request.method == "POST":
+        form = VisitForm(
+            request.POST,
+            instance=visit,
+            participant=participant,
+        )
+
+        if form.is_valid():
+            updated_visit = form.save()
+
+            messages.success(
+                request,
+                f"Visit {updated_visit.visit_number} was updated successfully.",
+            )
+
+            return redirect("participants:visit_list")
+
+    else:
+        form = VisitForm(
+            instance=visit,
+            participant=participant,
+        )
+
+    return render(
+        request,
+        "participants/update_visit.html",
+        {
+            "form": form,
+            "visit": visit,
+            "participant": participant,
+            "study": study,
+        },
+    )
