@@ -171,6 +171,16 @@ body {
     gap: 12px;
 }
 
+/* studies list page styling */
+
+.table thead th {
+    white-space: nowrap;
+}
+
+.table td,
+.table th {
+    vertical-align: middle;
+}
 
 /*responsive media queries */
 
