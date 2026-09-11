@@ -114,7 +114,7 @@ body {
 }
 
 
-/* dahsborboard system overview styling */
+/* dashboard system overview styling */
 
 .dashboard-card {
     border: 1px solid #e1e6eb;
@@ -130,6 +130,19 @@ body {
     color: #17324d;
     text-align: center;
 }
+
+/* dhasboard upcoming visit and recent doc table stlying */
+.table-responsive {
+    background-color: white;
+    border: 1px solid #e1e6eb;
+    border-radius: 10px;
+    overflow-x: auto;
+}
+
+.table-responsive .table {
+    margin-bottom: 0;
+}
+
 /*responsive media queries */
 
 @media (max-width: 991px) {

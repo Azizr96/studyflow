@@ -80,107 +80,108 @@
     </div>
 </section>
 
-<section>
-    <h2>Upcoming Visits</h2>
+<section class="mb-4">
+    <h2 class="h4 mb-3">Upcoming Visits</h2>
 
     {% if upcoming_visits %}
-
-        <table>
-            <thead>
-                <tr>
-                    <th>Participant</th>
-                    <th>Study</th>
-                    <th>Visit</th>
-                    <th>Type</th>
-                    <th>Scheduled Date</th>
-                </tr>
-            </thead>
-
-            <tbody>
-                {% for visit in upcoming_visits %}
+        <div class="table-responsive">
+            <table class="table table-striped table-hover align-middle">
+                <thead>
                     <tr>
-                        <td>
-                            {{ visit.participant.participant_number }}
-                        </td>
-
-                        <td>
-                            {{ visit.participant.study.protocol_number }}
-                        </td>
-
-                        <td>
-                            Visit {{ visit.visit_number }}
-                        </td>
-
-                        <td>
-                            {{ visit.visit_type }}
-                        </td>
-
-                        <td>
-                            {{ visit.scheduled_date }}
-                        </td>
+                        <th scope="col">Participant</th>
+                        <th scope="col">Study</th>
+                        <th scope="col">Visit</th>
+                        <th scope="col">Type</th>
+                        <th scope="col">Scheduled Date</th>
+                        <th scope="col">Status</th>
                     </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                </thead>
 
+                <tbody>
+                    {% for visit in upcoming_visits %}
+                        <tr>
+                            <td>
+                                {{ visit.participant.participant_number }}
+                            </td>
+
+                            <td>
+                                {{ visit.participant.study.protocol_number }}
+                            </td>
+
+                            <td>
+                                Visit {{ visit.visit_number }}
+                            </td>
+
+                            <td>
+                                {{ visit.visit_type }}
+                            </td>
+
+                            <td>
+                                {{ visit.scheduled_date }}
+                            </td>
+
+                            <td>
+                                {{ visit.status }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     {% else %}
-
-        <p>No upcoming scheduled visits.</p>
-
+        <p>No upcoming visits.</p>
     {% endif %}
 </section>
 
-<section>
-    <h2>Recent Documents</h2>
+<section class="mb-4">
+    <h2 class="h4 mb-3">Recent Documents</h2>
 
     {% if recent_documents %}
-
-        <table>
-            <thead>
-                <tr>
-                    <th>Study</th>
-                    <th>Category</th>
-                    <th>Version</th>
-                    <th>Uploaded By</th>
-                    <th>Uploaded</th>
-                </tr>
-            </thead>
-
-            <tbody>
-                {% for document in recent_documents %}
+        <div class="table-responsive">
+            <table class="table table-striped table-hover align-middle">
+                <thead>
                     <tr>
-                        <td>
-                            {{ document.study.protocol_number }}
-                        </td>
-
-                        <td>
-                            {{ document.category }}
-                        </td>
-
-                        <td>
-                            {{ document.version }}
-                        </td>
-
-                        <td>
-                            {% if document.uploaded_by %}
-                                {{ document.uploaded_by.username }}
-                            {% else %}
-                                -
-                            {% endif %}
-                        </td>
-
-                        <td>
-                            {{ document.uploaded_at }}
-                        </td>
+                        <th scope="col">Study</th>
+                        <th scope="col">Category</th>
+                        <th scope="col">Version</th>
+                        <th scope="col">Uploaded By</th>
+                        <th scope="col">Uploaded</th>
                     </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                </thead>
 
+                <tbody>
+                    {% for document in recent_documents %}
+                        <tr>
+                            <td>
+                                {{ document.study.protocol_number }}
+                            </td>
+
+                            <td>
+                                {{ document.category }}
+                            </td>
+
+                            <td>
+                                {{ document.version }}
+                            </td>
+
+                            <td>
+                                {% if document.uploaded_by %}
+                                    {{ document.uploaded_by.get_full_name|default:document.uploaded_by.username }}
+                                {% else %}
+                                    Unknown
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                {{ document.uploaded_at }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     {% else %}
-
-        <p>No study documents have been uploaded yet.</p>
-
+        <p>No recent documents.</p>
     {% endif %}
 </section>
 
