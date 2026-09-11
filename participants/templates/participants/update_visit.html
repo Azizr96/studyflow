@@ -1,36 +1,120 @@
 {% extends "base.html" %}
 
 {% block title %}
-    Update Participant | StudyFlow
+    Update Visit | StudyFlow
 {% endblock %}
 
 {% block content %}
 
-<h1>Update Visit</h1>
+<div class="container-fluid">
 
-<p>
-    <strong>Participant:</strong>
-    {{ participant.participant_number }} -
-    {{ participant.first_name }} {{ participant.last_name }}
-</p>
+    <div class="mb-4">
 
-<p>
-    <strong>Study:</strong>
-    {{ study.protocol_number }} - {{ study.title }}
-</p>
+        <h1 class="h3 mb-1">
+            Update Visit
+        </h1>
 
-<form method="post">
-    {% csrf_token %}
+        <p class="text-muted mb-0">
+            {{ visit.participant.participant_number }}
+            — Visit {{ visit.visit_number }}
+        </p>
 
-    {{ form.as_p }}
+    </div>
 
-    <button type="submit">
-        Save Changes
-    </button>
 
-    <a href="{% url 'participants:visit_list' %}">
-        Cancel
-    </a>
-</form>
+    <div class="row">
+
+        <div class="col-12 col-lg-8 col-xl-6">
+
+            <div class="card">
+
+                <div class="card-body">
+
+                    <form method="POST">
+
+                        {% csrf_token %}
+
+                        {{ form.non_field_errors }}
+
+
+                        <div class="row">
+
+                            <div class="col-12 col-md-6 mb-3">
+                                {{ form.visit_number.label_tag }}
+                                {{ form.visit_number }}
+                                {{ form.visit_number.errors }}
+                            </div>
+
+
+                            <div class="col-12 col-md-6 mb-3">
+                                {{ form.visit_type.label_tag }}
+                                {{ form.visit_type }}
+                                {{ form.visit_type.errors }}
+                            </div>
+
+                        </div>
+
+
+                        <div class="row">
+
+                            <div class="col-12 col-md-6 mb-3">
+                                {{ form.scheduled_date.label_tag }}
+                                {{ form.scheduled_date }}
+                                {{ form.scheduled_date.errors }}
+                            </div>
+
+
+                            <div class="col-12 col-md-6 mb-3">
+                                {{ form.actual_date.label_tag }}
+                                {{ form.actual_date }}
+                                {{ form.actual_date.errors }}
+                            </div>
+
+                        </div>
+
+
+                        <div class="mb-3">
+                            {{ form.status.label_tag }}
+                            {{ form.status }}
+                            {{ form.status.errors }}
+                        </div>
+
+
+                        <div class="mb-3">
+                            {{ form.notes.label_tag }}
+                            {{ form.notes }}
+                            {{ form.notes.errors }}
+                        </div>
+
+
+                        <div class="d-flex flex-wrap gap-2">
+
+                            <button
+                                type="submit"
+                                class="btn btn-primary"
+                            >
+                                Save Changes
+                            </button>
+
+                            <a
+                                href="{% url 'participants:visit_list' %}"
+                                class="btn btn-outline-secondary"
+                            >
+                                Cancel
+                            </a>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
 
 {% endblock %}
