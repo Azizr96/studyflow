@@ -157,9 +157,19 @@
                         </a>
                     {% endif %}
 
-                    <a href="{% url 'accounts:login' %}">
-                        Logout
-                    </a>
+                    <form
+                        method="POST"
+                        action="{% url 'accounts:logout' %}"
+                    >
+                        {% csrf_token %}
+
+                        <button
+                            type="submit"
+                            class="logout-button"
+                        >
+                            Logout
+                        </button>
+                    </form>
 
                 </nav>
 
