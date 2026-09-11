@@ -7,6 +7,8 @@ from .forms import RegistrationForm
 from .models import Role, UserStudy, UserProfile
 from studies.models import Study
 from django.db.models import Q, Prefetch
+from notifications.models import Notification
+from notifications.utils import create_notification
 
 def can_manage_users(user):
     if not user.is_authenticated:
