@@ -1,82 +1,168 @@
 {% extends "base.html" %}
 
 {% block title %}
-    Visit | StudyFlow
+    Visits | StudyFlow
 {% endblock %}
 
 {% block content %}
 
-<h1>Visits</h1>
+<div class="container-fluid">
 
-{% if visits %}
+    <div class="mb-4">
+        <h1 class="h3 mb-1">
+            Visits
+        </h1>
 
-    <table>
-        <thead>
-            <tr>
-                <th>Participant</th>
-                <th>Study</th>
-                <th>Visit</th>
-                <th>Type</th>
-                <th>Scheduled Date</th>
-                <th>Actual Date</th>
-                <th>Status</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
+        <p class="text-muted mb-0">
+            View and manage scheduled participant visits.
+        </p>
+    </div>
 
-        <tbody>
-            {% for visit in visits %}
-                <tr>
-                    <td>
-                        {{ visit.participant.participant_number }}
-                    </td>
 
-                    <td>
-                        {{ visit.participant.study.protocol_number }}
-                    </td>
+    {% if visits %}
 
-                    <td>
-                        Visit {{ visit.visit_number }}
-                    </td>
+        <div class="table-responsive">
 
-                    <td>
-                        {{ visit.visit_type }}
-                    </td>
+            <table
+                class="
+                    table
+                    table-striped
+                    table-hover
+                    align-middle
+                "
+            >
 
-                    <td>
-                        {{ visit.scheduled_date }}
-                    </td>
+                <thead>
+                    <tr>
+                        <th scope="col">
+                            Participant
+                        </th>
 
-                    <td>
-                        {% if visit.actual_date %}
-                            {{ visit.actual_date }}
-                        {% else %}
-                            -
-                        {% endif %}
-                    </td>
+                        <th scope="col">
+                            Study
+                        </th>
 
-                    <td>
-                        {{ visit.status }}
-                    </td>
+                        <th scope="col">
+                            Visit
+                        </th>
 
-                    <td>
-                        <a href="{% url 'participants:update_visit' visit.id %}">
-                            Edit
-                        </a>
-                        
-                        <a href="{% url 'participants:delete_visit' visit.id %}">
-                            Delete
-                        </a>
-                    </td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+                        <th scope="col">
+                            Type
+                        </th>
 
-{% else %}
+                        <th scope="col">
+                            Scheduled Date
+                        </th>
 
-    <p>No visits are currently available.</p>
+                        <th scope="col">
+                            Actual Date
+                        </th>
 
-{% endif %}
+                        <th scope="col">
+                            Status
+                        </th>
+
+                        <th scope="col">
+                            Actions
+                        </th>
+                    </tr>
+                </thead>
+
+
+                <tbody>
+
+                    {% for visit in visits %}
+
+                        <tr>
+
+                            <td>
+                                <strong>
+                                    {{ visit.participant.participant_number }}
+                                </strong>
+                            </td>
+
+
+                            <td>
+                                {{ visit.participant.study.protocol_number }}
+                            </td>
+
+
+                            <td>
+                                Visit {{ visit.visit_number }}
+                            </td>
+
+
+                            <td>
+                                {{ visit.visit_type }}
+                            </td>
+
+
+                            <td>
+                                {{ visit.scheduled_date }}
+                            </td>
+
+
+                            <td>
+                                {% if visit.actual_date %}
+                                    {{ visit.actual_date }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+
+
+                            <td>
+                                <span class="badge text-bg-secondary">
+                                    {{ visit.status }}
+                                </span>
+                            </td>
+
+
+                            <td>
+
+                                <div class="d-flex flex-wrap gap-2">
+
+                                    <a
+                                        href="{% url 'participants:update_visit' visit.id %}"
+                                        class="btn btn-sm btn-outline-secondary"
+                                    >
+                                        Edit
+                                    </a>
+
+
+                                    <a
+                                        href="{% url 'participants:delete_visit' visit.id %}"
+                                        class="btn btn-sm btn-outline-danger"
+                                    >
+                                        Delete
+                                    </a>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    {% else %}
+
+        <div class="card">
+            <div class="card-body">
+                <p class="mb-0">
+                    No visits are currently available.
+                </p>
+            </div>
+        </div>
+
+    {% endif %}
+
+</div>
 
 {% endblock %}
