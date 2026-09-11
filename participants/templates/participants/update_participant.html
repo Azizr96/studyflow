@@ -6,85 +6,122 @@
 
 {% block content %}
 
-    <h1>Update Participant</h1>
+<div class="container-fluid">
 
-    <p>
-        Study:
-        <strong>
-            {{ study.protocol_number }}
-            -
-            {{ study.title }}
-        </strong>
-    </p>
+    <div class="mb-4">
 
-    <p>
-        Participant:
-        <strong>
+        <h1 class="h3 mb-1">
+            Update Participant
+        </h1>
+
+        <p class="text-muted mb-0">
             {{ participant.participant_number }}
-        </strong>
-    </p>
+        </p>
 
-    <p>
-        StudyFlow is an educational project.
-        Only fictional participant information should be used.
-    </p>
+    </div>
 
-    <form method="POST">
-        {% csrf_token %}
 
-        {{ form.non_field_errors }}
+    <div class="row">
 
-        <div>
-            {{ form.participant_number.label_tag }}
-            {{ form.participant_number }}
-            {{ form.participant_number.errors }}
+        <div class="col-12 col-lg-8 col-xl-6">
+
+            <div class="card">
+
+                <div class="card-body">
+
+                    <form method="POST">
+
+                        {% csrf_token %}
+
+                        {{ form.non_field_errors }}
+
+
+                        <div class="mb-3">
+                            {{ form.participant_number.label_tag }}
+                            {{ form.participant_number }}
+                            {{ form.participant_number.errors }}
+                        </div>
+
+
+                        <div class="row">
+
+                            <div class="col-12 col-md-6 mb-3">
+                                {{ form.first_name.label_tag }}
+                                {{ form.first_name }}
+                                {{ form.first_name.errors }}
+                            </div>
+
+                            <div class="col-12 col-md-6 mb-3">
+                                {{ form.last_name.label_tag }}
+                                {{ form.last_name }}
+                                {{ form.last_name.errors }}
+                            </div>
+
+                        </div>
+
+
+                        <div class="row">
+
+                            <div class="col-12 col-md-6 mb-3">
+                                {{ form.date_of_birth.label_tag }}
+                                {{ form.date_of_birth }}
+                                {{ form.date_of_birth.errors }}
+                            </div>
+
+                            <div class="col-12 col-md-6 mb-3">
+                                {{ form.sex.label_tag }}
+                                {{ form.sex }}
+                                {{ form.sex.errors }}
+                            </div>
+
+                        </div>
+
+
+                        <div class="row">
+
+                            <div class="col-12 col-md-6 mb-3">
+                                {{ form.status.label_tag }}
+                                {{ form.status }}
+                                {{ form.status.errors }}
+                            </div>
+
+                            <div class="col-12 col-md-6 mb-3">
+                                {{ form.enrolled_date.label_tag }}
+                                {{ form.enrolled_date }}
+                                {{ form.enrolled_date.errors }}
+                            </div>
+
+                        </div>
+
+
+                        <div class="d-flex flex-wrap gap-2">
+
+                            <button
+                                type="submit"
+                                class="btn btn-primary"
+                            >
+                                Save Changes
+                            </button>
+
+                            <a
+                                href="{% url 'studies:study_detail' participant.study.id %}"
+                                class="btn btn-outline-secondary"
+                            >
+                                Cancel
+                            </a>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
         </div>
 
-        <div>
-            {{ form.first_name.label_tag }}
-            {{ form.first_name }}
-            {{ form.first_name.errors }}
-        </div>
+    </div>
 
-        <div>
-            {{ form.last_name.label_tag }}
-            {{ form.last_name }}
-            {{ form.last_name.errors }}
-        </div>
-
-        <div>
-            {{ form.date_of_birth.label_tag }}
-            {{ form.date_of_birth }}
-            {{ form.date_of_birth.errors }}
-        </div>
-
-        <div>
-            {{ form.sex.label_tag }}
-            {{ form.sex }}
-            {{ form.sex.errors }}
-        </div>
-
-        <div>
-            {{ form.status.label_tag }}
-            {{ form.status }}
-            {{ form.status.errors }}
-        </div>
-
-        <div>
-            {{ form.enrolled_date.label_tag }}
-            {{ form.enrolled_date }}
-            {{ form.enrolled_date.errors }}
-        </div>
-
-        <button type="submit">
-            Save Changes
-        </button>
-
-        <a
-            href="{% url 'studies:study_detail' study.id %}"
-        >
-            Cancel
-        </a>
-    </form>
+</div>
 
 {% endblock %}
