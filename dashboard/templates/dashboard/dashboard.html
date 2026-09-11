@@ -155,4 +155,48 @@
     {% endif %}
 </section>
 
+<section>
+    <h2>
+        Notifications
+        {% if unread_notification_count > 0 %}
+            ({{ unread_notification_count }} unread)
+        {% endif %}
+    </h2>
+
+    {% if recent_notifications %}
+
+        {% for notification in recent_notifications %}
+            <article>
+                <h3>
+                    {{ notification.title }}
+                </h3>
+
+                <p>
+                    {{ notification.message }}
+                </p>
+
+                <p>
+                    {{ notification.created_at }}
+                </p>
+
+                {% if not notification.is_read %}
+                    <p>
+                        <strong>Unread</strong>
+                    </p>
+                {% endif %}
+            </article>
+        {% endfor %}
+
+        <p>
+            <a href="{% url 'notifications:notification_list' %}">
+                View all notifications
+            </a>
+        </p>
+
+    {% else %}
+
+        <p>No notifications.</p>
+
+    {% endif %}
+</section>
 {% endblock %}
