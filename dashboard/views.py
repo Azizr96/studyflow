@@ -4,7 +4,7 @@ from django.utils import timezone
 from accounts.models import UserProfile
 from participants.models import Participant, Visit
 from studies.models import Study, StudyDocument
-
+from notifications.models import Notification
 
 @login_required
 def dashboard_home(request):
@@ -17,6 +17,15 @@ def dashboard_home(request):
         return redirect("accounts:login")
 
     today = timezone.localdate()
+
+    recent_notifications = Notification.objects.filter(
+        user=request.user,
+    ).order_by("-created_at")[:5]
+
+    unread_notification_count = Notification.objects.filter(
+        user=request.user,
+        is_read=False,
+    ).count()
 
     is_elevated = (
         role.is_admin
@@ -100,6 +109,8 @@ def dashboard_home(request):
         "pending_users": pending_users,
         "upcoming_visits": upcoming_visits,
         "recent_documents": recent_documents,
+        "recent_notifications": recent_notifications,
+        "unread_notification_count": unread_notification_count,
     }
 
     return render(
