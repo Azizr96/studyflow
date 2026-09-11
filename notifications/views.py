@@ -39,6 +39,7 @@ def mark_notification_read(request, notification_id):
         notification.save()
 
         messages.success(
+            request,
             "Notification marked as read.",
         )
 

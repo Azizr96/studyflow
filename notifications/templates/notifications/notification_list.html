@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Notifications | StudyFlow
+{% endblock %}
+
+{% block content %}
+
+    <h1>Notifications</h1>
+
+    <p>
+        Unread notifications:
+        <strong>{{ unread_count }}</strong>
+    </p>
+
+    {% if unread_count > 0 %}
+
+        <form
+            method="POST"
+            action="{% url 'notifications:mark_all_notifications_read' %}"
+        >
+            {% csrf_token %}
+
+            <button type="submit">
+                Mark all as read
+            </button>
+        </form>
+
+    {% endif %}
+
+    <section>
+        <h2>Your Notifications</h2>
+
+        {% if notifications %}
+
+            {% for notification in notifications %}
+
+                <article>
+
+                    <h3>
+                        {{ notification.title }}
+                    </h3>
+
+                    <p>
+                        {{ notification.message }}
+                    </p>
+
+                    <p>
+                        Type:
+                        {{ notification.type }}
+                    </p>
+
+                    <p>
+                        Received:
+                        {{ notification.created_at }}
+                    </p>
+
+                    {% if notification.is_read %}
+
+                        <p>
+                            Status:
+                            Read
+                        </p>
+
+                    {% else %}
+
+                        <p>
+                            <strong>
+                                Status: Unread
+                            </strong>
+                        </p>
+
+                        <form
+                            method="POST"
+                            action="{% url 'notifications:mark_notification_read' notification.id %}"
+                        >
+                            {% csrf_token %}
+
+                            <button type="submit">
+                                Mark as read
+                            </button>
+                        </form>
+
+                    {% endif %}
+
+                </article>
+
+            {% endfor %}
+
+        {% else %}
+
+            <p>
+                You do not have any notifications.
+            </p>
+
+        {% endif %}
+
+    </section>
+
+{% endblock %}
