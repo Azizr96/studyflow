@@ -91,9 +91,19 @@
                     {{ user.last_name }}
                 </p>
 
-                <a href="{% url 'accounts:logout' %}">
-                    Logout
-                </a>
+                <form
+                    method="POST"
+                    action="{% url 'accounts:logout' %}"
+                >
+                    {% csrf_token %}
+
+                    <button
+                        type="submit"
+                        class="logout-button"
+                    >
+                        Logout
+                    </button>
+                </form>
             </div>
 
         </aside>

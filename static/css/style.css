@@ -131,7 +131,7 @@ body {
     text-align: center;
 }
 
-/* dhasboard upcoming visit and recent doc table stlying */
+/* dashboard upcoming visit and recent doc table stlying */
 .table-responsive {
     background-color: white;
     border: 1px solid #e1e6eb;
@@ -142,6 +142,35 @@ body {
 .table-responsive .table {
     margin-bottom: 0;
 }
+
+/* dashboard notifiactions section styling */
+.notification-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+
+.notification-card {
+    background-color: white;
+    border: 1px solid #e1e6eb;
+    border-radius: 10px;
+    padding: 16px;
+}
+
+
+.notification-unread {
+    border-left: 4px solid #0d6efd;
+}
+
+
+.notification-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+}
+
 
 /*responsive media queries */
 
@@ -180,6 +209,11 @@ body {
 
     .page-content {
         padding: 20px 12px;
+    }
+
+    .notification-card-header {
+        flex-direction: column;
+        gap: 6px;
     }
 
 }
