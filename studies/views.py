@@ -3,6 +3,8 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render, get_object_or_404
 from .forms import StudyForm, StudyDocumentForm
 from .models import Study
+from notifications.models import Notification
+from notifications.utils import notify_study_users
 
 def can_manage_studies(user):
     if not user.is_authenticated:
@@ -138,6 +140,16 @@ def study_detail(request, study_id):
             document.uploaded_by = request.user
             document.save()
 
+            notify_study_users(
+                study=study,
+                title="Study Document Uploaded",
+                message=(
+                    f"A new {document.category} document "
+                    f"has been uploaded to {study.protocol_number}."
+                ),
+                notification_type=Notification.Type.DOCUMENT_UPLOADED,
+                exclude_user=request.user,
+            )
             messages.success(
                 request,
                 "Study document uploaded successfully.",

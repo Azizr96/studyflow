@@ -295,6 +295,18 @@ def add_visit(request, participant_id):
             visit.participant = participant
             visit.save()
 
+            notify_study_users(
+                study=study,
+                title="Upcoming Visit",
+                message=(
+                    f"Visit {visit.visit_number} for participant "
+                    f"{participant.participant_number} is scheduled for "
+                    f"{visit.scheduled_date} in {study.protocol_number}."
+                ),
+                notification_type=Notification.Type.VISIT_REMINDER,
+                exclude_user=request.user,
+            )
+            
             messages.success(
                 request,
                 f"Visit {visit.visit_number} was added successfully.",
@@ -373,6 +385,7 @@ def update_visit(request, visit_id):
 
     participant = visit.participant
     study = participant.study
+    original_status = visit.status
 
     if not can_access_study(request.user, study):
         messages.error(
@@ -380,6 +393,8 @@ def update_visit(request, visit_id):
             "You do not have permission to update this visit.",
         )
         return redirect("participants:visit_list")
+
+    
 
     if request.method == "POST":
         form = VisitForm(
@@ -390,6 +405,22 @@ def update_visit(request, visit_id):
 
         if form.is_valid():
             updated_visit = form.save()
+
+            if (
+                original_status != Visit.Status.COMPLETED
+                and updated_visit.status == Visit.Status.COMPLETED
+            ):
+                notify_study_users(
+                    study=study,
+                    title="Visit Completed",
+                    message=(
+                        f"Visit {updated_visit.visit_number} for participant "
+                        f"{participant.participant_number} has been completed "
+                        f"in {study.protocol_number}."
+                    ),
+                    notification_type=Notification.Type.VISIT_COMPLETED,
+                    exclude_user=request.user,
+                )
 
             messages.success(
                 request,
