@@ -310,6 +310,16 @@ def assign_user_to_study(request, user_id):
         )
 
         if created:
+            create_notification(
+                user=user,
+                title="New Study Assignment",
+                message=(
+                    f"You have been assigned to "
+                    f"{study.protocol_number} - {study.title}."
+                ),
+                notification_type=Notification.Type.STUDY_ASSIGNED,
+            )
+
             messages.success(
                 request,
                 (
@@ -331,6 +341,16 @@ def assign_user_to_study(request, user_id):
                 assignment.assigned_by = request.user
                 assignment.save()
 
+                create_notification(
+                    user=user,
+                    title="Study Reassigned",
+                    message=(
+                        f"You have been reassigned to "
+                        f"{study.protocol_number} - {study.title}."
+                    ),
+                    notification_type=Notification.Type.STUDY_ASSIGNED,
+                )
+                
                 messages.success(
                     request,
                     (
