@@ -5,6 +5,8 @@ from studies.models import Study
 from .forms import ParticipantForm, VisitForm
 from .models import Participant, Visit
 from django.contrib.auth import authenticate
+from notifications.models import Notification
+from notifications.utils import notify_study_users
 
 
 def can_access_study(user, study):
@@ -49,6 +51,16 @@ def add_participant(request, study_id):
             participant.study = study
             participant.save()
 
+            notify_study_users(
+                study=study,
+                title="Participant Added",
+                message=(
+                    f"Participant {participant.participant_number} "
+                    f"has been added to {study.protocol_number}."
+                ),
+                notification_type=Notification.Type.PARTICIPANT_ADDED,
+                exclude_user=request.user,
+            )
             messages.success(
                 request,
                 (
