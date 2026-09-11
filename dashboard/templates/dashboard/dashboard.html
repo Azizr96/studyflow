@@ -23,31 +23,60 @@
     </p>
 {% endif %}
 
-<section>
-    <h2>System Overview</h2>
+<section class="mb-4">
+    <h2 class="h4 mb-3">System Overview</h2>
 
-    <div>
-        <p>
-            <strong>Total Studies:</strong>
-            {{ total_studies }}
-        </p>
+    <div class="row g-3">
 
-        <p>
-            <strong>Total Participants:</strong>
-            {{ total_participants }}
-        </p>
+        <div class="col-12 col-sm-6 col-xl-3">
+            <div class="card dashboard-card h-100">
+                <div class="card-body">
+                    <p class="text-muted mb-1">Studies</p>
+                    <p class="dashboard-stat mb-0">
+                        {{ total_studies }}
+                    </p>
+                </div>
+            </div>
+        </div>
 
-        <p>
-            <strong>Total Visits:</strong>
-            {{ total_visits }}
-        </p>
+        <div class="col-12 col-sm-6 col-xl-3">
+            <div class="card dashboard-card h-100">
+                <div class="card-body">
+                    <p class="text-muted mb-1">Participants</p>
+                    <p class="dashboard-stat mb-0">
+                        {{ total_participants }}
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-xl-3">
+            <div class="card dashboard-card h-100">
+                <div class="card-body">
+                    <p class="text-muted mb-1">Visits</p>
+                    <p class="dashboard-stat mb-0">
+                        {{ total_visits }}
+                    </p>
+                </div>
+            </div>
+        </div>
 
         {% if dashboard_type == "elevated" %}
-            <p>
-                <strong>Pending User Approvals:</strong>
-                {{ pending_users }}
-            </p>
+            <div class="col-12 col-sm-6 col-xl-3">
+                <div class="card dashboard-card h-100">
+                    <div class="card-body">
+                        <p class="text-muted mb-1">
+                            Pending Approvals
+                        </p>
+
+                        <p class="dashboard-stat mb-0">
+                            {{ pending_users }}
+                        </p>
+                    </div>
+                </div>
+            </div>
         {% endif %}
+
     </div>
 </section>
 
