@@ -1,0 +1,55 @@
+body {
+    margin: 0;
+    min-height: 100vh;
+    background-color: #f5f7fa;
+}
+
+.desktop-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px;
+    height: 100vh;
+    background-color: #17324d;
+    color: white;
+    padding: 24px 18px;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-brand {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 32px;
+}
+
+.desktop-sidebar nav {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.desktop-sidebar nav a {
+    color: white;
+    text-decoration: none;
+    padding: 10px 12px;
+    border-radius: 6px;
+}
+
+.desktop-sidebar nav a:hover,
+.desktop-sidebar nav a:focus {
+    background-color: rgba(255, 255, 255, 0.12);
+}
+
+.sidebar-user {
+    margin-top: auto;
+}
+
+.sidebar-user p {
+    margin-bottom: 8px;
+}
+
+
+.sidebar-user a {
+    color: white;
+}
