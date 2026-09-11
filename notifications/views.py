@@ -26,3 +26,20 @@ def notification_list(request):
     )
 
 
+@login_required
+def mark_notification_read(request, notification_id):
+    notification = get_object_or_404(
+        Notification,
+        id=notification_id,
+        user=request.user,
+    )
+
+    if request.method == "POST":
+        notification.is_read = True
+        notification.save()
+
+        messages.success(
+            "Notification marked as read.",
+        )
+
+    return redirect("notifications:notification_list")
