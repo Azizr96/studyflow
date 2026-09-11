@@ -25,5 +25,9 @@ urlpatterns = [
         "participants/",
         include("participants.urls"),
     ),
+    path(
+        "notifications/",
+        include("notifications.urls"),
+    ),
     path('', include('dashboard.urls')),
 ]
