@@ -4,6 +4,7 @@ body {
     background-color: #f5f7fa;
 }
 
+/* Desktop side bar styling */
 .desktop-sidebar {
     position: fixed;
     top: 0;
@@ -52,5 +53,27 @@ body {
 
 .sidebar-user a {
     color: white;
+}
+
+/* logout button styling */
+.logout-button {
+    background: none;
+    border: none;
+    color: white;
+    padding: 10px 12px;
+    text-align: left;
+    width: 100%;
+    cursor: pointer;
+    border-radius: 6px;
+}
+
+.logout-button:hover,
+.logout-button:focus {
+    background-color: rgba(255, 255, 255, 0.12);
+}
+
+.page-content {
+    margin-left: 250px;
+    padding: 32px;
 }
 
