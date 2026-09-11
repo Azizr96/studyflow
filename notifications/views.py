@@ -43,3 +43,20 @@ def mark_notification_read(request, notification_id):
         )
 
     return redirect("notifications:notification_list")
+
+@login_required
+def mark_all_notifications_read(request):
+    if request.method == "POST":
+        Notification.objects.filter(
+            user=request.user,
+            is_read=False,
+        ).update(
+            is_read=True
+        )
+
+        messages.success(
+            request,
+            "All notifications have been marked as read."
+        )
+
+    return redirect("notifications:notification_list")
