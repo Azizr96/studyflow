@@ -419,3 +419,279 @@ The MoSCoW method was used to control the project scope within the available dev
 **Could Have** stories represent enhancements that were deliberately kept outside the core MVP until the essential functionality had been implemented and tested.
 
 This prioritisation helped prevent scope creep and ensured that development remained focused on delivering a secure and functional application before optional enhancements were considered.
+
+## Features
+
+### Existing Features
+
+StudyFlow contains a range of features designed around the management of fictional clinical trial studies. Functionality is controlled through authentication, role permissions and study assignments so that users only have access to appropriate areas of the application.
+
+The screenshots below demonstrate the main features of the final deployed application.
+
+### Registration
+
+New users can create a StudyFlow account using the registration form. Django's authentication system handles password security and password validation.
+
+Newly registered accounts do not receive immediate access to the application. Their account must first be approved and assigned an appropriate role by an authorised elevated user.
+
+![StudyFlow registration](documentation/features/registration.png)
+
+### Login and Logout
+
+Approved users can securely log in using their StudyFlow credentials.
+
+The login process checks that the account has been approved and has an assigned role before allowing access to the application.
+
+Authenticated users can securely log out using the Logout control available within the navigation.
+
+![StudyFlow login](documentation/features/login.png)
+
+### Role-Based Access Control
+
+StudyFlow provides different levels of functionality depending on the user's assigned role.
+
+Elevated roles include:
+
+- Administrator
+- Investigator
+- Project Lead
+
+Standard roles include:
+
+- Study Coordinator
+- Trial Assistant
+
+Elevated users can access application-wide information and authorised management functionality.
+
+Standard users are restricted to studies to which they have been actively assigned. This restriction is enforced by the Django back end rather than relying only on hiding navigation links.
+
+![StudyFlow role-based navigation admin](documentation/features/role-based-nav-admin.png)
+![StudyFlow role-based navigation user](documentation/features/role-based-nav-user.png)
+
+### Elevated User Dashboard
+
+Administrators, Investigators and Project Leads receive a global dashboard containing an overview of application activity.
+
+The dashboard provides summary information and quick access to recent study activity, allowing elevated users to monitor information across accessible studies.
+
+![StudyFlow elevated dashboard](documentation/features/dashboard-elevated.png)
+
+### Standard User Dashboard
+
+Study Coordinators and Trial Assistants receive a role-aware dashboard.
+
+Instead of displaying application-wide information, the dashboard is filtered using Django ORM queries so that standard users only receive information associated with their active study assignments.
+
+![StudyFlow standard dashboard](documentation/features/dashboard-user.png)
+
+### User Management
+
+Authorised elevated users have access to a dedicated Users area.
+
+The user-management workflow allows authorised users to:
+
+- search registered users
+- review pending registrations
+- approve or reject accounts
+- view individual user details
+- assign appropriate roles
+- assign users to studies
+- remove study assignments
+- delete user accounts
+
+Elevated role assignment is additionally restricted so that only a Django superuser can assign elevated roles.
+
+![StudyFlow user management](documentation/features/user-management.png)
+
+### User Study Assignment
+
+Study access for standard users is controlled through explicit study assignments.
+
+An authorised elevated user can open a user's details and assign that user to one or more studies. Assignments can later be made inactive without deleting their historical database record.
+
+This relationship allows StudyFlow to determine which studies, participants, visits and dashboard information a standard user is permitted to access.
+
+![StudyFlow study assignment](documentation/features/study-assignment.png)
+
+### Study Management
+
+Authorised elevated users can create clinical studies using a validated Django form.
+
+Study information includes:
+
+- protocol number
+- title
+- description
+- phase
+- status
+- start date
+- end date
+
+The protocol number must be unique, and date validation prevents an end date from being entered before the study start date.
+
+Core study information is treated as read-only after creation within the current MVP.
+
+![StudyFlow study management](documentation/features/studies.png)
+
+### Study Detail
+
+Each accessible study has a dedicated detail page bringing related information together.
+
+The page provides access to study information, fictional participants and uploaded study documents.
+
+Standard users can only access a study detail page when they have an active assignment to that study, while authorised elevated users can access studies according to their role permissions.
+
+![StudyFlow study detail](documentation/features/study-detail.png)
+
+### Study Document Uploads
+
+Authorised users can upload documents against an accessible study.
+
+Study documents contain a category and version and are associated with both the relevant study and the user who uploaded the document.
+
+The upload form validates file extensions and limits uploads to a maximum size of 10 MB. Supported document types include PDF, Word and Excel documents.
+
+Uploaded study documents are stored using Cloudinary.
+
+![StudyFlow document upload](documentation/features/document-upload.png)
+
+### Participant Management
+
+Authorised study users can create, view, update and delete fictional participant records within studies they are permitted to access.
+
+Participant information includes:
+
+- participant number
+- first name
+- last name
+- date of birth
+- sex
+- participant status
+- enrolment date
+
+Participant numbers must be unique and are normalised to uppercase. Form validation also prevents an enrolment date from being entered before the participant's date of birth.
+
+All participant information used within StudyFlow is fictional and must not be interpreted as real clinical or patient data.
+
+![StudyFlow participant management](documentation/features/participants.png)
+
+### Visit Management
+
+Visits can be created and managed for fictional participants within accessible studies.
+
+Visit information includes:
+
+- visit number
+- visit type
+- scheduled date
+- actual date
+- status
+- notes
+
+A participant cannot have duplicate visit numbers. Additional validation checks the relationship between scheduled and actual dates and requires an actual visit date when a visit is marked as completed.
+
+![StudyFlow visit management](documentation/features/visits.png)
+
+### Destructive Action Confirmation
+
+Destructive actions use dedicated confirmation pages rather than immediately deleting database records.
+
+For sensitive deletion actions, such as deleting a user or fictional participant, the user is shown a warning and must provide additional confirmation before the operation is completed.
+
+This reduces the likelihood of accidental data deletion and demonstrates defensive design within the application.
+
+![StudyFlow delete confirmation](documentation/features/delete-participant-confirm.png)
+![StudyFlow delete confirmation](documentation/features/delete-visit-confirm.png)
+
+### Notifications
+
+StudyFlow contains a database-backed notification system.
+
+Notifications are created for relevant application events such as:
+
+- a user being assigned to a study
+- a fictional participant being added
+- a study document being uploaded
+- a visit being completed
+- an upcoming visit being created
+
+Study-related notifications are sent to active, approved users assigned to the relevant study. The user responsible for performing the study activity can be excluded where appropriate to avoid unnecessary self-notifications.
+
+Users can view their own notifications and manage their read status.
+
+![StudyFlow notifications](documentation/features/notifications.png)
+
+### Responsive Navigation
+
+StudyFlow was designed to work across desktop, tablet and mobile screen sizes.
+
+Desktop users receive a persistent left-hand navigation sidebar.
+
+On smaller screens, the sidebar is removed and replaced by a hamburger button which opens an offcanvas navigation menu. This provides access to the same appropriate functionality without permanently occupying limited mobile screen space.
+
+The navigation is also role-aware, meaning the Users area is only displayed to users authorised to manage users.
+
+![StudyFlow responsive navigation](documentation/features/responsive-nav.png)
+
+### Accessible Interface
+
+Accessibility was considered throughout the interface design.
+
+StudyFlow uses semantic HTML, labelled form controls, structured heading levels, table headings, visible validation messages, descriptive status text and visible keyboard focus indicators.
+
+Accessibility is verified separately through manual and automated testing, with the results documented in [TESTING.md](TESTING.md).
+
+### Future Features
+
+The following enhancements were identified during project planning but were kept outside the core MVP so that development could remain focused on delivering and testing the essential StudyFlow functionality.
+
+#### Study Status Filtering
+
+Users could filter the study list by statuses such as Planning, Recruiting, Active, Completed, Suspended or Terminated.
+
+This corresponds to **US27**.
+
+#### Participant Search
+
+A participant search feature could allow authorised users to locate fictional participants more quickly using participant numbers or other appropriate searchable information.
+
+Search results would continue to respect existing study-access permissions.
+
+This corresponds to **US28**.
+
+#### Visit Filtering
+
+Visit filtering could allow users to narrow the visit list by criteria such as visit status, study or scheduled date.
+
+This corresponds to **US29**.
+
+#### Enhanced Dashboard Visualisations
+
+Charts could be introduced to provide additional visual summaries of study, participant and visit activity.
+
+Any visualisations would remain role-aware so that standard users could not use dashboard charts to infer information about studies to which they are not assigned.
+
+This corresponds to **US30**.
+
+#### Activity Audit Log
+
+A future version of StudyFlow could provide an activity history showing important actions such as user approvals, assignments and record changes.
+
+The current project does not claim to provide a regulatory-grade clinical audit trail.
+
+This corresponds to **US31**.
+
+#### Visit Progress Indicator
+
+Participant pages could display a visual progress indicator showing progression through scheduled study visits.
+
+This could make it easier for study staff to identify completed, upcoming and outstanding visits.
+
+This corresponds to **US32**.
+
+#### Additional Future Development
+
+Beyond the current user stories, a production-focused version of StudyFlow could potentially include more advanced document management, reporting and administrative functionality.
+
+However, integration with real clinical systems, storage of real patient data and regulatory compliance would require substantially greater security, privacy, validation and governance requirements than are within the scope of this educational project.
+
