@@ -35,3 +35,256 @@ The main goals of StudyFlow are to:
 - restrict standard users to studies to which they have been assigned;
 - provide a responsive and accessible interface across desktop, tablet and mobile devices;
 - demonstrate relational database design, CRUD functionality, validation, defensive programming and Django ORM usage.
+
+## UX
+
+### The 5 Planes of UX
+
+The UX design for StudyFlow was planned using the Five Planes of User Experience: Strategy, Scope, Structure, Skeleton and Surface. This approach helped ensure that the application's features were based on genuine user requirements rather than designing individual pages without considering the overall workflow.
+
+### 1. Strategy
+
+#### Purpose
+
+StudyFlow was designed to provide clinical trial site staff with a centralised interface for managing fictional clinical studies, participants, visits, study documents and user assignments.
+
+The system aims to reduce the need to navigate between disconnected information by organising the main site-management activities around individual clinical studies.
+
+The application also places particular importance on access control. Users should only be able to access information and functionality appropriate to their role and assigned studies.
+
+#### Primary User Needs
+
+StudyFlow has two primary groups of authenticated users.
+
+**Elevated users - Administrators, Investigators and Project Leads**
+
+These users need to:
+
+- approve or reject new account registrations;
+- manage registered users;
+- assign appropriate roles to users;
+- assign users to clinical studies;
+- create new studies;
+- view all studies and associated information;
+- monitor activity across the application;
+- access an overview of study, participant and visit activity through the dashboard.
+
+**Standard users - Study Coordinators and Trial Assistants**
+
+These users need to:
+
+- access only the studies assigned to them;
+- view study information without modifying the core study details;
+- upload documents to assigned studies;
+- create, view, update and delete fictional participants within assigned studies;
+- create, view, update and delete participant visits;
+- receive notifications relating to activity within their assigned studies;
+- use a dashboard containing information relevant to their assigned studies.
+
+#### Project Goals
+
+The main project goals are to:
+
+- provide a simple and structured clinical trial site management interface;
+- demonstrate secure authentication and authorisation;
+- implement role-based and study-based access control;
+- provide useful CRUD functionality using Django and PostgreSQL;
+- provide clear feedback following important user actions;
+- maintain relationships between users, studies, participants, visits and documents;
+- provide relevant notifications about study activity;
+- create an interface that remains usable across desktop, tablet and mobile devices;
+- follow accessibility and defensive programming principles.
+
+### 2. Scope
+
+The scope of StudyFlow was deliberately controlled so that the project could deliver a complete and functional MVP within the available development period.
+
+#### Core Features
+
+The MVP includes:
+
+- user registration;
+- administrator approval of new accounts;
+- login and logout;
+- role-based permissions;
+- user management;
+- study assignment;
+- study creation;
+- role-aware study lists;
+- study detail pages;
+- study document uploads;
+- participant CRUD functionality;
+- visit CRUD functionality;
+- role-aware dashboards;
+- database-backed notifications;
+- responsive navigation and page layouts;
+- server-side form validation;
+- destructive-action confirmation.
+
+#### Content Requirements
+
+StudyFlow stores and displays information relating to:
+
+- users and their assigned roles;
+- study assignments;
+- study protocol information;
+- fictional participant information;
+- scheduled and completed visits;
+- uploaded study documents;
+- user notifications.
+
+The participant data used within StudyFlow is entirely fictional and exists only to demonstrate application functionality.
+
+#### Features Outside the MVP
+
+To prevent scope creep, several features were intentionally excluded from the initial version of StudyFlow.
+
+These include:
+
+
+- storage of real patient or clinical trial data.
+- real-time WebSocket notifications.
+- advanced analytics.
+- regulatory-grade audit logging.
+
+Some additional features were retained as Should Have or Could Have user stories and may be implemented if development time permits.
+
+### 3. Structure
+
+#### Information Architecture
+
+StudyFlow follows a study-centred information structure.
+
+The main relationship is:
+
+**Study → Participants → Visits**
+
+A study can contain multiple fictional participants, and each participant can have multiple visits.
+
+Studies can also contain uploaded study documents and can have multiple users assigned to them.
+
+Users receive notifications relevant to activity within studies to which they have been assigned.
+
+#### Navigation
+
+Authenticated elevated users can access:
+
+- Dashboard
+- Studies
+- Participants
+- Visits
+- Notifications
+- Users
+- Logout
+
+Authenticated standard users can access:
+
+- Dashboard
+- Studies
+- Participants
+- Visits
+- Notifications
+- Logout
+
+The **Users** area is deliberately excluded from the standard-user navigation because user administration is restricted to authorised elevated roles.
+
+On desktop devices, navigation is provided through a persistent left sidebar.
+
+On tablet and mobile devices, the sidebar is replaced with a hamburger menu which opens the navigation when required. A persistent mobile bottom navigation was intentionally avoided to maintain a clean interface and prevent unnecessary duplication.
+
+#### User Flow
+
+A typical elevated-user flow is:
+
+1. Log in to StudyFlow.
+2. Review the global dashboard.
+3. Review pending registrations.
+4. Approve a user and assign an appropriate role.
+5. Create or view a study.
+6. Assign users to the study.
+7. Monitor study, participant, visit and document activity.
+
+A typical standard-user flow is:
+
+1. Register for a StudyFlow account.
+2. Wait for account approval and role assignment.
+3. Log in after approval.
+4. View the assigned-study dashboard.
+5. Open an assigned study.
+6. Manage fictional participants within that study.
+7. Schedule and update participant visits.
+8. Upload relevant study documents.
+9. Review notifications relating to assigned-study activity.
+
+### 4. Skeleton
+
+The StudyFlow interface was designed around a consistent application shell so that users do not need to relearn the interface when moving between different areas.
+
+The main page structures include:
+
+- authentication forms for registration and login.
+- dashboard statistic cards and activity tables.
+- study list and study detail pages.
+- participant and visit tables.
+- create and update forms.
+- confirmation pages for destructive actions.
+- user-management screens.
+- notification lists.
+- responsive desktop, tablet and mobile navigation.
+
+Tables are used where users need to compare structured information, while cards and forms are used where information needs greater visual separation.
+
+Initial wireframes were produced for desktop, tablet and mobile layouts before the main interface was implemented. These are documented in the [Wireframes](#wireframes) section.
+
+### 5. Surface
+
+**Visual Design Elements**
+
+- [**Colour Scheme**](#colour-scheme) (see below)
+- [**Typography**](#typography) (see below)
+
+The visual design of StudyFlow was created to provide a clean, professional and structured interface appropriate for a clinical trial site management application. The design deliberately avoids excessive decoration so that studies, participants, visits, documents and notifications remain the main focus of each page.
+
+### Colour Scheme
+
+StudyFlow uses a restrained blue, white and neutral-grey colour palette. Dark navy is used for the primary navigation to provide a strong visual structure, while lighter backgrounds are used throughout the main content area to keep data-heavy pages clear and readable.
+
+Blue is used for primary actions and interactive emphasis, while red is reserved for destructive actions and validation feedback. Status information also includes visible text so that meaning is not communicated through colour alone.
+
+The main colours used throughout StudyFlow are:
+
+- `#17324D` — primary dark navy used for the desktop sidebar and mobile navigation header. This provides strong separation between the main navigation and application content.
+- `#F5F7FA` — light grey page background used behind the main application content to reduce the visual harshness of a completely white interface.
+- `#FFFFFF` — white used for cards, forms, tables and other primary content surfaces.
+- `#0D6EFD` — Bootstrap primary blue used for primary actions, links, focus indicators and interface emphasis.
+- `#198754` — Bootstrap success green used for positive and completed states where appropriate.
+- `#DC3545` — Bootstrap danger red used for destructive actions such as deletion.
+- `#B02A37` — dark red used for form validation error messages to clearly distinguish invalid input.
+- `#6C757D` — muted grey used for secondary information and form help text.
+- `#E1E6EB` — light border colour used around cards, tables and notification containers.
+- `#EEF2F6` — light interaction background used when navigation items are hovered or focused.
+
+The palette was selected to maintain a professional clinical appearance while providing clear visual distinction between navigation, content, actions, status information and warnings.
+
+Colour is not relied upon as the only method of communicating important information. For example, notification states and application statuses also contain descriptive text.
+
+
+![StudyFlow colour palette](documentation/color-pallete.png)
+
+### Typography
+
+StudyFlow uses the default Bootstrap system font stack rather than importing external Google Fonts.
+
+Using a system font stack allows the application to use fonts already available on the user's operating system. This provides a familiar appearance, reduces the need for additional font downloads and helps maintain consistent readability across different devices and browsers.
+
+Typography follows a clear hierarchy:
+
+- headings are used to identify pages and major content sections;
+- bold and semi-bold text is used for navigation, form labels and important information;
+- standard body text is used for descriptions and application content;
+- smaller muted text is used for secondary information and form guidance;
+- larger bold values are used on dashboard statistic cards to make important figures easy to identify.
+
+Bootstrap's responsive typography and spacing are combined with custom CSS to maintain consistency across desktop, tablet and mobile layouts.
+
+No external icon library is currently required for the core StudyFlow interface. Bootstrap's built-in components and standard text labels are used for navigation and actions.
