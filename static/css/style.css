@@ -216,6 +216,22 @@ form p {
     margin-bottom: 8px;
 }
 
+/* registering page styling */
+.helptext {
+    display: block;
+    margin-top: 6px;
+    font-size: 0.875rem;
+    color: #6c757d;
+}
+
+form ul {
+    padding-left: 20px;
+    font-size: 0.875rem;
+}
+
+form p {
+    margin-bottom: 16px;
+}
 
 @media (max-width: 576px) {
     .assigned-study-item {
