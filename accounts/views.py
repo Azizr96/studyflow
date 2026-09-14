@@ -38,7 +38,7 @@ def register(request):
                 ),
             )
 
-            return redirect("accounts:register")
+            return redirect("accounts:login")
 
     else:
         form = RegistrationForm()
