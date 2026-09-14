@@ -729,3 +729,223 @@ Several additional tools are used during development and testing:
 - **CI Python Linter** - used to check Python code against PEP8 conventions.
 - **Django Test Framework** - used for automated application and permission testing.
 - **Django System Check Framework** - used throughout development with `python manage.py check` to identify configuration and application issues.
+
+## Database Design
+
+### Data Model
+
+StudyFlow uses a relational PostgreSQL database managed through Django's Object Relational Mapper (ORM).
+
+The database was designed around the relationship between clinical studies, authorised users, fictional participants and participant visits.
+
+At the centre of the application is the `Study` model. Users can be assigned to studies through the `UserStudy` model, studies contain fictional participants, participants contain visits, and documents can be uploaded against individual studies.
+
+Django's built-in `User` model is used for authentication rather than creating a custom password-management system. Additional StudyFlow-specific user information, such as role and approval status, is stored separately in the `UserProfile` model.
+
+The main model relationships are:
+
+**User → UserProfile → Role**
+
+**User → UserStudy ← Study**
+
+**Study → Participant → Visit**
+
+**Study → StudyDocument**
+
+**User → Notification**
+
+### Database Models
+
+#### User
+
+StudyFlow uses Django's built-in `User` model for authentication.
+
+This provides Django's established functionality for:
+
+- usernames
+- first and last names
+- email addresses
+- password hashing
+- authentication
+- active-user status
+- superuser status
+
+Application-specific information is deliberately separated into the `UserProfile` model rather than attempting to store or manage passwords manually.
+
+#### Role
+
+The `Role` model defines the application-level role assigned to a user.
+
+Important fields include:
+
+- `name`
+- `description`
+- `is_admin`
+- `can_approve_users`
+- `can_manage_studies`
+- `can_manage_users`
+
+The permission fields allow StudyFlow to make authorisation decisions through database-backed role information rather than relying only on role names within templates.
+
+The current roles are:
+
+- Administrator
+- Investigator
+- Project Lead
+- Study Coordinator
+- Trial Assistant
+
+#### UserProfile
+
+Each Django user has one `UserProfile`.
+
+The profile stores:
+
+- the associated Django user
+- the user's StudyFlow role
+- account approval status
+
+This allows the application to check whether a newly registered user has been approved before granting access.
+
+A Django signal automatically creates a `UserProfile` when a new user is created.
+
+#### UserStudy
+
+`UserStudy` represents the assignment of a user to a study.
+
+Important fields include:
+
+- `user`
+- `study`
+- `assigned_by`
+- `assigned_at`
+- `is_active`
+
+An explicit assignment model was chosen instead of a basic many-to-many field because StudyFlow needs additional information about the relationship itself.
+
+For example, the application needs to know who made an assignment, when it was created and whether the assignment is currently active.
+
+A database constraint prevents the same user and study combination from being created more than once.
+
+Study assignments are also important to application security. Standard users are filtered against active `UserStudy` records before being allowed to access study-related information.
+
+#### Study
+
+The `Study` model stores the main information for each fictional clinical study.
+
+Important fields include:
+
+- `protocol_number`
+- `title`
+- `description`
+- `phase`
+- `status`
+- `start_date`
+- `end_date`
+- `created_at`
+- `updated_at`
+
+The protocol number is unique to prevent duplicate study identifiers.
+
+Study phase and status use predefined Django `TextChoices` to keep database values consistent.
+
+#### StudyDocument
+
+`StudyDocument` represents a document uploaded against a study.
+
+Important fields include:
+
+- `study`
+- `uploaded_by`
+- `file`
+- `category`
+- `version`
+- `uploaded_at`
+
+Each document belongs to a study and records the user responsible for uploading it.
+
+The file itself is managed through a Django `FileField` using Cloudinary-backed storage.
+
+Document categories use predefined choices to provide consistent classification.
+
+#### Participant
+
+The `Participant` model stores fictional participant information associated with a study.
+
+Important fields include:
+
+- `study`
+- `participant_number`
+- `first_name`
+- `last_name`
+- `date_of_birth`
+- `sex`
+- `status`
+- `enrolled_date`
+- `created_at`
+- `updated_at`
+
+Each participant belongs to one study, while a study can contain multiple participants.
+
+Participant numbers are unique to prevent duplicate participant identifiers within the current application design.
+
+All participant information contained within StudyFlow is fictional and is used only to demonstrate application functionality.
+
+#### Visit
+
+The `Visit` model represents a study visit belonging to a fictional participant.
+
+Important fields include:
+
+- `participant`
+- `visit_number`
+- `visit_type`
+- `scheduled_date`
+- `actual_date`
+- `status`
+- `notes`
+- `created_at`
+- `updated_at`
+
+A participant can have multiple visits.
+
+A database-level unique constraint prevents the same visit number from being assigned more than once to the same participant.
+
+The model therefore allows Visit 1 to exist for many different participants while preventing a single participant from accidentally having two Visit 1 records.
+
+#### Notification
+
+The `Notification` model stores notifications for individual users.
+
+Important fields include:
+
+- `user`
+- `title`
+- `message`
+- `type`
+- `is_read`
+- `created_at`
+
+Each notification belongs to one user.
+
+Notifications are database-backed rather than real-time WebSocket notifications. This was considered sufficient for the StudyFlow MVP while still demonstrating relational data, application events and personalised user information.
+
+### Entity Relationship Diagram
+
+The following Entity Relationship Diagram illustrates the primary database models and relationships used within StudyFlow.
+
+![StudyFlow Entity Relationship Diagram](documentation/erd.png)
+
+The primary relationships are:
+
+- one `User` has one `UserProfile`;
+- one `Role` can be assigned to multiple user profiles;
+- one `User` can have multiple `UserStudy` assignments;
+- one `Study` can have multiple `UserStudy` assignments;
+- one `Study` can contain multiple `Participant` records;
+- one `Participant` can contain multiple `Visit` records;
+- one `Study` can contain multiple `StudyDocument` records;
+- one `User` can upload multiple `StudyDocument` records;
+- one `User` can receive multiple `Notification` records.
+
+The `UserStudy` model acts as the relationship between users and studies and allows StudyFlow to store assignment-specific information while also supporting study-level access control.
