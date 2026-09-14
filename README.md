@@ -730,6 +730,12 @@ Several additional tools are used during development and testing:
 - **Django Test Framework** - used for automated application and permission testing.
 - **Django System Check Framework** - used throughout development with `python manage.py check` to identify configuration and application issues.
 
+## AI Tool Usage 
+
+Chat GPT was used as supporting development assistant during the project. It was primarily used to speed up project structuring, troubleshooting, review potential code improvements, and refine spelling/grammar and documentation.
+
+All planning, design decisions, implementation, testing, and final code changes were completed and validated by the project author. AI suggestions were reviewed critically and applied only where they aligned with project requirements and best practices.
+
 ## Database Design
 
 ### Data Model
@@ -949,3 +955,141 @@ The primary relationships are:
 - one `User` can receive multiple `Notification` records.
 
 The `UserStudy` model acts as the relationship between users and studies and allows StudyFlow to store assignment-specific information while also supporting study-level access control.
+
+## Agile Development Process
+
+StudyFlow was developed using an Agile approach supported by GitHub Issues and a GitHub Project board.
+
+The project was broken down into user stories so that each feature could be planned, developed, tested and reviewed independently. This helped keep the project manageable during the limited development period and made it easier to track progress against the assessment requirements.
+
+### GitHub Project Board
+
+A GitHub Project named **StudyFlow Development** was used to manage the workflow.
+
+The board uses the following columns:
+
+**Todo → In Progress → Testing → Done → Future Additions**
+
+Each user story begins in the Todo.
+
+When a story is selected for development, it is moved to Todo and then into In Progress while the functionality is being implemented.
+
+Once the implementation is complete, the story moves into Testing so that the acceptance criteria, browser behaviour and permissions can be checked.
+
+Only after the feature has been successfully tested is the story moved to Done.
+
+![StudyFlow GitHub Project board](documentation/agile/)
+
+### GitHub Issues
+
+Individual user stories were created as GitHub Issues.
+
+Each issue represents a specific piece of functionality and includes acceptance criteria so that there is a clear definition of when the feature can be considered complete.
+
+This provides traceability between:
+
+- project planning
+- implementation
+- testing
+- Git commits
+- final application features
+
+![StudyFlow GitHub user stories](documentation/agile/)
+
+### MoSCoW Prioritisation
+
+The MoSCoW method was used to prioritise the StudyFlow user stories.
+
+#### Must Have
+
+Must Have stories contain the functionality required for the StudyFlow MVP to operate successfully.
+
+These include:
+
+- registration and authentication
+- account approval
+- role-based permissions
+- user management
+- study management
+- study assignments
+- participant CRUD functionality
+- visit CRUD functionality
+- study documents
+- dashboards
+- notifications
+- responsive design
+- accessibility
+
+These stories were prioritised before optional functionality.
+
+#### Should Have
+
+Should Have stories provide useful improvements but are not required for the core application to function.
+
+These include:
+
+- study filtering
+- participant searching
+- visit filtering
+
+These were intentionally placed behind the core MVP requirements.
+
+#### Could Have
+
+Could Have stories represent enhancements that could be implemented if sufficient development time remained.
+
+These include:
+
+- enhanced dashboard charts
+- an activity audit log
+- a visit progress indicator
+
+By separating these features from the core MVP, the project could remain focused on delivering a secure and complete application rather than expanding the scope before the essential functionality had been tested.
+
+### Agile Iteration
+
+Development was iterative rather than following the initial wireframes and feature ideas without change.
+
+Several features evolved during implementation and testing.
+
+Examples include:
+
+- moving study assignment management into an individual user detail page
+- using inactive study assignments rather than deleting assignment records
+- creating stronger confirmation workflows for destructive actions
+- restricting elevated role assignment to Django superusers
+- filtering dashboard information according to active study assignments
+- refining responsive navigation for smaller screen sizes
+- improving accessibility after reviewing semantic structure and keyboard interaction
+
+These changes were made because testing and implementation revealed more appropriate solutions than the initial design.
+
+This iterative process allowed StudyFlow to develop while still remaining aligned with the original project goals and user requirements.
+
+## Testing
+
+StudyFlow has been tested throughout development using a combination of manual testing, automated Django tests, code validation, responsive testing and defensive programming tests.
+
+Testing focuses particularly on authentication, role-based permissions, study-level access control, CRUD functionality, form validation and ensuring that users cannot access or modify information outside their authorised studies.
+
+Testing includes:
+
+- HTML validation using the W3C Markup Validation Service
+- CSS validation using the W3C CSS Validation Service
+- Python validation against PEP8 conventions
+- Django automated unit testing
+- manual user acceptance testing
+- authentication and permission testing
+- defensive programming and restricted URL testing
+- form and server-side validation testing
+- responsive testing across desktop, tablet and mobile screen sizes
+- browser compatibility testing
+- keyboard accessibility testing
+- Lighthouse auditing
+- user story testing
+- deployment and production testing
+- bug tracking and regression testing
+
+Detailed testing procedures, results, screenshots, automated test evidence and documented bugs can be found in the separate testing document:
+
+### [View StudyFlow Testing Documentation](TESTING.md)
