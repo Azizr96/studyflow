@@ -233,6 +233,34 @@ form p {
     margin-bottom: 16px;
 }
 
+/* brand/logo style */
+
+a.sidebar-brand,
+a.mobile-brand {
+    color: inherit;
+    text-decoration: none;
+}
+
+a.sidebar-brand:hover,
+a.sidebar-brand:focus,
+a.sidebar-brand:visited,
+a.mobile-brand:hover,
+a.mobile-brand:focus,
+a.mobile-brand:visited {
+    color: inherit;
+    text-decoration: none;
+}
+
+/* Accessibility: visible keyboard focus */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    outline: 3px solid #0d6efd;
+    outline-offset: 3px;
+}
+
 @media (max-width: 576px) {
     .assigned-study-item {
         flex-direction: column;
