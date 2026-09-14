@@ -114,6 +114,29 @@ def approve_user(request, user_id):
 
         role = get_object_or_404(Role, id=role_id)
 
+        # Only a Django superuser can assign elevated roles.
+        if (
+            not request.user.is_superuser
+            and (
+                role.is_admin
+                or role.can_manage_users
+                or role.can_manage_studies
+                or role.can_approve_users
+            )
+        ):
+            messages.error(
+                request,
+                "You do not have permission to assign this role.",
+            )
+            return redirect("accounts:pending_users")
+
+        if user.profile.is_approved:
+            messages.info(
+                request,
+                f"{user.username} has already been approved.",
+            )
+            return redirect("accounts:pending_users")
+
         user.profile.role = role
         user.profile.is_approved = True
         user.profile.save()
@@ -124,7 +147,6 @@ def approve_user(request, user_id):
         )
 
     return redirect("accounts:pending_users")
-
 
 @login_required
 def reject_user(request, user_id):
