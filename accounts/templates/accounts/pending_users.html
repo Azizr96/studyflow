@@ -6,75 +6,216 @@
 
 {% block content %}
 
-    <h1>Pending User Registrations</h1>
+<div class="container-fluid">
+
+    <!-- Page heading -->
+    <div
+        class="
+            d-flex
+            flex-column
+            flex-md-row
+            justify-content-between
+            align-items-md-center
+            gap-2
+            mb-4
+        "
+    >
+
+        <div>
+
+            <h1 class="h3 mb-1">
+                Pending User Registrations
+            </h1>
+
+            <p class="text-muted mb-0">
+                Review registration requests and assign an appropriate role
+                before approving access.
+            </p>
+
+        </div>
+
+
+        <a
+            href="{% url 'accounts:user_list' %}"
+            class="btn btn-outline-secondary"
+        >
+            Back to Users
+        </a>
+
+    </div>
+
 
     {% if users %}
 
-        {% for user in users %}
-            <section>
+        <div class="row g-4">
 
-                <h2>
-                    {{ user.first_name }}
-                    {{ user.last_name }}
-                </h2>
+            {% for user in users %}
 
-                <p>
-                    Username: {{ user.username }}
-                </p>
+                <div class="col-12 col-lg-6">
 
-                <p>
-                    Email: {{ user.email }}
-                </p>
+                    <article class="card h-100">
 
-                <form
-                    method="POST"
-                    action="{% url 'accounts:approve_user' user.id %}"
-                >
-                    {% csrf_token %}
+                        <div class="card-body">
 
-                    <label for="role-{{ user.id }}">
-                        Assign role
-                    </label>
+                            <!-- User details -->
+                            <div class="mb-4">
 
-                    <select
-                        id="role-{{ user.id }}"
-                        name="role"
-                        required
-                    >
-                        <option value="">
-                            Select a role
-                        </option>
+                                <h2 class="h5 mb-3">
 
-                        {% for role in roles %}
-                            <option value="{{ role.id }}">
-                                {{ role.name }}
-                            </option>
-                        {% endfor %}
-                    </select>
+                                    {{ user.first_name }}
+                                    {{ user.last_name }}
 
-                    <button type="submit">
-                        Approve
-                    </button>
-                </form>
+                                </h2>
 
-                <form
-                    method="POST"
-                    action="{% url 'accounts:reject_user' user.id %}"
-                >
-                    {% csrf_token %}
 
-                    <button type="submit">
-                        Reject
-                    </button>
-                </form>
+                                <dl class="row mb-0">
 
-            </section>
-        {% endfor %}
+                                    <dt class="col-sm-4">
+                                        Username
+                                    </dt>
+
+                                    <dd class="col-sm-8">
+                                        {{ user.username }}
+                                    </dd>
+
+
+                                    <dt class="col-sm-4">
+                                        Email
+                                    </dt>
+
+                                    <dd class="col-sm-8">
+                                        {{ user.email }}
+                                    </dd>
+
+
+                                    <dt class="col-sm-4">
+                                        Status
+                                    </dt>
+
+                                    <dd class="col-sm-8">
+
+                                        <span class="badge text-bg-warning">
+                                            Pending Approval
+                                        </span>
+
+                                    </dd>
+
+                                </dl>
+
+                            </div>
+
+
+                            <hr>
+
+
+                            <!-- Approve user -->
+                            <form
+                                method="POST"
+                                action="{% url 'accounts:approve_user' user.id %}"
+                                class="mb-3"
+                            >
+
+                                {% csrf_token %}
+
+
+                                <label
+                                    for="role-{{ user.id }}"
+                                    class="form-label"
+                                >
+                                    Assign Role
+                                </label>
+
+
+                                <select
+                                    id="role-{{ user.id }}"
+                                    name="role"
+                                    required
+                                    class="mb-3"
+                                >
+
+                                    <option value="">
+                                        Select a role
+                                    </option>
+
+
+                                    {% for role in roles %}
+
+                                        <option value="{{ role.id }}">
+                                            {{ role.name }}
+                                        </option>
+
+                                    {% endfor %}
+
+                                </select>
+
+
+                                <button
+                                    type="submit"
+                                    class="btn btn-success"
+                                >
+                                    Approve User
+                                </button>
+
+                            </form>
+
+
+                            <!-- Reject user -->
+                            <form
+                                method="POST"
+                                action="{% url 'accounts:reject_user' user.id %}"
+                            >
+
+                                {% csrf_token %}
+
+
+                                <button
+                                    type="submit"
+                                    class="btn btn-outline-danger"
+                                >
+                                    Reject Registration
+                                </button>
+
+                            </form>
+
+                        </div>
+
+                    </article>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
 
     {% else %}
 
-        <p>No pending registrations.</p>
+        <div class="card">
+
+            <div class="card-body text-center py-5">
+
+                <h2 class="h5 mb-2">
+                    No Pending Registrations
+                </h2>
+
+                <p class="text-muted mb-3">
+                    There are currently no user registrations waiting
+                    for approval.
+                </p>
+
+
+                <a
+                    href="{% url 'accounts:user_list' %}"
+                    class="btn btn-outline-primary"
+                >
+                    Back to Users
+                </a>
+
+            </div>
+
+        </div>
 
     {% endif %}
+
+</div>
 
 {% endblock %}
