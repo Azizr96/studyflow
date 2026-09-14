@@ -344,3 +344,78 @@ Examples include:
 - notification previews were incorporated into the dashboard while the full notification history remains available from the Notifications page.
 
 These changes demonstrate the iterative development process between the original UX planning and the final implementation.
+
+## User Stories
+
+User stories were used throughout the development of StudyFlow to define functionality from the perspective of the application's users.
+
+The stories were managed using GitHub Issues and the StudyFlow GitHub Project board. Each story was prioritised using the MoSCoW method and moved through the development workflow:
+
+**Todo → In Progress → Testing → Done → Future Additions**
+
+Detailed acceptance criteria are maintained within the corresponding GitHub Issues, while the tables below provide an overview of the requirements used to guide development.
+
+### Must Have User Stories
+
+The following user stories formed the core MVP requirements for StudyFlow.
+
+| ID | User Story |
+| --- | --- |
+| US01 | As a new user, I want to register for an account so that I can request access to StudyFlow. |
+| US02 | As an authorised elevated user, I want to approve or reject registrations so that only authorised users can access the system. |
+| US03 | As an approved user, I want to log in securely so that I can access functionality appropriate to my role. |
+| US04 | As an authenticated user, I want to log out securely so that my account is protected when I finish using the application. |
+| US05 | As a user, I want the interface to reflect my authentication state so that I can clearly understand whether I am logged in and which functionality is available to me. |
+| US06 | As an authorised elevated user, I want to search for and view registered users so that I can manage application access efficiently. |
+| US07 | As an authorised elevated user, I want to assign users to studies so that staff can access the studies they are responsible for. |
+| US08 | As an authorised elevated user, I want to delete a user when necessary so that obsolete accounts can be removed securely. |
+| US09 | As an authorised elevated user, I want to create a study so that new clinical trial studies can be managed within StudyFlow. |
+| US10 | As an elevated user, I want to view all studies so that I can oversee study activity across the application. |
+| US11 | As a standard user, I want to view only studies assigned to me so that I only access information relevant to my responsibilities. |
+| US12 | As an authorised study user, I want to upload study documents so that relevant documentation can be stored against the appropriate study. |
+| US13 | As an authorised study user, I want to add a fictional participant to a study so that participant activity can be managed. |
+| US14 | As an authorised user, I want to view fictional participants associated with accessible studies so that I can review participant information. |
+| US15 | As an authorised study user, I want to update a fictional participant so that their study information can be kept current. |
+| US16 | As an authorised study user, I want to delete a fictional participant so that incorrectly created or unnecessary records can be removed. |
+| US17 | As an authorised study user, I want to add a visit for a participant so that study visits can be scheduled and tracked. |
+| US18 | As an authorised user, I want to view visits associated with accessible studies so that I can monitor visit activity. |
+| US19 | As an authorised study user, I want to update a visit so that its status, dates and notes can be maintained. |
+| US20 | As an authorised study user, I want to delete a visit so that incorrect or unnecessary visit records can be removed. |
+| US21 | As an elevated user, I want a global dashboard so that I can see an overview of activity across the application. |
+| US22 | As a standard user, I want a personalised dashboard so that I only see information associated with my assigned studies. |
+| US23 | As a user, I want to receive relevant notifications so that I am aware of important activity relating to my studies. |
+| US24 | As a user, I want to view and mark notifications as read so that I can manage information that requires my attention. |
+| US25 | As a user, I want the application to work across desktop, tablet and mobile devices so that I can use StudyFlow on different screen sizes. |
+| US26 | As a user, I want an accessible interface so that StudyFlow is understandable and operable for users with different accessibility requirements. |
+
+### Should Have User Stories
+
+These stories provide useful improvements to the core application but are not required for the initial MVP to function.
+
+| ID | User Story |
+| --- | --- |
+| US27 | As a user, I want to filter studies by status so that I can find relevant studies more efficiently. |
+| US28 | As a user, I want to search participants so that I can locate a fictional participant without manually reviewing the entire list. |
+| US29 | As a user, I want to filter visits so that I can more easily review relevant visit activity. |
+
+### Could Have User Stories
+
+These stories were identified as potential enhancements if sufficient development time remained after completion and testing of the core application.
+
+| ID | User Story |
+| --- | --- |
+| US30 | As an authorised user, I want enhanced dashboard charts so that application activity can be visualised more easily. |
+| US31 | As an elevated user, I want an activity audit log so that important actions within StudyFlow can be reviewed. |
+| US32 | As a study user, I want a visit progress indicator so that I can quickly understand a participant's progress through their study visits. |
+
+### MoSCoW Prioritisation
+
+The MoSCoW method was used to control the project scope within the available development period.
+
+**Must Have** stories represent the core StudyFlow MVP. These include authentication, permissions, studies, participants, visits, dashboards, notifications, responsiveness and accessibility.
+
+**Should Have** stories improve usability but do not prevent the core application from operating if they are not completed.
+
+**Could Have** stories represent enhancements that were deliberately kept outside the core MVP until the essential functionality had been implemented and tested.
+
+This prioritisation helped prevent scope creep and ensured that development remained focused on delivering a secure and functional application before optional enhancements were considered.
