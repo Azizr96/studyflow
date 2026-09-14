@@ -471,3 +471,53 @@ def delete_user(request, user_id):
         "accounts/delete_user.html",
         context,
     )
+
+@login_required
+def user_detail(request, user_id):
+    if not can_manage_users(request.user):
+        messages.error(
+            request,
+            "You do not have permission to manage users."
+        )
+        return redirect("dashboard:home")
+
+    account = get_object_or_404(
+        User.objects.select_related(
+            "profile",
+            "profile__role",
+        ),
+        id=user_id,
+    )
+
+    active_study_assignments = (
+        UserStudy.objects
+        .filter(
+            user=account,
+            is_active=True,
+        )
+        .select_related("study")
+        .order_by("study__protocol_number")
+    )
+
+    assigned_study_ids = active_study_assignments.values_list(
+        "study_id",
+        flat=True,
+    )
+
+    available_studies = (
+        Study.objects
+        .exclude(id__in=assigned_study_ids)
+        .order_by("protocol_number")
+    )
+
+    context = {
+        "account": account,
+        "active_study_assignments": active_study_assignments,
+        "available_studies": available_studies,
+    }
+
+    return render(
+        request,
+        "accounts/user_detail.html",
+        context,
+    )

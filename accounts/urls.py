@@ -35,4 +35,9 @@ urlpatterns = [
         views.delete_user,
         name="delete_user",
     ),
+    path(
+        "users/<int:user_id>/",
+        views.user_detail,
+        name="user_detail",
+    ),
 ]
