@@ -1093,3 +1093,242 @@ Testing includes:
 Detailed testing procedures, results, screenshots, automated test evidence and documented bugs can be found in the separate testing document:
 
 ### [View StudyFlow Testing Documentation](TESTING.md)
+
+## Deployment
+
+StudyFlow is deployed using Heroku with a PostgreSQL database. Cloudinary is used for uploaded study documents, while WhiteNoise is used to serve the application's static files.
+
+The live application can be accessed here:
+
+[StudyFlow Live Site](https://studyflow-83c0183db652.herokuapp.com)
+
+### Heroku Deployment
+
+The following process was used to deploy StudyFlow to Heroku:
+
+1. Create a new application on Heroku.
+2. Connect the Heroku application to the StudyFlow GitHub repository.
+3. Configure the required environment variables using Heroku Config Vars.
+4. Ensure all project dependencies are included in `requirements.txt`.
+5. Configure Gunicorn as the production WSGI server.
+6. Configure WhiteNoise for static file handling.
+7. Configure Cloudinary for uploaded study documents.
+8. Configure the PostgreSQL database through the `DATABASE_URL` environment variable.
+9. Add the required `Procfile` to the root of the project.
+10. Deploy the `main` branch through Heroku.
+11. Apply database migrations during deployment.
+12. Verify the deployed application and static assets.
+
+### Environment Variables
+
+Sensitive configuration values are stored in environment variables and are never committed to the GitHub repository.
+
+The production environment requires the following values:
+
+| Variable | Purpose |
+| --- | --- |
+| `SECRET_KEY` | Django secret key used for cryptographic signing and security functionality. |
+| `DATABASE_URL` | Connection URL for the PostgreSQL database. |
+| `CLOUDINARY_URL` | Cloudinary credentials used for uploaded study-document storage. |
+
+Production runs with Django debug mode disabled.
+
+Actual credentials and database connection details are not included in this documentation for security reasons.
+
+### Procfile
+
+Heroku uses the root-level `Procfile` to determine how the StudyFlow application should run.
+
+The StudyFlow `Procfile` contains:
+
+```text
+release: python manage.py migrate --noinput
+web: gunicorn studyflow.wsgi
+```
+
+The `release` command applies outstanding Django migrations during deployment.
+
+The `web` command starts the application using Gunicorn and the StudyFlow WSGI configuration.
+
+### PostgreSQL
+
+StudyFlow uses PostgreSQL as its relational database.
+
+The database connection is supplied through the `DATABASE_URL` environment variable and parsed within Django using `dj-database-url`.
+
+Database schema changes are managed using Django migrations.
+
+Typical migration commands used during development include:
+
+```bash
+python manage.py makemigrations
+python manage.py migrate
+```
+
+Database credentials are never stored directly within the public source code.
+
+### Cloudinary
+
+Cloudinary is used to store files uploaded through the StudyFlow study-document functionality.
+
+The application uses a Django `FileField` with Cloudinary-backed storage.
+
+The Cloudinary connection is provided through the `CLOUDINARY_URL` environment variable.
+
+Cloudinary is used for uploaded media/documents and is not responsible for serving the application's CSS or other static assets.
+
+### Static Files and WhiteNoise
+
+StudyFlow uses Django's static-file system together with WhiteNoise.
+
+Source static files are stored within the project's `static/` directory.
+
+During deployment, Django's `collectstatic` process collects these files into the deployment `staticfiles/` directory.
+
+The generated `staticfiles/` directory is excluded from Git because it is deployment output rather than source code.
+
+WhiteNoise then allows the deployed Django application to serve the collected static assets.
+
+### Security Configuration
+
+Sensitive values are loaded from environment variables rather than being hard-coded into the project.
+
+The local `env.py` file is excluded from version control through `.gitignore`.
+
+Production deployment also uses debug mode disabled so that Django does not expose detailed debugging information to application users.
+
+The project `.gitignore` excludes files and directories that should not be committed, including local environment configuration, virtual environments, generated static files and local development artefacts.
+
+## Local Development
+
+### Requirements
+
+To run StudyFlow locally, a developer requires:
+
+- Python;
+- Git;
+- access to a PostgreSQL database;
+- Cloudinary credentials for document uploads.
+
+### Clone the Repository
+
+Clone the GitHub repository:
+
+```bash
+git clone https://github.com/Azizr96/studyflow.git
+```
+
+Move into the project directory:
+
+```bash
+cd studyflow
+```
+
+### Create a Virtual Environment
+
+Create a Python virtual environment:
+
+```bash
+python -m venv .venv
+```
+
+Activate it on Git Bash or a Unix-style terminal:
+
+```bash
+source .venv/Scripts/activate
+```
+
+On Windows Command Prompt:
+
+```text
+.venv\Scripts\activate
+```
+
+### Install Dependencies
+
+Install the required packages:
+
+```bash
+pip install -r requirements.txt
+```
+
+### Configure Environment Variables
+
+Create an `env.py` file in the root project directory.
+
+The file should contain the required local environment configuration using your own credentials.
+
+For example:
+
+```python
+import os
+
+os.environ.setdefault(
+    "SECRET_KEY",
+    "your-secret-key",
+)
+
+os.environ.setdefault(
+    "DATABASE_URL",
+    "your-postgresql-database-url",
+)
+
+os.environ.setdefault(
+    "CLOUDINARY_URL",
+    "your-cloudinary-url",
+)
+
+os.environ.setdefault(
+    "DJANGO_DEBUG",
+    "True",
+)
+```
+
+The example values above are placeholders only.
+
+Never commit the completed `env.py` file or expose real credentials in GitHub, screenshots or documentation.
+
+### Apply Database Migrations
+
+Run:
+
+```bash
+python manage.py migrate
+```
+
+### Check the Application
+
+Django's system checks can be run using:
+
+```bash
+python manage.py check
+```
+
+### Run the Development Server
+
+Start StudyFlow locally using:
+
+```bash
+python manage.py runserver
+```
+
+The application can then be accessed through the local development server.
+
+## Forking the Repository
+
+To create an independent copy of StudyFlow through GitHub:
+
+1. Open the StudyFlow GitHub repository.
+2. Select **Fork**.
+3. Choose the GitHub account or organisation where the fork should be created.
+4. GitHub will create a separate copy of the repository which can then be cloned and modified independently.
+
+## Local vs Deployed Environment
+
+StudyFlow uses environment variables so that sensitive configuration can differ between local development and production without changing the source code.
+
+Locally, development credentials can be loaded through the ignored `env.py` file.
+
+On Heroku, equivalent sensitive values are stored securely as Config Vars.
+
+This separation prevents production credentials from being committed to GitHub and allows the same application codebase to run in different environments.
