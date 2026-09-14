@@ -6,66 +6,153 @@
 
 {% block content %}
 
-    <h1>StudyFlow Login</h1>
+<div class="container-fluid">
 
-    {% if user.is_authenticated %}
+    <div
+        class="
+            min-vh-100
+            d-flex
+            align-items-center
+            justify-content-center
+            py-4
+        "
+    >
 
-        <p>
-            You are signed in as
-            <strong>{{ user.username }}</strong>.
-        </p>
+        <div class="col-12 col-sm-10 col-md-7 col-lg-5 col-xl-4">
 
-        {% if user.profile.role %}
-            <p>
-                Role: {{ user.profile.role.name }}
-            </p>
-        {% endif %}
+            <div class="card shadow-sm">
 
-    {% else %}
+                <div class="card-body p-4 p-md-5">
 
-        <form method="POST">
-            {% csrf_token %}
+                    <div class="text-center mb-4">
 
-            <div>
-                <label for="username">
-                    Username
-                </label>
+                        <h1 class="h3 mb-2">
+                            StudyFlow Login
+                        </h1>
 
-                <input
-                    type="text"
-                    id="username"
-                    name="username"
-                    required
-                    autocomplete="username"
-                >
+                        <p class="text-muted mb-0">
+                            Sign in to access your clinical trial workspace.
+                        </p>
+
+                    </div>
+
+
+                    {% if user.is_authenticated %}
+
+                        <div
+                            class="alert alert-info"
+                            role="status"
+                        >
+                            You are signed in as
+                            <strong>{{ user.username }}</strong>.
+                        </div>
+
+
+                        {% if user.profile.role %}
+
+                            <p class="text-center mb-3">
+                                Role:
+                                <span class="badge text-bg-secondary">
+                                    {{ user.profile.role.name }}
+                                </span>
+                            </p>
+
+                        {% endif %}
+
+
+                        <div class="d-grid">
+
+                            <a
+                                href="{% url 'dashboard:home' %}"
+                                class="btn btn-primary"
+                            >
+                                Go to Dashboard
+                            </a>
+
+                        </div>
+
+
+                    {% else %}
+
+                        <form method="POST">
+
+                            {% csrf_token %}
+
+
+                            <div class="mb-3">
+
+                                <label
+                                    for="username"
+                                    class="form-label"
+                                >
+                                    Username
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="username"
+                                    name="username"
+                                    required
+                                    autocomplete="username"
+                                    class="form-control"
+                                >
+
+                            </div>
+
+
+                            <div class="mb-4">
+
+                                <label
+                                    for="password"
+                                    class="form-label"
+                                >
+                                    Password
+                                </label>
+
+                                <input
+                                    type="password"
+                                    id="password"
+                                    name="password"
+                                    required
+                                    autocomplete="current-password"
+                                    class="form-control"
+                                >
+
+                            </div>
+
+
+                            <div class="d-grid mb-3">
+
+                                <button
+                                    type="submit"
+                                    class="btn btn-primary"
+                                >
+                                    Login
+                                </button>
+
+                            </div>
+
+                        </form>
+
+
+                        <p class="text-center mb-0">
+                            Don't have an account?
+
+                            <a href="{% url 'accounts:register' %}">
+                                Register
+                            </a>
+                        </p>
+
+                    {% endif %}
+
+                </div>
+
             </div>
 
-            <div>
-                <label for="password">
-                    Password
-                </label>
+        </div>
 
-                <input
-                    type="password"
-                    id="password"
-                    name="password"
-                    required
-                    autocomplete="current-password"
-                >
-            </div>
+    </div>
 
-            <button type="submit">
-                Login
-            </button>
-        </form>
-
-        <p>
-            Don't have an account?
-            <a href="{% url 'accounts:register' %}">
-                Register
-            </a>
-        </p>
-
-    {% endif %}
+</div>
 
 {% endblock %}
