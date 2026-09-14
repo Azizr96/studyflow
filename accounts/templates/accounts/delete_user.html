@@ -6,77 +6,163 @@
 
 {% block content %}
 
-    <h1>Delete User</h1>
+<div class="container-fluid">
 
-    <section>
-        <h2>Warning</h2>
+    <div class="mb-4">
 
-        <p>
-            You are about to permanently delete:
+        <h1 class="h3 mb-1">
+            Delete User
+        </h1>
+
+        <p class="text-muted mb-0">
+            Permanently remove a user account from StudyFlow.
         </p>
 
-        <p>
-            <strong>
-                {{ user_to_delete.first_name }}
-                {{ user_to_delete.last_name }}
-            </strong>
-        </p>
+    </div>
 
-        <p>
-            Username: {{ user_to_delete.username }}
-        </p>
 
-        <p>
-            Email: {{ user_to_delete.email }}
-        </p>
+    <div class="row">
 
-        <p>
-            This action cannot be undone.
-        </p>
-    </section>
+        <div class="col-12 col-lg-8 col-xl-6">
 
-    <section>
-        <h2>Final Confirmation</h2>
+            <section class="card border-danger mb-4">
 
-        <form method="POST">
-            {% csrf_token %}
+                <div class="card-body">
 
-            <div>
-                <label for="confirm-delete">
-                    Type DELETE to confirm
-                </label>
+                    <div
+                        class="alert alert-danger"
+                        role="alert"
+                    >
+                        <strong>Warning:</strong>
+                        this action permanently deletes the user account and
+                        cannot be undone.
+                    </div>
 
-                <input
-                    type="text"
-                    id="confirm-delete"
-                    name="confirm_delete"
-                    required
-                    autocomplete="off"
-                >
-            </div>
 
-            <div>
-                <label for="password">
-                    Enter your password
-                </label>
+                    <h2 class="h5 mb-3">
+                        User Details
+                    </h2>
 
-                <input
-                    type="password"
-                    id="password"
-                    name="password"
-                    required
-                    autocomplete="current-password"
-                >
-            </div>
 
-            <button type="submit">
-                Permanently Delete User
-            </button>
+                    <dl class="row mb-0">
 
-            <a href="{% url 'accounts:user_list' %}">
-                Cancel
-            </a>
-        </form>
-    </section>
+                        <dt class="col-sm-4">
+                            Name
+                        </dt>
+
+                        <dd class="col-sm-8">
+                            {{ user_to_delete.first_name }}
+                            {{ user_to_delete.last_name }}
+                        </dd>
+
+
+                        <dt class="col-sm-4">
+                            Username
+                        </dt>
+
+                        <dd class="col-sm-8">
+                            {{ user_to_delete.username }}
+                        </dd>
+
+
+                        <dt class="col-sm-4">
+                            Email
+                        </dt>
+
+                        <dd class="col-sm-8">
+                            {{ user_to_delete.email }}
+                        </dd>
+
+                    </dl>
+
+                </div>
+
+            </section>
+
+
+            <section class="card">
+
+                <div class="card-body">
+
+                    <h2 class="h5 mb-3">
+                        Final Confirmation
+                    </h2>
+
+
+                    <form method="POST">
+
+                        {% csrf_token %}
+
+
+                        <div class="mb-3">
+
+                            <label
+                                for="confirm-delete"
+                                class="form-label"
+                            >
+                                Type DELETE to confirm
+                            </label>
+
+                            <input
+                                type="text"
+                                id="confirm-delete"
+                                name="confirm_delete"
+                                required
+                                autocomplete="off"
+                            >
+
+                        </div>
+
+
+                        <div class="mb-4">
+
+                            <label
+                                for="password"
+                                class="form-label"
+                            >
+                                Enter your password
+                            </label>
+
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                required
+                                autocomplete="current-password"
+                            >
+
+                        </div>
+
+
+                        <div class="d-flex flex-wrap gap-2">
+
+                            <button
+                                type="submit"
+                                class="btn btn-danger"
+                            >
+                                Permanently Delete User
+                            </button>
+
+
+                            <a
+                                href="{% url 'accounts:user_detail' user_to_delete.id %}"
+                                class="btn btn-outline-secondary"
+                            >
+                                Cancel
+                            </a>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </section>
+
+        </div>
+
+    </div>
+
+</div>
 
 {% endblock %}
