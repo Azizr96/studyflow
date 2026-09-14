@@ -288,3 +288,59 @@ Typography follows a clear hierarchy:
 Bootstrap's responsive typography and spacing are combined with custom CSS to maintain consistency across desktop, tablet and mobile layouts.
 
 No external icon library is currently required for the core StudyFlow interface. Bootstrap's built-in components and standard text labels are used for navigation and actions.
+
+## Wireframes
+
+Wireframes were created during the planning stage of StudyFlow to establish the application's information hierarchy, navigation and responsive layout before detailed visual styling was applied.
+
+The wireframes were intentionally kept low-fidelity. They use simple boxes, placeholder content and minimal visual styling because their purpose was to plan the position and relationship of interface elements rather than represent the final appearance of the application.
+
+Separate layouts were considered for elevated users and standard users because the information and functionality available to each role differs.
+
+Elevated users such as Administrators, Investigators and Project Leads require access to user management and application-wide information, while Study Coordinators and Trial Assistants require an interface focused on their assigned studies.
+
+Responsive layouts were also considered from the beginning. Desktop designs use a persistent sidebar, while tablet and mobile designs replace this with a hamburger navigation menu to preserve screen space.
+
+### Dashboard Wireframes
+
+The dashboard wireframes demonstrate how the interface adapts according to both user role and screen size.
+
+| Desktop | Tablet | Mobile |
+| --- | --- | --- |
+| Elevated user dashboard | Elevated user dashboard | Elevated user dashboard |
+| Standard user dashboard | Standard user dashboard | Standard user dashboard |
+
+![StudyFlow dashboard wireframes](documentation/wireframes/users-dashboard.png)
+
+### Application Wireframes
+
+Additional wireframes were created for the main workflows within StudyFlow, including:
+
+- login and registration.
+- user management.
+- studies list.
+- study details.
+- participant management.
+- visit forms.
+- study documents.
+- notifications.
+- confirmation screens.
+
+These wireframes were used as a structural guide during development. Some elements evolved during implementation as usability, permissions and technical requirements became clearer.
+
+![StudyFlow application wireframes](documentation/wireframes/All-page-wireframes.png)
+
+### Changes From the Initial Wireframes
+
+The wireframes were treated as a guide rather than a fixed specification. During development, several interface decisions were refined after testing the application in the browser.
+
+Examples include:
+
+- responsive navigation was implemented using a persistent sidebar on desktop and a hamburger/offcanvas menu on tablet and mobile.
+- user study assignments were moved into a dedicated user detail workflow rather than overloading the main users list.
+- destructive actions were given dedicated confirmation pages to reduce accidental deletion.
+- study core information remained read-only after creation, while authorised users can manage associated participants, visits and documents.
+- dashboard information became role-aware so standard users only see information associated with their assigned studies.
+- notification previews were incorporated into the dashboard while the full notification history remains available from the Notifications page.
+
+These changes demonstrate the iterative development process between the original UX planning and the final implementation.
