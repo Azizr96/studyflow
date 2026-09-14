@@ -30,7 +30,7 @@
 
         <div class="col-12 col-sm-6 col-xl-3">
             <div class="card dashboard-card h-100">
-                <div class="card-body">
+                <div class="card-body" aria-label="{{ total_studies }} studies">
                     <p class="text-muted mb-1">Studies</p>
                     <p class="dashboard-stat mb-0">
                         {{ total_studies }}
@@ -41,7 +41,7 @@
 
         <div class="col-12 col-sm-6 col-xl-3">
             <div class="card dashboard-card h-100">
-                <div class="card-body">
+                <div class="card-body" aria-label="{{ total_participants }} participants">
                     <p class="text-muted mb-1">Participants</p>
                     <p class="dashboard-stat mb-0">
                         {{ total_participants }}
@@ -52,7 +52,7 @@
 
         <div class="col-12 col-sm-6 col-xl-3">
             <div class="card dashboard-card h-100">
-                <div class="card-body">
+                <div class="card-body" aria-label="{{ total_visits }} visits">
                     <p class="text-muted mb-1">Visits</p>
                     <p class="dashboard-stat mb-0">
                         {{ total_visits }}
@@ -64,7 +64,7 @@
         {% if dashboard_type == "elevated" %}
             <div class="col-12 col-sm-6 col-xl-3">
                 <div class="card dashboard-card h-100">
-                    <div class="card-body">
+                    <div class="card-body" aria-label="{{ pending_users }} pending user approvals">
                         <p class="text-muted mb-1">
                             Pending Approvals
                         </p>
@@ -86,6 +86,9 @@
     {% if upcoming_visits %}
         <div class="table-responsive">
             <table class="table table-striped table-hover align-middle">
+                <caption class="visually-hidden">
+                    Upcoming participant visits
+                </caption>
                 <thead>
                     <tr>
                         <th scope="col">Participant</th>
@@ -139,6 +142,9 @@
     {% if recent_documents %}
         <div class="table-responsive">
             <table class="table table-striped table-hover align-middle">
+                <caption class="visually-hidden">
+                    Recently uploaded study documents
+                </caption>
                 <thead>
                     <tr>
                         <th scope="col">Study</th>
@@ -230,7 +236,9 @@
                     </p>
 
                     <small class="text-muted">
-                        {{ notification.created_at }}
+                        <time datetime="{{ notification.created_at|date:'c' }}">
+                            {{ notification.created_at }}
+                        </time>
                     </small>
 
                 </article>
