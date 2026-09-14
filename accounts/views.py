@@ -296,7 +296,10 @@ def assign_user_to_study(request, user_id):
                 request,
                 "Please select a study.",
             )
-            return redirect("accounts:user_list")
+            return redirect(
+                "accounts:user_detail",
+                user_id=user.id,
+            )
 
         study = get_object_or_404(Study, id=study_id)
 
@@ -327,6 +330,7 @@ def assign_user_to_study(request, user_id):
                     f"to {study.protocol_number}."
                 ),
             )
+
         else:
             if assignment.is_active:
                 messages.info(
@@ -336,6 +340,7 @@ def assign_user_to_study(request, user_id):
                         f"to {study.protocol_number}."
                     ),
                 )
+
             else:
                 assignment.is_active = True
                 assignment.assigned_by = request.user
@@ -350,7 +355,7 @@ def assign_user_to_study(request, user_id):
                     ),
                     notification_type=Notification.Type.STUDY_ASSIGNED,
                 )
-                
+
                 messages.success(
                     request,
                     (
@@ -359,7 +364,10 @@ def assign_user_to_study(request, user_id):
                     ),
                 )
 
-    return redirect("accounts:user_list")
+    return redirect(
+        "accounts:user_detail",
+        user_id=user.id,
+    )
 
 
 @login_required
@@ -381,6 +389,8 @@ def unassign_user_from_study(request, assignment_id):
     )
 
     if request.method == "POST":
+        user_id = assignment.user.id
+
         assignment.is_active = False
         assignment.assigned_by = request.user
         assignment.save()
@@ -393,7 +403,10 @@ def unassign_user_from_study(request, assignment_id):
             ),
         )
 
-        return redirect("accounts:user_list")
+        return redirect(
+            "accounts:user_detail",
+            user_id=user_id,
+        )
 
     return render(
         request,

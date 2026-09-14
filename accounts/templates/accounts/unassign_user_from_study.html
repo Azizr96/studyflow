@@ -34,7 +34,10 @@
             Confirm Unassign
         </button>
 
-        <a href="{% url 'accounts:user_list' %}">
+        <a
+            href="{% url 'accounts:user_detail' assignment.user.id %}"
+            class="btn btn-outline-secondary"
+        >
             Cancel
         </a>
     </form>
