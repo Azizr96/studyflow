@@ -245,10 +245,13 @@
                             <tr>
 
                                 <td>
-                                    <strong>
+                                    <a
+                                        href="{% url 'accounts:user_detail' account.id %}"
+                                        class="text-decoration-none fw-semibold"
+                                    >
                                         {{ account.first_name }}
                                         {{ account.last_name }}
-                                    </strong>
+                                    </a>
                                 </td>
 
 
@@ -303,7 +306,11 @@
                                 <td>
                                     <span class="badge text-bg-primary">
                                         {{ account.active_study_assignments|length }}
-                                        assigned
+                                        {% if account.active_study_assignments|length == 1 %}
+                                            study
+                                        {% else %}
+                                            studies
+                                        {% endif %}
                                     </span>
                                 </td>
 
