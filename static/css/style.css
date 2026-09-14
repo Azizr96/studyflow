@@ -216,6 +216,14 @@ form p {
     margin-bottom: 8px;
 }
 
+
+@media (max-width: 576px) {
+    .assigned-study-item {
+        flex-direction: column;
+        max-width: 100%;
+    }
+}
+
 /*responsive media queries */
 
 @media (max-width: 991px) {

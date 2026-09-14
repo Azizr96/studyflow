@@ -6,240 +6,375 @@
 
 {% block content %}
 
-    <h1>User Management</h1>
+<div class="container-fluid">
 
-    <section>
-        <h2>Search Users</h2>
+    <div class="mb-4">
 
-        <form method="GET">
-            <label for="user-search">
-                Search by name, username, email or role
-            </label>
+        <h1 class="h3 mb-1">
+            User Management
+        </h1>
 
-            <input
-                type="search"
-                id="user-search"
-                name="q"
-                value="{{ search_query }}"
-                placeholder="Search users"
-            >
+        <p class="text-muted mb-0">
+            Search users, review registrations, manage study assignments,
+            and maintain user access.
+        </p>
 
-            <button type="submit">
-                Search
-            </button>
+    </div>
 
-            {% if search_query %}
-                <a href="{% url 'accounts:user_list' %}">
-                    Clear search
-                </a>
-            {% endif %}
-        </form>
+
+    <section class="mb-4">
+
+        <h2 class="h4 mb-3">
+            Search Users
+        </h2>
+
+        <div class="card">
+
+            <div class="card-body">
+
+                <form method="GET">
+
+                    <label
+                        for="user-search"
+                        class="form-label"
+                    >
+                        Search by name, username, email or role
+                    </label>
+
+
+                    <div
+                        class="
+                            d-flex
+                            flex-column
+                            flex-md-row
+                            gap-2
+                        "
+                    >
+
+                        <input
+                            type="search"
+                            id="user-search"
+                            name="q"
+                            value="{{ search_query }}"
+                            placeholder="Search users"
+                        >
+
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary"
+                        >
+                            Search
+                        </button>
+
+
+                        {% if search_query %}
+
+                            <a
+                                href="{% url 'accounts:user_list' %}"
+                                class="btn btn-outline-secondary"
+                            >
+                                Clear Search
+                            </a>
+
+                        {% endif %}
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
     </section>
 
-    <section>
-        <h2>
-            Pending Registrations
-            ({{ pending_users|length }})
-        </h2>
+
+    <section class="mb-4">
+
+        <div
+            class="
+                d-flex
+                flex-column
+                flex-md-row
+                justify-content-between
+                align-items-md-center
+                gap-2
+                mb-3
+            "
+        >
+
+            <h2 class="h4 mb-0">
+                Pending Registrations
+            </h2>
+
+            <span class="badge text-bg-warning">
+                {{ pending_users|length }} pending
+            </span>
+
+        </div>
+
 
         {% if pending_users %}
 
-            {% for pending_user in pending_users %}
-                <article>
+            <div class="row g-3">
 
-                    <h3>
-                        {{ pending_user.first_name }}
-                        {{ pending_user.last_name }}
-                    </h3>
+                {% for pending_user in pending_users %}
 
-                    <p>
-                        Username:
-                        {{ pending_user.username }}
-                    </p>
+                    <div class="col-12 col-md-6 col-xl-4">
 
-                    <p>
-                        Email:
-                        {{ pending_user.email }}
-                    </p>
+                        <article class="card h-100">
 
-                    <a href="{% url 'accounts:pending_users' %}">
-                        Review registration
-                    </a>
+                            <div class="card-body">
 
-                </article>
-            {% endfor %}
+                                <h3 class="h5">
+                                    {{ pending_user.first_name }}
+                                    {{ pending_user.last_name }}
+                                </h3>
+
+
+                                <p class="mb-1">
+                                    <strong>Username:</strong>
+                                    {{ pending_user.username }}
+                                </p>
+
+
+                                <p class="mb-3">
+                                    <strong>Email:</strong>
+                                    {{ pending_user.email }}
+                                </p>
+
+
+                                <a
+                                    href="{% url 'accounts:pending_users' %}"
+                                    class="btn btn-sm btn-outline-primary"
+                                >
+                                    Review Registration
+                                </a>
+
+                            </div>
+
+                        </article>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
 
         {% else %}
 
-            <p>No pending registrations.</p>
+            <div class="card">
+
+                <div class="card-body">
+
+                    <p class="mb-0">
+                        No pending registrations.
+                    </p>
+
+                </div>
+
+            </div>
 
         {% endif %}
+
     </section>
 
-    <section>
-        <h2>Current Users</h2>
+
+    <section class="mb-4">
+
+        <h2 class="h4 mb-3">
+            Current Users
+        </h2>
+
 
         {% if users %}
 
-            <table>
-                <thead>
-                    <tr>
-                        <th scope="col">
-                            Name
-                        </th>
+            <div class="table-responsive">
 
-                        <th scope="col">
-                            Username
-                        </th>
+                <table
+                    class="
+                        table
+                        table-striped
+                        table-hover
+                        align-middle
+                    "
+                >
 
-                        <th scope="col">
-                            Email
-                        </th>
+                    <thead>
 
-                        <th scope="col">
-                            Role
-                        </th>
-
-                        <th scope="col">
-                            Status
-                        </th>
-
-                        <th scope="col">
-                            Study Assignment
-                        </th>
-
-                        <th scope="col">
-                            Actions
-                        </th>
-                    </tr>
-                </thead>
-
-                <tbody>
-
-                    {% for account in users %}
                         <tr>
-                            <td>
-                                {{ account.first_name }}
-                                {{ account.last_name }}
-                            </td>
 
-                            <td>
-                                {{ account.username }}
-                            </td>
+                            <th scope="col">
+                                Name
+                            </th>
 
-                            <td>
-                                {{ account.email }}
-                            </td>
+                            <th scope="col">
+                                Username
+                            </th>
 
-                            <td>
-                                {% if account.profile.role %}
-                                    {{ account.profile.role.name }}
-                                {% else %}
-                                    No role assigned
-                                {% endif %}
-                            </td>
+                            <th scope="col">
+                                Email
+                            </th>
 
-                            <td>
-                                {% if account.profile.is_approved %}
-                                    Approved
-                                {% else %}
-                                    Pending
-                                {% endif %}
-                            </td>
-                            <!-- this section assigns user to study -->
-                            <!-- this section manages user study assignments -->
-                            <td>
+                            <th scope="col">
+                                Role
+                            </th>
 
-                                <div>
-                                    <strong>Assigned studies</strong>
+                            <th scope="col">
+                                Status
+                            </th>
 
-                                    {% if account.active_study_assignments %}
+                            <th scope="col">
+                                Study Assignment
+                            </th>
 
-                                        <ul>
-                                            {% for assignment in account.active_study_assignments %}
-                                                <li>
-                                                    {{ assignment.study.protocol_number }}
-                                                    -
-                                                    {{ assignment.study.title }}
+                            <th scope="col">
+                                Actions
+                            </th>
 
-                                                    <a href="{% url 'accounts:unassign_user_from_study' assignment.id %}">
-                                                        Unassign
-                                                    </a>
-                                                </li>
-                                            {% endfor %}
-                                        </ul>
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for account in users %}
+
+                            <tr>
+
+                                <td>
+                                    <strong>
+                                        {{ account.first_name }}
+                                        {{ account.last_name }}
+                                    </strong>
+                                </td>
+
+
+                                <td>
+                                    {{ account.username }}
+                                </td>
+
+
+                                <td>
+                                    {{ account.email }}
+                                </td>
+
+
+                                <td>
+
+                                    {% if account.profile.role %}
+
+                                        <span class="badge text-bg-secondary">
+                                            {{ account.profile.role.name }}
+                                        </span>
 
                                     {% else %}
 
-                                        <p>No studies assigned.</p>
+                                        <span class="text-muted">
+                                            No role assigned
+                                        </span>
 
                                     {% endif %}
-                                </div>
 
-                                <div>
-                                    <form
-                                        method="POST"
-                                        action="{% url 'accounts:assign_user_to_study' account.id %}"
-                                    >
-                                        {% csrf_token %}
+                                </td>
 
-                                        <label for="study-{{ account.id }}">
-                                            Assign another study
-                                        </label>
 
-                                        <select
-                                            id="study-{{ account.id }}"
-                                            name="study"
-                                            required
+                                <td>
+
+                                    {% if account.profile.is_approved %}
+
+                                        <span class="badge text-bg-success">
+                                            Approved
+                                        </span>
+
+                                    {% else %}
+
+                                        <span class="badge text-bg-warning">
+                                            Pending
+                                        </span>
+
+                                    {% endif %}
+
+                                </td>
+
+
+                                <td>
+                                    <span class="badge text-bg-primary">
+                                        {{ account.active_study_assignments|length }}
+                                        assigned
+                                    </span>
+                                </td>
+
+
+                                <td>
+
+                                    <div class="d-flex flex-wrap gap-2">
+
+                                        <a
+                                            href="{% url 'accounts:user_detail' account.id %}"
+                                            class="btn btn-sm btn-outline-primary"
                                         >
-                                            <option value="">
-                                                Select study
-                                            </option>
+                                            View
+                                        </a>
 
-                                            {% for study in studies %}
-                                                <option value="{{ study.id }}">
-                                                    {{ study.protocol_number }}
-                                                    -
-                                                    {{ study.title }}
-                                                </option>
-                                            {% endfor %}
-                                        </select>
+                                        {% if account != user %}
+                                            <a
+                                                href="{% url 'accounts:delete_user' account.id %}"
+                                                class="btn btn-sm btn-outline-danger"
+                                            >
+                                                Delete
+                                            </a>
+                                        {% else %}
+                                            <span class="text-muted">
+                                                Current user
+                                            </span>
+                                        {% endif %}
 
-                                        <button type="submit">
-                                            Assign
-                                        </button>
-                                    </form>
-                                </div>
+                                    </div>
 
-                            </td>
-                            <!-- this section to delete user  -->
-                            <td>
-                                {% if account != user %}
-                                    <a href="{% url 'accounts:delete_user' account.id %}">
-                                        Delete
-                                    </a>
-                                {% else %}
-                                    Current user
-                                {% endif %}
-                            </td>
-                        </tr>
-                    {% endfor %}
+                                </td>
 
-                </tbody>
-            </table>
+                            </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
 
         {% else %}
 
-            {% if search_query %}
-                <p>
-                    No users found matching
-                    "{{ search_query }}".
-                </p>
-            {% else %}
-                <p>No users found.</p>
-            {% endif %}
+            <div class="card">
+
+                <div class="card-body">
+
+                    {% if search_query %}
+
+                        <p class="mb-0">
+                            No users found matching
+                            "{{ search_query }}".
+                        </p>
+
+                    {% else %}
+
+                        <p class="mb-0">
+                            No users found.
+                        </p>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
 
         {% endif %}
+
     </section>
+
+</div>
 
 {% endblock %}
