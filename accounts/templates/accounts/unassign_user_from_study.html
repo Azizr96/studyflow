@@ -6,40 +6,115 @@
 
 {% block content %}
 
-    <h1>Confirm Study Unassignment</h1>
+<div class="container-fluid">
 
-    <p>
-        Are you sure you want to unassign
-        <strong>
-            {{ assignment.user.first_name }}
-            {{ assignment.user.last_name }}
-        </strong>
-        from
-        <strong>
-            {{ assignment.study.protocol_number }}
-            -
-            {{ assignment.study.title }}
-        </strong>?
-    </p>
+    <div class="mb-4">
 
-    <p>
-        The user will immediately lose access to this study.
-        They can be reassigned later if needed.
-    </p>
+        <h1 class="h3 mb-1">
+            Confirm Study Unassignment
+        </h1>
 
-    <form method="POST">
-        {% csrf_token %}
+        <p class="text-muted mb-0">
+            Review the assignment before removing access.
+        </p>
 
-        <button type="submit">
-            Confirm Unassign
-        </button>
+    </div>
 
-        <a
-            href="{% url 'accounts:user_detail' assignment.user.id %}"
-            class="btn btn-outline-secondary"
-        >
-            Cancel
-        </a>
-    </form>
+
+    <div class="row">
+
+        <div class="col-12 col-lg-8 col-xl-6">
+
+            <div class="card border-warning">
+
+                <div class="card-body">
+
+                    <div
+                        class="alert alert-warning"
+                        role="alert"
+                    >
+                        This user will immediately lose access to the selected
+                        study. The assignment can be restored later if needed.
+                    </div>
+
+
+                    <dl class="row mb-4">
+
+                        <dt class="col-sm-4">
+                            User
+                        </dt>
+
+                        <dd class="col-sm-8">
+                            {{ assignment.user.first_name }}
+                            {{ assignment.user.last_name }}
+                        </dd>
+
+
+                        <dt class="col-sm-4">
+                            Username
+                        </dt>
+
+                        <dd class="col-sm-8">
+                            {{ assignment.user.username }}
+                        </dd>
+
+
+                        <dt class="col-sm-4">
+                            Study
+                        </dt>
+
+                        <dd class="col-sm-8">
+                            <strong>
+                                {{ assignment.study.protocol_number }}
+                            </strong>
+
+                            <div class="text-muted">
+                                {{ assignment.study.title }}
+                            </div>
+                        </dd>
+
+                    </dl>
+
+
+                    <p>
+                        Are you sure you want to unassign this user from this study?
+                    </p>
+
+
+                    <form method="POST">
+
+                        {% csrf_token %}
+
+
+                        <div class="d-flex flex-wrap gap-2">
+
+                            <button
+                                type="submit"
+                                class="btn btn-warning"
+                            >
+                                Confirm Unassign
+                            </button>
+
+
+                            <a
+                                href="{% url 'accounts:user_detail' assignment.user.id %}"
+                                class="btn btn-outline-secondary"
+                            >
+                                Cancel
+                            </a>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
 
 {% endblock %}
