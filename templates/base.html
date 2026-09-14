@@ -43,17 +43,21 @@
                 ☰
             </button>
 
-            <span class="mobile-brand">
+            <a
+                href="{% url 'dashboard:home' %}"
+                class="mobile-brand"
+                aria-label="StudyFlow dashboard"
+            >
                 StudyFlow
-            </span>
+            </a>
         </header>
 
 
         <aside class="desktop-sidebar">
 
-            <div class="sidebar-brand">
+            <a href="{% url 'dashboard:home' %}" class="sidebar-brand" aria-label="StudyFlow dashboard">
                 StudyFlow
-            </div>
+            </a>
 
             <nav aria-label="Main navigation">
 
