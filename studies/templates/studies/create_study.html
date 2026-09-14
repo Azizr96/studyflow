@@ -45,8 +45,13 @@
             <div class="card">
 
                 <div class="card-body">
-
-                    <form method="POST">
+                    <p
+                        id="study-form-help"
+                        class="text-muted"
+                    >
+                        Complete the study details below. Required fields must be filled in before submission.
+                    </p>
+                    <form method="POST" aria-describedby="study-form-help">
 
                         {% csrf_token %}
 
@@ -59,7 +64,11 @@
 
                             {{ form.protocol_number }}
 
-                            {{ form.protocol_number.errors }}
+                            {% if form.protocol_number.errors %}
+                                <div class="text-danger mt-1">
+                                    {{ form.protocol_number.errors }}
+                                </div>
+                            {% endif %}
 
                         </div>
 
@@ -70,7 +79,11 @@
 
                             {{ form.title }}
 
-                            {{ form.title.errors }}
+                            {% if form.title.errors %}
+                                <div class="text-danger mt-1">
+                                    {{ form.title.errors }}
+                                </div>
+                            {% endif %}
 
                         </div>
 
@@ -81,8 +94,12 @@
 
                             {{ form.description }}
 
-                            {{ form.description.errors }}
-
+                            
+                            {% if form.description.errors %}
+                                <div class="text-danger mt-1">
+                                    {{ form.description.errors }}
+                                </div>
+                            {% endif %}
                         </div>
 
 
@@ -94,8 +111,12 @@
 
                                 {{ form.phase }}
 
-                                {{ form.phase.errors }}
-
+                                
+                                {% if form.phase.errors %}
+                                    <div class="text-danger mt-1">
+                                        {{ form.phase.errors }}
+                                    </div>
+                                {% endif %}
                             </div>
 
 
@@ -105,7 +126,12 @@
 
                                 {{ form.status }}
 
-                                {{ form.status.errors }}
+                                
+                                {% if form.status.errors %}
+                                    <div class="text-danger mt-1">
+                                        {{ form.status.errors }}
+                                    </div>
+                                {% endif %}
 
                             </div>
 
@@ -120,7 +146,12 @@
 
                                 {{ form.start_date }}
 
-                                {{ form.start_date.errors }}
+                                
+                                {% if form.start_date.errors %}
+                                    <div class="text-danger mt-1">
+                                        {{ form.start_date.errors }}
+                                    </div>
+                                {% endif %}
 
                             </div>
 
@@ -131,7 +162,12 @@
 
                                 {{ form.end_date }}
 
-                                {{ form.end_date.errors }}
+                                
+                                {% if form.end_date.errors %}
+                                    <div class="text-danger mt-1">
+                                        {{ form.end_date.errors }}
+                                    </div>
+                                {% endif %}
 
                             </div>
 

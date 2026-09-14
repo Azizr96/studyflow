@@ -179,7 +179,9 @@
                         align-middle
                     "
                 >
-
+                    <caption class="visually-hidden">
+                        Participants enrolled in study {{ study.protocol_number }}
+                    </caption>
                     <thead>
                         <tr>
                             <th scope="col">
@@ -257,6 +259,7 @@
                                         <a
                                             href="{% url 'participants:add_visit' participant.id %}"
                                             class="btn btn-sm btn-outline-primary"
+                                            aria-label="Add visit for participant {{ participant.participant_number }}"
                                         >
                                             Add Visit
                                         </a>
@@ -265,6 +268,7 @@
                                         <a
                                             href="{% url 'participants:update_participant' participant.id %}"
                                             class="btn btn-sm btn-outline-secondary"
+                                            aria-label="Edit participant {{ participant.participant_number }}"
                                         >
                                             Edit
                                         </a>
@@ -273,6 +277,7 @@
                                         <a
                                             href="{% url 'participants:delete_participant' participant.id %}"
                                             class="btn btn-sm btn-outline-danger"
+                                            aria-label="Delete participant {{ participant.participant_number }}"
                                         >
                                             Delete
                                         </a>
@@ -327,7 +332,9 @@
                         align-middle
                     "
                 >
-
+                    <caption class="visually-hidden">
+                        Documents uploaded for study {{ study.protocol_number }}
+                    </caption>
                     <thead>
                         <tr>
                             <th scope="col">
@@ -365,6 +372,9 @@
                                         rel="noopener noreferrer"
                                     >
                                         {{ document.file.name }}
+                                        <span class="visually-hidden">
+                                            (opens in a new tab)
+                                        </span>
                                     </a>
                                 </td>
 
@@ -393,7 +403,9 @@
 
 
                                 <td>
-                                    {{ document.uploaded_at }}
+                                    <time datetime="{{ document.uploaded_at|date:'c' }}">
+                                        {{ document.uploaded_at }}
+                                    </time>
                                 </td>
 
                             </tr>
@@ -432,7 +444,7 @@
         <div class="card">
             <div class="card-body">
 
-                <p class="text-muted">
+                <p id="document-upload-help" class="text-muted">
                     Accepted file types: PDF, Word, and Excel.
                     Maximum file size: 10 MB.
                 </p>
@@ -440,6 +452,7 @@
                 <form
                     method="POST"
                     enctype="multipart/form-data"
+                    aria-describedby="document-upload-help"
                 >
 
                     {% csrf_token %}
