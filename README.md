@@ -695,3 +695,37 @@ Beyond the current user stories, a production-focused version of StudyFlow could
 
 However, integration with real clinical systems, storage of real patient data and regulatory compliance would require substantially greater security, privacy, validation and governance requirements than are within the scope of this educational project.
 
+## Tools & Technologies
+
+The following technologies and development tools were used to design, build, test and deploy StudyFlow.
+
+| Technology | Purpose |
+| --- | --- |
+| HTML5 | Provides the semantic structure for the StudyFlow user interface. |
+| CSS3 | Provides custom styling, responsive adjustments, form styling and visual presentation. |
+| Bootstrap 5 | Provides responsive layout utilities and interface components, including the mobile offcanvas navigation. |
+| Python | Primary back-end programming language used for application logic, validation and database interaction. |
+| Django | Main web framework used for authentication, forms, models, views, URL routing, permissions and ORM functionality. |
+| PostgreSQL | Relational database used to store StudyFlow application data. |
+| Django ORM | Provides object-oriented interaction between Django models and the PostgreSQL database. |
+| Cloudinary | Provides cloud storage for uploaded study documents. |
+| WhiteNoise | Serves application static files in the deployed environment. |
+| Gunicorn | Production WSGI server used to run the Django application on Heroku. |
+| Heroku | Cloud platform used to deploy and host the live StudyFlow application. |
+| Git | Provides version control throughout development. |
+| GitHub | Hosts the source-code repository and provides Issues and project-management functionality. |
+| GitHub Projects | Used to manage the Agile workflow and track user stories from Backlog through development and testing. |
+| Visual Studio Code | Primary development environment used to build StudyFlow. |
+| ChatGPT | Used as an AI-assisted development tool for debugging, explaining code and supporting documentation. |
+
+### Development and Testing Tools
+
+Several additional tools are used during development and testing:
+
+- **Chrome Developer Tools** - used for responsive testing, browser inspection and accessibility testing.
+- **Lighthouse** - used to assess accessibility, performance, best practices and SEO on the deployed application.
+- **W3C HTML Validator** - used to validate rendered HTML.
+- **W3C CSS Validation Service** - used to validate custom CSS.
+- **CI Python Linter** - used to check Python code against PEP8 conventions.
+- **Django Test Framework** - used for automated application and permission testing.
+- **Django System Check Framework** - used throughout development with `python manage.py check` to identify configuration and application issues.
