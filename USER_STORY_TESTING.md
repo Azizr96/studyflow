@@ -2,6 +2,17 @@
 
 This document records the manual browser testing completed for the StudyFlow capstone. Evidence is presented **inside the relevant test table**, so the assessor can compare the test, expected behaviour, observed result and screenshot in one place.
 
+## Testing Summary
+
+| Measure | Result |
+| --- | ---: |
+| Manual checks/tests performed | 113 |
+| PASS | 111 |
+| FAIL | 0 |
+| NOT TESTED / partially verified | 3 scoped cases |
+| Saved screenshots | 106 |
+
+
 ## Phase 1 - Authentication
 | Test ID | User Story | Test / Action | Expected Result | Actual Result | Result | Evidence |
 | --- | --- | --- | --- | --- | --- | --- |
