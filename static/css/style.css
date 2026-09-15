@@ -251,6 +251,22 @@ a.mobile-brand:visited {
     text-decoration: none;
 }
 
+/* Error pages */
+
+.error-page {
+    max-width: 600px;
+    margin: 80px auto;
+}
+
+.error-code {
+    margin-bottom: 0;
+    color: #17324d;
+    font-size: 5rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+
 /* Accessibility: visible keyboard focus */
 a:focus-visible,
 button:focus-visible,
@@ -265,6 +281,14 @@ textarea:focus-visible {
     .assigned-study-item {
         flex-direction: column;
         max-width: 100%;
+    }
+
+    .error-page {
+        margin: 40px auto;
+    }
+
+    .error-code {
+        font-size: 4rem;
     }
 }
 
