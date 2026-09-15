@@ -1379,7 +1379,9 @@ Any third-party logos, badges or externally sourced assets used within the READM
 
 I would like to acknowledge the support and resources provided by Code Institute throughout the Full Stack Software Development course.
 
-I would like to thank Tim Nelson for the READEME template and Marko Tot for the guidance in project plannnig and Agile methadologies.
+I would like to thank Tim Nelson for the READEME template and providing me suggestions for date validation when picking dates. The JavaScript code in the create_study.html was provided by Tim Nelson. 
+
+I would also like to thank, Marko Tot at Code Institute for the guidance in project planingg and Agile methadologies.
 
 I would also like to acknowledge the Code Institute course material and project guidance used to support the planning, development, testing and deployment of this project.
 

@@ -1,5 +1,6 @@
 from django import forms
 from .models import Participant, Visit
+from datetime import date
 
 
 class ParticipantForm(forms.ModelForm):
@@ -17,7 +18,8 @@ class ParticipantForm(forms.ModelForm):
         ]
         widgets = {
             "date_of_birth": forms.DateInput(
-                attrs={"type": "date"}
+                attrs={"type": "date",
+                       "max": date.today().isoformat(),}
             ),
             "enrolled_date": forms.DateInput(
                 attrs={"type": "date"}

@@ -205,3 +205,19 @@
 </div>
 
 {% endblock %}
+{% block js %}
+<script>
+    const startDate = document.getElementById("id_start_date");
+    const endDate = document.getElementById("id_end_date");
+
+    // Listen to user changing the start_date
+    startDate.addEventListener("change", function () {
+        endDate.min = startDate.value;
+
+        // Reset end date if it is now before the start date
+        if (endDate.value && endDate.value < startDate.value) {
+            endDate.value = "";
+        }
+    });
+</script>
+{% endblock %}
