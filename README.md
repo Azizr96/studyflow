@@ -695,6 +695,20 @@ Beyond the current user stories, a production-focused version of StudyFlow could
 
 However, integration with real clinical systems, storage of real patient data and regulatory compliance would require substantially greater security, privacy, validation and governance requirements than are within the scope of this educational project.
 
+### Custom Error Pages
+
+StudyFlow provides custom error pages so that users receive a consistent and helpful interface when an error occurs.
+
+A custom **404 Page Not Found** page is displayed when a user attempts to access a URL that does not exist.
+
+A custom **500 Server Error** page provides a user-friendly response if the application encounters an unexpected server-side error.
+
+Both pages provide an appropriate route back into the application rather than exposing a generic server error page.
+
+![StudyFlow 404 error page](documentation/features/404.png)
+
+![StudyFlow 500 error page](documentation/features/500.png)
+
 ## Tools & Technologies
 
 The following technologies and development tools were used to design, build, test and deploy StudyFlow.
