@@ -1332,3 +1332,41 @@ Locally, development credentials can be loaded through the ignored `env.py` file
 On Heroku, equivalent sensitive values are stored securely as Config Vars.
 
 This separation prevents production credentials from being committed to GitHub and allows the same application codebase to run in different environments.
+
+## Credits
+
+### Content
+
+All written content relating specifically to StudyFlow, including the project description, user stories, feature descriptions and clinical trial site management context, was created for this project.
+
+The application is an educational project based on fictional clinical trial site-management scenarios. No real patient or clinical trial participant data is used.
+
+Django's official documentation was referenced throughout development for information relating to models, forms, authentication, views, migrations and deployment configuration.
+
+Bootstrap documentation was referenced for responsive layout utilities and components, including the offcanvas mobile navigation.
+
+### Media
+
+StudyFlow primarily uses interface elements created specifically for the project and does not rely heavily on external media.
+
+The following project documentation assets were created specifically for StudyFlow:
+
+- responsive wireframes
+- Entity Relationship Diagram
+- project screenshots
+- testing and validation screenshots
+- responsive design screenshots
+- GitHub Project and Agile-development screenshots
+
+Any third-party logos, badges or externally sourced assets used within the README remain the property of their respective owners.
+
+
+### Acknowledgements
+
+I would like to acknowledge the support and resources provided by Code Institute throughout the Full Stack Software Development course.
+
+I would like to thank Tim Nelson for the READEME template and Marko Tot for the guidance in project plannnig and Agile methadologies.
+
+I would also like to acknowledge the Code Institute course material and project guidance used to support the planning, development, testing and deployment of this project.
+
+The Django, Bootstrap, PostgreSQL, Cloudinary, WhiteNoise, Gunicorn, GitHub and Heroku documentation provided valuable technical references during development.
