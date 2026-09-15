@@ -1386,3 +1386,31 @@ I would also like to thank, Marko Tot at Code Institute for the guidance in proj
 I would also like to acknowledge the Code Institute course material and project guidance used to support the planning, development, testing and deployment of this project.
 
 The Django, Bootstrap, PostgreSQL, Cloudinary, WhiteNoise, Gunicorn, GitHub and Heroku documentation provided valuable technical references during development.
+
+
+## License
+
+Copyright © 2026 Rauhan Aziz. All Rights Reserved.
+
+This project is publicly available for **educational, portfolio, demonstration, and reference purposes only**.
+
+You are welcome to:
+
+- View and study the source code.
+- Use the project as a reference for learning purposes.
+- Learn from the concepts, techniques, structure, and approaches demonstrated within the project.
+
+You may **not**, without prior written permission:
+
+- Copy or reproduce substantial portions of the source code.
+- Redistribute the source code or project materials.
+- Modify and redistribute the project as your own work.
+- Submit this project, or substantial portions of it, as your own academic, professional, or portfolio work.
+- Sell, sublicense, or commercially distribute the project.
+- Remove or alter copyright or ownership notices.
+
+The **StudyFlow** name, source code, documentation, designs, database structure, and other original project materials remain the intellectual property of **Rauhan Aziz**, unless otherwise stated.
+
+For full terms and conditions, please see the [LICENSE](LICENSE) file.
+
+**Copyright © 2026 Rauhan Aziz. All Rights Reserved.**
