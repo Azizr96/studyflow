@@ -124,3 +124,37 @@ class LoginTests(TestCase):
             "Your account is awaiting approval.",
         )
 
+    def test_approved_user_with_role_can_log_in(self):
+        """An approved user with a role should be able to log in."""
+        role = Role.objects.create(
+            name="Study Coordinator",
+            description="Standard study team member",
+        )
+
+        user = User.objects.create_user(
+            username="approveduser",
+            first_name="Approved",
+            email="approved@example.com",
+            password="StrongTestPassword123!",
+        )
+
+        user.profile.role = role
+        user.profile.is_approved = True
+        user.profile.save()
+
+        response = self.client.post(
+            reverse("accounts:login"),
+            {
+                "username": "approveduser",
+                "password": "StrongTestPassword123!",
+            },
+        )
+
+        self.assertTrue(
+            response.wsgi_request.user.is_authenticated
+        )
+        self.assertRedirects(
+            response,
+            reverse("dashboard:home"),
+            fetch_redirect_response=False,
+        )
