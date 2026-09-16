@@ -304,3 +304,36 @@ Protected content was not exposed during the manual tests performed.
 
 The full authentication and permission test evidence is documented in
 [USER_STORY_TESTING.md](USER_STORY_TESTING.md).
+
+### Form and Data Validation
+
+Django forms and model constraints are used throughout StudyFlow to
+reduce invalid or inconsistent data being submitted to the database.
+
+Validation implemented within the application includes:
+
+- required fields on study, participant, visit, and registration forms
+- unique user email validation during registration
+- study end dates being prevented from occurring before start dates
+- participant enrolment dates being prevented from occurring before
+  the participant's date of birth
+- duplicate visit numbers being prevented for the same participant
+- completed visits requiring an actual visit date
+- actual visit dates being prevented from occurring before their
+  scheduled date
+- study document file extension validation
+- study document file size validation
+- confirmation requirements for destructive deletion actions
+
+The Create Study form also includes a small amount of JavaScript that
+improves date selection by setting the minimum end date from the
+selected start date. This is a usability enhancement only; server-side
+Django validation remains responsible for validating submitted study
+dates.
+
+Form validation was manually exercised during user story and defensive
+testing. Invalid submissions produced validation feedback rather than
+being accepted as valid application data.
+
+Detailed test cases and supporting screenshots are available in
+[USER_STORY_TESTING.md](USER_STORY_TESTING.md).
