@@ -337,3 +337,34 @@ being accepted as valid application data.
 
 Detailed test cases and supporting screenshots are available in
 [USER_STORY_TESTING.md](USER_STORY_TESTING.md).
+
+### Destructive Actions and Data Protection
+
+StudyFlow applies additional safeguards to destructive actions to reduce
+the risk of accidental or unauthorised data deletion.
+
+For destructive deletion actions, the application requires additional
+confirmation before the action is completed. Participant, visit, and
+user deletion workflows require the user to:
+
+- access the dedicated deletion confirmation page
+- enter `DELETE` as an explicit confirmation
+- confirm the action using their current password
+
+Permission checks are also performed before protected actions are
+allowed. Users cannot use deletion functionality to bypass the role or
+study assignment restrictions applied elsewhere in the application.
+
+User deletion includes an additional safeguard that prevents a user
+from deleting their own account through the user management workflow.
+
+Removing a user from a study is handled differently from permanent
+deletion. Study assignments are deactivated rather than removed from
+the database, preserving the assignment record while preventing the
+user from continuing to access that study.
+
+These behaviours were manually tested during the user story testing,
+including confirmation requirements and restricted-access scenarios.
+
+Detailed evidence is available in
+[USER_STORY_TESTING.md](USER_STORY_TESTING.md).
