@@ -30,7 +30,7 @@
 
         <div class="col-12 col-sm-6 col-xl-3">
             <div class="card dashboard-card h-100">
-                <div class="card-body" aria-label="{{ total_studies }} studies">
+                <div class="card-body">
                     <p class="text-muted mb-1">Studies</p>
                     <p class="dashboard-stat mb-0">
                         {{ total_studies }}
@@ -41,7 +41,7 @@
 
         <div class="col-12 col-sm-6 col-xl-3">
             <div class="card dashboard-card h-100">
-                <div class="card-body" aria-label="{{ total_participants }} participants">
+                <div class="card-body">
                     <p class="text-muted mb-1">Participants</p>
                     <p class="dashboard-stat mb-0">
                         {{ total_participants }}
@@ -52,7 +52,7 @@
 
         <div class="col-12 col-sm-6 col-xl-3">
             <div class="card dashboard-card h-100">
-                <div class="card-body" aria-label="{{ total_visits }} visits">
+                <div class="card-body">
                     <p class="text-muted mb-1">Visits</p>
                     <p class="dashboard-stat mb-0">
                         {{ total_visits }}
@@ -64,7 +64,7 @@
         {% if dashboard_type == "elevated" %}
             <div class="col-12 col-sm-6 col-xl-3">
                 <div class="card dashboard-card h-100">
-                    <div class="card-body" aria-label="{{ pending_users }} pending user approvals">
+                    <div class="card-body">
                         <p class="text-muted mb-1">
                             Pending Approvals
                         </p>
