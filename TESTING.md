@@ -271,3 +271,36 @@ navigation is displayed.
 
 No significant layout issues, unwanted horizontal overflow, or unusable
 interface elements were identified during responsiveness testing.
+
+## Defensive Programming
+
+Defensive programming techniques were implemented throughout StudyFlow
+to protect application data, restrict unauthorised actions, validate
+user input, and ensure users can only access functionality appropriate
+to their role and study assignments.
+
+Defensive behaviour was manually tested as part of the application's
+user story testing. Detailed test cases and evidence are available in
+[USER_STORY_TESTING.md](USER_STORY_TESTING.md).
+
+### Authentication and Access Control
+
+StudyFlow uses Django authentication together with approval, role, and
+study-assignment checks to restrict access to protected functionality.
+
+Testing included:
+
+- unauthenticated access to protected pages
+- login with incorrect credentials
+- access attempts by users awaiting approval
+- elevated versus standard user navigation
+- restriction of user-management functionality
+- restriction of study creation functionality
+- standard users accessing only their assigned studies
+- cross-study participant and visit access restrictions 
+- notification ownership restrictions
+
+Protected content was not exposed during the manual tests performed.
+
+The full authentication and permission test evidence is documented in
+[USER_STORY_TESTING.md](USER_STORY_TESTING.md).
