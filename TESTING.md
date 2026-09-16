@@ -184,3 +184,46 @@ were not treated as developer-authored files requiring CI Python Linter
 evidence.
 
 ---
+
+## Lighthouse Audit
+
+Google Chrome Lighthouse was used to audit the deployed StudyFlow
+application for performance, accessibility, best practices, and SEO.
+
+Testing was carried out using both desktop and mobile Lighthouse
+configurations. The public Login page and authenticated Dashboard were
+selected as representative pages.
+
+### Lighthouse Results
+
+| Page | Device | Performance | Accessibility | Best Practices | SEO | Evidence |
+| --- | --- | ---: | ---: | ---: | ---: | --- |
+| Login | Desktop | 100 | 100 | 100 | 100 | ![Login desktop Lighthouse](documentation/lighthouse/login-desktop-lighthouse.png) |
+| Login | Mobile | 98 | 100 | 100 | 100 | ![Login mobile Lighthouse](documentation/lighthouse/login-mobile-lighthouse.png) |
+| Dashboard | Desktop | 99 | 100 | 100 | 100 | ![Dashboard desktop Lighthouse](documentation/lighthouse/dashboard-desktop-lighthouse.png) |
+| Dashboard | Mobile | 97 | 100 | 100 | 100 | ![Dashboard mobile Lighthouse](documentation/lighthouse/dashboard-mobile-lighthouse.png) |
+
+### SEO Improvement
+
+During the initial desktop Lighthouse audit of the Login page, the SEO
+score was **90**. Lighthouse identified that the document did not have
+a meta description.
+
+A descriptive meta tag was added to the shared `base.html` template:
+
+```html
+<meta
+    name="description"
+    content="StudyFlow is a clinical trial site management system for managing studies, participants, visits, documents, and site activities."
+>
+```
+
+After the change, `python manage.py check` reported **0 issues**. The
+change was deployed and Lighthouse was run again against the deployed
+application.
+
+The Login page SEO score increased from **90 to 100**.
+
+The final audits achieved **100 for Accessibility, Best Practices, and
+SEO across all four tests**, with Performance scores ranging from
+**97 to 100**.
