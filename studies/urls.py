@@ -20,5 +20,4 @@ urlpatterns = [
         views.study_detail,
         name="study_detail",
     ),
-    
 ]

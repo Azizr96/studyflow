@@ -1,10 +1,13 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import redirect, render, get_object_or_404
-from .forms import StudyForm, StudyDocumentForm
-from .models import Study
+from django.shortcuts import get_object_or_404, redirect, render
+
 from notifications.models import Notification
 from notifications.utils import notify_study_users
+
+from .forms import StudyDocumentForm, StudyForm
+from .models import Study
+
 
 def can_manage_studies(user):
     if not user.is_authenticated:
@@ -17,6 +20,7 @@ def can_manage_studies(user):
         return False
 
     return user.profile.role.can_manage_studies
+
 
 def can_access_study(user, study):
     if not user.is_authenticated:
@@ -114,6 +118,7 @@ def study_list(request):
         context,
     )
 
+
 @login_required
 def study_detail(request, study_id):
     study = get_object_or_404(
@@ -172,6 +177,7 @@ def study_detail(request, study_id):
     participants = study.participants.all().order_by(
         "participant_number"
     )
+
     context = {
         "study": study,
         "documents": documents,

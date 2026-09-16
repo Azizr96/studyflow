@@ -1,6 +1,8 @@
-from django import forms
-from .models import Participant, Visit
 from datetime import date
+
+from django import forms
+
+from .models import Participant, Visit
 
 
 class ParticipantForm(forms.ModelForm):
@@ -18,8 +20,10 @@ class ParticipantForm(forms.ModelForm):
         ]
         widgets = {
             "date_of_birth": forms.DateInput(
-                attrs={"type": "date",
-                       "max": date.today().isoformat(),}
+                attrs={
+                    "type": "date",
+                    "max": date.today().isoformat(),
+                }
             ),
             "enrolled_date": forms.DateInput(
                 attrs={"type": "date"}
@@ -59,6 +63,7 @@ class ParticipantForm(forms.ModelForm):
 
 
 class VisitForm(forms.ModelForm):
+
     class Meta:
         model = Visit
         fields = [
@@ -71,8 +76,12 @@ class VisitForm(forms.ModelForm):
         ]
 
         widgets = {
-            "scheduled_date": forms.DateInput(attrs={"type": "date"}),
-            "actual_date": forms.DateInput(attrs={"type": "date"}),
+            "scheduled_date": forms.DateInput(
+                attrs={"type": "date"}
+            ),
+            "actual_date": forms.DateInput(
+                attrs={"type": "date"}
+            ),
         }
 
     def __init__(self, *args, participant=None, **kwargs):
@@ -95,7 +104,8 @@ class VisitForm(forms.ModelForm):
 
             if existing_visit.exists():
                 raise forms.ValidationError(
-                    f"Visit {visit_number} already exists for this participant."
+                    f"Visit {visit_number} already exists "
+                    "for this participant."
                 )
 
         return visit_number
@@ -110,7 +120,8 @@ class VisitForm(forms.ModelForm):
         if actual_date and scheduled_date:
             if actual_date < scheduled_date:
                 raise forms.ValidationError(
-                    "The actual visit date cannot be before the scheduled date."
+                    "The actual visit date cannot be before "
+                    "the scheduled date."
                 )
 
         if status == Visit.Status.COMPLETED and not actual_date:

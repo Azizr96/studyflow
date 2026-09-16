@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from cloudinary_storage.storage import RawMediaCloudinaryStorage
 
+
 class Study(models.Model):
 
     class Phase(models.TextChoices):
@@ -17,7 +18,7 @@ class Study(models.Model):
         COMPLETED = "Completed", "Completed"
         SUSPENDED = "Suspended", "Suspended"
         TERMINATED = "Terminated", "Terminated"
-        
+
     protocol_number = models.CharField(max_length=100, unique=True)
     title = models.CharField(max_length=255)
     description = models.TextField(blank=True)
@@ -25,7 +26,6 @@ class Study(models.Model):
         max_length=50,
         choices=Phase.choices,
     )
-
     status = models.CharField(
         max_length=50,
         choices=Status.choices,
@@ -47,25 +47,27 @@ class StudyDocument(models.Model):
             "Investigator Brochure",
             "Investigator Brochure",
         )
-        INFORMED_CONSENT = "Informed Consent Form", "Informed Consent Form"
+        INFORMED_CONSENT = (
+            "Informed Consent Form",
+            "Informed Consent Form",
+        )
         SITE_DOCUMENT = "Site Document", "Site Document"
         TRAINING_DOCUMENT = "Training Document", "Training Document"
         OTHER = "Other", "Other"
 
-    
     study = models.ForeignKey(
         Study,
         on_delete=models.CASCADE,
-        related_name='documents'
+        related_name="documents",
     )
     uploaded_by = models.ForeignKey(
         User,
         on_delete=models.SET_NULL,
         null=True,
-        related_name='uploaded_study_documents'
+        related_name="uploaded_study_documents",
     )
     file = models.FileField(
-        upload_to='study_documents/',
+        upload_to="study_documents/",
         storage=RawMediaCloudinaryStorage(),
     )
     category = models.CharField(
@@ -76,4 +78,4 @@ class StudyDocument(models.Model):
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f'{self.study.protocol_number} - {self.file.name}'
+        return f"{self.study.protocol_number} - {self.file.name}"

@@ -1,10 +1,12 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 from django.utils import timezone
+
 from accounts.models import UserProfile
+from notifications.models import Notification
 from participants.models import Participant, Visit
 from studies.models import Study, StudyDocument
-from notifications.models import Notification
+
 
 @login_required
 def dashboard_home(request):

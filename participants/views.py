@@ -1,12 +1,14 @@
 from django.contrib import messages
+from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
-from studies.models import Study
-from .forms import ParticipantForm, VisitForm
-from .models import Participant, Visit
-from django.contrib.auth import authenticate
+
 from notifications.models import Notification
 from notifications.utils import notify_study_users
+from studies.models import Study
+
+from .forms import ParticipantForm, VisitForm
+from .models import Participant, Visit
 
 
 def can_access_study(user, study):
@@ -89,6 +91,7 @@ def add_participant(request, study_id):
         context,
     )
 
+
 @login_required
 def participant_list(request):
     if not hasattr(request.user, "profile"):
@@ -130,6 +133,7 @@ def participant_list(request):
         "participants/participant_list.html",
         context,
     )
+
 
 @login_required
 def update_participant(request, participant_id):
@@ -189,6 +193,7 @@ def update_participant(request, participant_id):
         "participants/update_participant.html",
         context,
     )
+
 
 @login_required
 def delete_participant(request, participant_id):
@@ -268,6 +273,7 @@ def delete_participant(request, participant_id):
         context,
     )
 
+
 @login_required
 def add_visit(request, participant_id):
     participant = get_object_or_404(
@@ -306,7 +312,7 @@ def add_visit(request, participant_id):
                 notification_type=Notification.Type.VISIT_REMINDER,
                 exclude_user=request.user,
             )
-            
+
             messages.success(
                 request,
                 f"Visit {visit.visit_number} was added successfully.",
@@ -331,6 +337,7 @@ def add_visit(request, participant_id):
             "study": study,
         },
     )
+
 
 @login_required
 def visit_list(request):
@@ -373,6 +380,7 @@ def visit_list(request):
         },
     )
 
+
 @login_required
 def update_visit(request, visit_id):
     visit = get_object_or_404(
@@ -393,8 +401,6 @@ def update_visit(request, visit_id):
             "You do not have permission to update this visit.",
         )
         return redirect("participants:visit_list")
-
-    
 
     if request.method == "POST":
         form = VisitForm(
@@ -424,7 +430,8 @@ def update_visit(request, visit_id):
 
             messages.success(
                 request,
-                f"Visit {updated_visit.visit_number} was updated successfully.",
+                f"Visit {updated_visit.visit_number} was updated "
+                "successfully.",
             )
 
             return redirect("participants:visit_list")
@@ -445,6 +452,7 @@ def update_visit(request, visit_id):
             "study": study,
         },
     )
+
 
 @login_required
 def delete_visit(request, visit_id):

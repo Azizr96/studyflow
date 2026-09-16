@@ -1,14 +1,17 @@
 from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.db.models import Prefetch, Q
 from django.shortcuts import get_object_or_404, redirect, render
-from django.contrib.auth import authenticate, login, logout
-from .forms import RegistrationForm
-from .models import Role, UserStudy, UserProfile
-from studies.models import Study
-from django.db.models import Q, Prefetch
+
 from notifications.models import Notification
 from notifications.utils import create_notification
+from studies.models import Study
+
+from .forms import RegistrationForm
+from .models import Role, UserStudy
+
 
 def can_manage_users(user):
     if not user.is_authenticated:
@@ -53,6 +56,7 @@ def register(request):
         context,
     )
 
+
 @login_required
 def pending_users(request):
     if not can_manage_users(request.user):
@@ -61,9 +65,6 @@ def pending_users(request):
             "You do not have permission to manage users.",
         )
         return redirect("accounts:register")
-
-    
-    
 
     users = User.objects.filter(
         profile__is_approved=False,
@@ -81,9 +82,10 @@ def pending_users(request):
         )
 
     context = {
-            'users': users,
-            'roles': roles,
-        }
+        "users": users,
+        "roles": roles,
+    }
+
     return render(
         request,
         "accounts/pending_users.html",
@@ -148,6 +150,7 @@ def approve_user(request, user_id):
 
     return redirect("accounts:pending_users")
 
+
 @login_required
 def reject_user(request, user_id):
     if not can_manage_users(request.user):
@@ -169,6 +172,7 @@ def reject_user(request, user_id):
         )
 
     return redirect("accounts:pending_users")
+
 
 def user_login(request):
     if request.user.is_authenticated:
@@ -229,6 +233,7 @@ def user_login(request):
         "accounts/login.html",
     )
 
+
 @login_required
 def user_logout(request):
     if request.method == "POST":
@@ -240,6 +245,7 @@ def user_logout(request):
         )
 
     return redirect("accounts:login")
+
 
 @login_required
 def user_list(request):
@@ -506,6 +512,7 @@ def delete_user(request, user_id):
         "accounts/delete_user.html",
         context,
     )
+
 
 @login_required
 def user_detail(request, user_id):
