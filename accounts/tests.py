@@ -248,3 +248,112 @@ class UserManagementPermissionTests(TestCase):
             response,
             "accounts/user_list.html",
         )
+
+    def test_non_superuser_manager_cannot_assign_elevated_role(self):
+        """A non-superuser manager should not assign an elevated role."""
+        manager_role = Role.objects.create(
+            name="User Manager",
+            can_manage_users=True,
+        )
+
+        elevated_role = Role.objects.create(
+            name="Project Lead",
+            can_manage_users=True,
+            can_manage_studies=True,
+            can_approve_users=True,
+        )
+
+        manager = User.objects.create_user(
+            username="manager",
+            email="manager@example.com",
+            password="StrongTestPassword123!",
+        )
+        manager.profile.role = manager_role
+        manager.profile.is_approved = True
+        manager.profile.save()
+
+        pending_user = User.objects.create_user(
+            username="pendinguser",
+            email="pending@example.com",
+            password="StrongTestPassword123!",
+        )
+
+        self.client.force_login(manager)
+
+        response = self.client.post(
+            reverse(
+                "accounts:approve_user",
+                args=[pending_user.id],
+            ),
+            {
+                "role": elevated_role.id,
+            },
+        )
+
+        pending_user.profile.refresh_from_db()
+
+        self.assertFalse(pending_user.profile.is_approved)
+        self.assertIsNone(pending_user.profile.role)
+        self.assertRedirects(
+            response,
+            reverse("accounts:pending_users"),
+            fetch_redirect_response=False,
+        )
+
+    def test_superuser_can_assign_elevated_role(self):
+        """A configured Django superuser can assign an elevated role."""
+        admin_role = Role.objects.create(
+            name="Admin",
+            is_admin=True,
+            can_approve_users=True,
+            can_manage_studies=True,
+            can_manage_users=True,
+        )
+
+        elevated_role = Role.objects.create(
+            name="Project Lead",
+            can_manage_users=True,
+            can_manage_studies=True,
+            can_approve_users=True,
+        )
+
+        superuser = User.objects.create_superuser(
+            username="adminuser",
+            email="admin@example.com",
+            password="StrongTestPassword123!",
+        )
+
+        superuser.profile.role = admin_role
+        superuser.profile.is_approved = True
+        superuser.profile.save()
+
+        pending_user = User.objects.create_user(
+            username="pendinguser",
+            email="pending@example.com",
+            password="StrongTestPassword123!",
+        )
+
+        self.client.force_login(superuser)
+
+        response = self.client.post(
+            reverse(
+                "accounts:approve_user",
+                args=[pending_user.id],
+            ),
+            {
+                "role": elevated_role.id,
+            },
+        )
+
+        pending_user.profile.refresh_from_db()
+
+        self.assertTrue(pending_user.profile.is_approved)
+        self.assertEqual(
+            pending_user.profile.role,
+            elevated_role,
+        )
+        self.assertRedirects(
+            response,
+            reverse("accounts:pending_users"),
+            fetch_redirect_response=False,
+        )
