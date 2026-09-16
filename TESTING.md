@@ -227,3 +227,22 @@ The Login page SEO score increased from **90 to 100**.
 The final audits achieved **100 for Accessibility, Best Practices, and
 SEO across all four tests**, with Performance scores ranging from
 **97 to 100**.
+
+## Browser Compatibility
+
+StudyFlow was manually tested across multiple desktop browsers to
+confirm that the deployed application renders consistently and that
+core functionality remains operational.
+
+Testing included authentication, navigation, dashboard content,
+studies, participants, visits, notifications, forms, tables, buttons,
+cards, and responsive navigation.
+
+| Browser | Result | Evidence |
+| --- | --- | --- |
+| Google Chrome | PASS | ![StudyFlow tested in Google Chrome](documentation/browsers/chrome/chrome-compatibility.png) |
+| Microsoft Edge | PASS | ![StudyFlow tested in Microsoft Edge](documentation/browsers/edge/edge-compatibility.png) |
+| Mozilla Firefox | PASS | ![StudyFlow tested in Mozilla Firefox](documentation/browsers/firefox/firefox-compatibility.png) |
+
+No browser-specific functional or visual issues were identified during
+the manual compatibility testing.
