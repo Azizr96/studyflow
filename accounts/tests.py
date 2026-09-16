@@ -219,3 +219,32 @@ class UserManagementPermissionTests(TestCase):
             reverse("accounts:login"),
             fetch_redirect_response=False,
         )
+
+    def test_manager_can_access_user_list(self):
+        """A user manager should be able to access user management."""
+        role = Role.objects.create(
+            name="Project Lead",
+            can_manage_users=True,
+        )
+
+        user = User.objects.create_user(
+            username="projectlead",
+            email="projectlead@example.com",
+            password="StrongTestPassword123!",
+        )
+
+        user.profile.role = role
+        user.profile.is_approved = True
+        user.profile.save()
+
+        self.client.force_login(user)
+
+        response = self.client.get(
+            reverse("accounts:user_list")
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(
+            response,
+            "accounts/user_list.html",
+        )
