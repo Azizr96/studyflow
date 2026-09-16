@@ -246,3 +246,28 @@ cards, and responsive navigation.
 
 No browser-specific functional or visual issues were identified during
 the manual compatibility testing.
+
+## Responsiveness
+
+StudyFlow was manually tested across mobile, tablet, and desktop
+viewports using Chrome DevTools to confirm that the interface remains
+usable and responsive across different screen sizes.
+
+Representative pages including the Dashboard, Studies, Participants,
+Visits, and forms were checked at each viewport size.
+
+Testing focused on navigation behaviour, content layout, forms, tables,
+readability, horizontal overflow, and the responsive navigation system.
+
+| Viewport | Test Size | Result | Evidence |
+| --- | --- | --- | --- |
+| Mobile | 325 × 700 | PASS | ![StudyFlow mobile responsiveness](documentation/responsiveness/mobile/dashboard-mobile.png) |
+| Tablet | 768 × 1024 | PASS | ![StudyFlow tablet responsiveness](documentation/responsiveness/tablet/dashboard-tablet.png) |
+| Desktop | 1440 × 900 | PASS | ![StudyFlow desktop responsiveness](documentation/responsiveness/desktop/dashboard-desktop.png) |
+
+On mobile and tablet layouts, the desktop sidebar is replaced by the
+responsive hamburger/offcanvas navigation. On desktop, the full sidebar
+navigation is displayed.
+
+No significant layout issues, unwanted horizontal overflow, or unusable
+interface elements were identified during responsiveness testing.
