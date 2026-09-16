@@ -368,3 +368,42 @@ including confirmation requirements and restricted-access scenarios.
 
 Detailed evidence is available in
 [USER_STORY_TESTING.md](USER_STORY_TESTING.md).
+
+### Defensive Testing Limitations
+
+The manual defensive testing covered the main authentication,
+authorisation, validation, ownership, and destructive-action behaviours
+of StudyFlow. However, several specific scenarios were not fully
+verified during browser-based testing.
+
+The following limitations were recorded:
+
+- **Duplicate study assignment:** the user interface prevented creation
+  of a duplicate active study assignment, so direct server-side
+  enforcement of a duplicate assignment was not manually tested.
+
+- **Study document retrieval:** during initial testing, document upload
+  and persistence were verified, but PDF content could not be viewed
+  through the Cloudinary browser viewer. Investigation identified that
+  PDF delivery was disabled within the Cloudinary security settings.
+  After enabling PDF delivery, the uploaded PDF opened successfully and
+  its content could be viewed.
+
+- **Notification ownership:** attempting to access another user's
+  notification through the browser did not expose the notification.
+  However, a direct state-changing POST request against another user's
+  notification was not manually performed.
+
+- **Visit notification delivery:** visit-related notification logic was
+  exercised, but a positive delivery scenario was not demonstrated in
+  one test because the user performing the action was excluded from
+  receiving their own notification and no second eligible study user
+  was available.
+
+These items were therefore not recorded as application failures.
+Instead, they are documented as limitations of the manual testing
+performed.
+
+Where appropriate, server-side behaviours that cannot be safely or
+reliably demonstrated through normal browser interaction can be covered
+by Django automated tests.
