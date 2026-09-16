@@ -8,7 +8,7 @@ Developer: Rauhan Aziz ([Azizr96](https://www.github.com/Azizr96))
 [![Heroku Deployment](https://img.shields.io/badge/deployment-Heroku-purple)](https://studyflow-83c0183db652.herokuapp.com)
 
 ![StudyFlow responsive mockup](documentation/mockup1.png)
-![StudyFlow responsive mockup](documentation/)
+![StudyFlow responsive mockup](documentation/mockup2.png)
 
 
 ## Project Introduction and Rationale
