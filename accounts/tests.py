@@ -158,3 +158,31 @@ class LoginTests(TestCase):
             reverse("dashboard:home"),
             fetch_redirect_response=False,
         )
+
+    def test_approved_user_without_role_cannot_log_in(self):
+        """An approved user without a role should not be allowed to log in."""
+        user = User.objects.create_user(
+            username="noroleuser",
+            email="norole@example.com",
+            password="StrongTestPassword123!",
+        )
+
+        user.profile.is_approved = True
+        user.profile.save()
+
+        response = self.client.post(
+            reverse("accounts:login"),
+            {
+                "username": "noroleuser",
+                "password": "StrongTestPassword123!",
+            },
+            follow=True,
+        )
+
+        self.assertFalse(
+            response.wsgi_request.user.is_authenticated
+        )
+        self.assertContains(
+            response,
+            "Your account does not have an assigned role.",
+        )
