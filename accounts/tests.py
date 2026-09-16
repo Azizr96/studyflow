@@ -186,3 +186,36 @@ class LoginTests(TestCase):
             response,
             "Your account does not have an assigned role.",
         )
+
+
+class UserManagementPermissionTests(TestCase):
+    """Tests for role-based access to user management."""
+
+    def test_standard_user_cannot_access_user_list(self):
+        """A standard user should not access user management."""
+        role = Role.objects.create(
+            name="Study Coordinator",
+            can_manage_users=False,
+        )
+
+        user = User.objects.create_user(
+            username="coordinator",
+            email="coordinator@example.com",
+            password="StrongTestPassword123!",
+        )
+
+        user.profile.role = role
+        user.profile.is_approved = True
+        user.profile.save()
+
+        self.client.force_login(user)
+
+        response = self.client.get(
+            reverse("accounts:user_list")
+        )
+
+        self.assertRedirects(
+            response,
+            reverse("accounts:login"),
+            fetch_redirect_response=False,
+        )
