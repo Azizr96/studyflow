@@ -2,7 +2,9 @@ from django.contrib.auth.models import User
 from django.test import TestCase
 
 from .forms import RegistrationForm
-from .models import UserProfile
+from .models import UserProfile, Role
+from django.urls import reverse
+
 
 class RegistrationFormTests(TestCase):
     """Tests for the StudyFlow user registration form."""
@@ -92,4 +94,33 @@ class UserProfileSignalTests(TestCase):
 
         self.assertFalse(profile.is_approved)
 
+
+class LoginTests(TestCase):
+    """Tests for StudyFlow login restrictions."""
+
+    def test_unapproved_user_cannot_log_in(self):
+        """An unapproved user should not be allowed to log in."""
+        user = User.objects.create_user(
+            username="pendinguser",
+            email="pending@example.com",
+            password="StrongTestPassword123!",
+        )
+
+        response = self.client.post(
+            reverse("accounts:login"),
+            {
+                "username": "pendinguser",
+                "password": "StrongTestPassword123!",
+            },
+            follow=True,
+        )
+
+        self.assertFalse(user.profile.is_approved)
+        self.assertFalse(
+            response.wsgi_request.user.is_authenticated
+        )
+        self.assertContains(
+            response,
+            "Your account is awaiting approval.",
+        )
 
