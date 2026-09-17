@@ -1,5 +1,5 @@
 # StudyFlow
-
+Live link: [StudyFlow](https://studyflow-83c0183db652.herokuapp.com/accounts/login/?next=/)
 Developer: Rauhan Aziz ([Azizr96](https://www.github.com/Azizr96))
 
 [![GitHub commit activity](https://img.shields.io/github/commit-activity/t/Azizr96/studyflow)](https://www.github.com/Azizr96/studyflow/commits/main)
@@ -7,10 +7,88 @@ Developer: Rauhan Aziz ([Azizr96](https://www.github.com/Azizr96))
 [![GitHub repo size](https://img.shields.io/github/repo-size/Azizr96/studyflow)](https://www.github.com/Azizr96/studyflow)
 [![Heroku Deployment](https://img.shields.io/badge/deployment-Heroku-purple)](https://studyflow-83c0183db652.herokuapp.com)
 
-![StudyFlow responsive mockup](documentation/mockup1.png)
 ![StudyFlow responsive mockup](documentation/mockup2.png)
 
+## Table of Contents
 
+- [Project Introduction and Rationale](#project-introduction-and-rationale)
+- [UX](#ux)
+  - [The 5 Planes of UX](#the-5-planes-of-ux)
+  - [1. Strategy](#1-strategy)
+  - [2. Scope](#2-scope)
+  - [3. Structure](#3-structure)
+  - [4. Skeleton](#4-skeleton)
+  - [5. Surface](#5-surface)
+  - [Colour Scheme](#colour-scheme)
+  - [Typography](#typography)
+- [Wireframes](#wireframes)
+  - [Dashboard Wireframes](#dashboard-wireframes)
+  - [Application Wireframes](#application-wireframes)
+  - [Changes From the Initial Wireframes](#changes-from-the-initial-wireframes)
+- [User Stories](#user-stories)
+  - [Must Have User Stories](#must-have-user-stories)
+  - [Should Have User Stories](#should-have-user-stories)
+  - [Could Have User Stories](#could-have-user-stories)
+  - [MoSCoW Prioritisation](#moscow-prioritisation)
+- [Features](#features)
+  - [Existing Features](#existing-features)
+  - [Registration](#registration)
+  - [Login and Logout](#login-and-logout)
+  - [Role-Based Access Control](#role-based-access-control)
+  - [Elevated User Dashboard](#elevated-user-dashboard)
+  - [Standard User Dashboard](#standard-user-dashboard)
+  - [User Management](#user-management)
+  - [User Study Assignment](#user-study-assignment)
+  - [Study Management](#study-management)
+  - [Study Detail](#study-detail)
+  - [Study Document Uploads](#study-document-uploads)
+  - [Participant Management](#participant-management)
+  - [Visit Management](#visit-management)
+  - [Destructive Action Confirmation](#destructive-action-confirmation)
+  - [Notifications](#notifications)
+  - [Responsive Navigation](#responsive-navigation)
+  - [Accessible Interface](#accessible-interface)
+  - [Future Features](#future-features)
+  - [Custom Error Pages](#custom-error-pages)
+- [Tools & Technologies](#tools--technologies)
+  - [Development and Testing Tools](#development-and-testing-tools)
+- [AI Tool Usage](#ai-tool-usage)
+  - [AI-Assisted Automated Testing](#ai-assisted-automated-testing)
+- [Database Design](#database-design)
+  - [Data Model](#data-model)
+  - [Database Models](#database-models)
+  - [Entity Relationship Diagram](#entity-relationship-diagram)
+- [Agile Development Process](#agile-development-process)
+  - [GitHub Project Board](#github-project-board)
+  - [GitHub Issues](#github-issues)
+  - [MoSCoW Prioritisation](#moscow-prioritisation-1)
+  - [Agile Iteration](#agile-iteration)
+- [Testing](#testing)
+- [Deployment](#deployment)
+  - [Heroku Deployment](#heroku-deployment)
+  - [Environment Variables](#environment-variables)
+  - [Procfile](#procfile)
+  - [PostgreSQL](#postgresql)
+  - [Cloudinary](#cloudinary)
+  - [Static Files and WhiteNoise](#static-files-and-whitenoise)
+  - [Security Configuration](#security-configuration)
+- [Local Development](#local-development)
+  - [Requirements](#requirements)
+  - [Clone the Repository](#clone-the-repository)
+  - [Create a Virtual Environment](#create-a-virtual-environment)
+  - [Install Dependencies](#install-dependencies)
+  - [Configure Environment Variables](#configure-environment-variables)
+  - [Apply Database Migrations](#apply-database-migrations)
+  - [Check the Application](#check-the-application)
+  - [Run the Development Server](#run-the-development-server)
+- [Forking the Repository](#forking-the-repository)
+- [Local vs Deployed Environment](#local-vs-deployed-environment)
+- [Credits](#credits)
+  - [Content](#content)
+  - [Media](#media)
+  - [Design and Development Tools](#design-and-development-tools)
+  - [Acknowledgements](#acknowledgements)
+- [License](#license)
 ## Project Introduction and Rationale
 
 StudyFlow is a fictional Clinical Trial Site Management System developed to provide a centralised platform for managing key activities associated with clinical research studies. The application allows authorised users to manage studies, fictional participants, scheduled visits, study documents, user assignments and notifications from a single responsive interface.
@@ -707,7 +785,6 @@ Both pages provide an appropriate route back into the application rather than ex
 
 ![StudyFlow 404 error page](documentation/features/404.png)
 
-![StudyFlow 500 error page](documentation/features/500.png)
 
 ## Tools & Technologies
 
@@ -731,6 +808,7 @@ The following technologies and development tools were used to design, build, tes
 | GitHub Projects | Used to manage the Agile workflow and track user stories from Backlog through development and testing. |
 | Visual Studio Code | Primary development environment used to build StudyFlow. |
 | ChatGPT | Used as an AI-assisted development tool for debugging, explaining code and supporting documentation. |
+| Co-Pilot | Used as an AI-assisted development tool for debugging, Automated Django test case testing |
 
 ### Development and Testing Tools
 
@@ -749,6 +827,70 @@ Several additional tools are used during development and testing:
 Chat GPT was used as supporting development assistant during the project. It was primarily used to speed up project structuring, troubleshooting, review potential code improvements, and refine spelling/grammar and documentation.
 
 All planning, design decisions, implementation, testing, and final code changes were completed and validated by the project author. AI suggestions were reviewed critically and applied only where they aligned with project requirements and best practices.
+
+### AI-Assisted Automated Testing
+
+AI was used extensively during the development of StudyFlow's automated
+test suite. Rather than generating generic tests, I provided the AI with
+the relevant models, forms, views, URL configurations and permission logic
+from each Django application so that the suggested tests reflected the
+actual implementation and business rules of StudyFlow.
+
+AI assisted with identifying test scenarios and generating Django
+`TestCase` code across the following areas:
+
+- **Accounts and Permissions** - registration validation, profile creation,
+  approval status, authentication and role-based permissions.
+- **Studies and Documents** - study date validation, study access,
+  assignment-based visibility and document validation.
+- **Participants and Visits** - participant validation, visit validation,
+  duplicate visit prevention and protection against unauthorised
+  cross-study update and delete operations.
+- **Notifications** - notification ownership, read-state protection,
+  user isolation and study-based notification distribution.
+- **Dashboard** - verification that standard users only receive data from
+  assigned studies while elevated users receive global dashboard data.
+
+For example, one of the prompts used during test development was:
+
+> Review my existing Django models, forms, views and URLs and generate
+> Django TestCase tests based only on the functionality I have provided.
+> Test form validation, role-based permissions, data isolation and
+> unauthorised access. Use my existing models and URL names and do not
+> invent functionality that is not present in the application.
+
+More targeted prompts were then used for individual areas. For example,
+when testing notification security, AI was asked to verify that one user
+could not modify another user's notification through a state-changing
+POST request.
+
+GitHub Copilot was also used directly within VS Code to generate a Django
+unit test for notification ownership. The prompt instructed Copilot to
+attempt to mark another user's notification as read and then verify that
+the notification remained unchanged. The generated test was reviewed
+against the existing view and permission logic before being executed.
+
+AI-generated test code was not treated as automatically correct. Tests
+were reviewed, executed incrementally and compared against the intended
+StudyFlow business rules. Failures were investigated before changes were
+made. For example, an initially failing Accounts test helped identify that
+a test-created Django superuser also needed the appropriate StudyFlow
+profile, approval status and Admin role configuration to satisfy the
+application's additional permission layer.
+
+The complete automated test suite was ultimately executed with:
+
+    python manage.py test
+
+The final test run completed successfully with **41 out of 41 tests
+passing** and Django reporting no system-check issues.
+
+AI therefore supported the design, generation, review and debugging of the
+automated tests, while the final test behaviour and results were manually
+reviewed and verified before being accepted into the project.
+
+Full details of the automated tests, prompts, individual test areas and
+results are documented in [TESTING.md](TESTING.md).
 
 ## Database Design
 
@@ -992,7 +1134,7 @@ Once the implementation is complete, the story moves into Testing so that the ac
 
 Only after the feature has been successfully tested is the story moved to Done.
 
-![StudyFlow GitHub Project board](documentation/agile/)
+![StudyFlow GitHub Project board](documentation/agile/project-board.png)
 
 ### GitHub Issues
 
@@ -1008,7 +1150,7 @@ This provides traceability between:
 - Git commits
 - final application features
 
-![StudyFlow GitHub user stories](documentation/agile/)
+![StudyFlow GitHub user stories](documentation/agile/issues.png)
 
 ### MoSCoW Prioritisation
 
@@ -1374,14 +1516,48 @@ The following project documentation assets were created specifically for StudyFl
 
 Any third-party logos, badges or externally sourced assets used within the README remain the property of their respective owners.
 
+### Design and Development Tools
+
+The following external tools were used during the design, development and
+documentation of StudyFlow:
+
+- [Photopea | Online Photo Editor](https://www.photopea.com/) - Used for
+  editing and preparing images and visual assets used within the project
+  documentation.
+
+- [Multi Device Website Mockup Generator](https://techsini.com/multi-mockup/#google_vignette) -
+  Used to create multi-device mockups demonstrating how StudyFlow appears
+  across desktop, tablet and mobile devices.
+
+- [Am I Responsive?](https://fireship.dev/amiresponsive) - Used to
+  visually demonstrate the responsive design of the deployed StudyFlow
+  application across different device sizes.
+
+- [Balsamiq Wireframes](https://balsamiq.com/product/wireframes/) - Used
+  during the UX design and planning stage to create wireframes.
 
 ### Acknowledgements
 
 I would like to acknowledge the support and resources provided by Code Institute throughout the Full Stack Software Development course.
 
-I would like to thank Tim Nelson for the READEME template and providing me suggestions for date validation when picking dates. The JavaScript code in the create_study.html was provided by Tim Nelson. 
+I would like to thank Tim Nelson for the READEME template and providing me suggestions for date validation when picking dates. The JavaScript code in the create_study.html was provided by Tim Nelson:
 
-I would also like to thank, Marko Tot at Code Institute for the guidance in project planingg and Agile methadologies.
+```javascript
+const startDate = document.getElementById("id_start_date");
+    const endDate = document.getElementById("id_end_date");
+
+    // Listen to user changing the start_date
+    startDate.addEventListener("change", function () {
+        endDate.min = startDate.value;
+
+        // Reset end date if it is now before the start date
+        if (endDate.value && endDate.value < startDate.value) {
+            endDate.value = "";
+        }
+    });
+```
+
+I would also like to thank, Marko Tot at Code Institute for the guidance in project planing and Agile methadologies.
 
 I would also like to acknowledge the Code Institute course material and project guidance used to support the planning, development, testing and deployment of this project.
 
