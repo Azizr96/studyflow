@@ -77,3 +77,32 @@ class StudyPermissionTests(TestCase):
             reverse("accounts:login"),
             fetch_redirect_response=False,
         )
+
+    def test_manager_can_access_create_study(self):
+        """A study manager should be able to access study creation."""
+        role = Role.objects.create(
+            name="Project Lead",
+            can_manage_studies=True,
+        )
+
+        user = User.objects.create_user(
+            username="projectlead",
+            email="projectlead@example.com",
+            password="StrongTestPassword123!",
+        )
+
+        user.profile.role = role
+        user.profile.is_approved = True
+        user.profile.save()
+
+        self.client.force_login(user)
+
+        response = self.client.get(
+            reverse("studies:create_study")
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(
+            response,
+            "studies/create_study.html",
+        )
