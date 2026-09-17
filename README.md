@@ -512,7 +512,6 @@ New users can create a StudyFlow account using the registration form. Django's a
 
 Newly registered accounts do not receive immediate access to the application. Their account must first be approved and assigned an appropriate role by an authorised elevated user.
 
-![StudyFlow registration](documentation/features/registration.png)
 
 ### Login and Logout
 
@@ -522,7 +521,9 @@ The login process checks that the account has been approved and has an assigned 
 
 Authenticated users can securely log out using the Logout control available within the navigation.
 
-![StudyFlow login](documentation/features/login.png)
+| Registration | Login |
+| --- | --- |
+| ![StudyFlow registration](documentation/features/registration.png) | ![StudyFlow login](documentation/features/login.png) |
 
 ### Role-Based Access Control
 
@@ -543,8 +544,9 @@ Elevated users can access application-wide information and authorised management
 
 Standard users are restricted to studies to which they have been actively assigned. This restriction is enforced by the Django back end rather than relying only on hiding navigation links.
 
-![StudyFlow role-based navigation admin](documentation/features/role-based-nav-admin.png)
-![StudyFlow role-based navigation user](documentation/features/role-based-nav-user.png)
+| Elevated User Navigation | Standard User Navigation |
+| --- | --- |
+| ![StudyFlow role-based navigation admin](documentation/features/role-based-nav-admin.png) | ![StudyFlow role-based navigation user](documentation/features/role-based-nav-user.png) |
 
 ### Elevated User Dashboard
 
@@ -552,7 +554,6 @@ Administrators, Investigators and Project Leads receive a global dashboard conta
 
 The dashboard provides summary information and quick access to recent study activity, allowing elevated users to monitor information across accessible studies.
 
-![StudyFlow elevated dashboard](documentation/features/dashboard-elevated.png)
 
 ### Standard User Dashboard
 
@@ -560,7 +561,9 @@ Study Coordinators and Trial Assistants receive a role-aware dashboard.
 
 Instead of displaying application-wide information, the dashboard is filtered using Django ORM queries so that standard users only receive information associated with their active study assignments.
 
-![StudyFlow standard dashboard](documentation/features/dashboard-user.png)
+| Elevated User Dashboard | Standard User Dashboard |
+| --- | --- |
+| ![StudyFlow elevated dashboard](documentation/features/dashboard-elevated.png) | ![StudyFlow standard dashboard](documentation/features/dashboard-user.png) |
 
 ### User Management
 
@@ -579,7 +582,6 @@ The user-management workflow allows authorised users to:
 
 Elevated role assignment is additionally restricted so that only a Django superuser can assign elevated roles.
 
-![StudyFlow user management](documentation/features/user-management.png)
 
 ### User Study Assignment
 
@@ -589,7 +591,9 @@ An authorised elevated user can open a user's details and assign that user to on
 
 This relationship allows StudyFlow to determine which studies, participants, visits and dashboard information a standard user is permitted to access.
 
-![StudyFlow study assignment](documentation/features/study-assignment.png)
+| User Management | User Study Assignment |
+| --- | --- |
+| ![StudyFlow user management](documentation/features/user-management.png) | ![StudyFlow study assignment](documentation/features/study-assignment.png) |
 
 ### Study Management
 
@@ -609,7 +613,6 @@ The protocol number must be unique, and date validation prevents an end date fro
 
 Core study information is treated as read-only after creation within the current MVP.
 
-![StudyFlow study management](documentation/features/studies.png)
 
 ### Study Detail
 
@@ -619,7 +622,9 @@ The page provides access to study information, fictional participants and upload
 
 Standard users can only access a study detail page when they have an active assignment to that study, while authorised elevated users can access studies according to their role permissions.
 
-![StudyFlow study detail](documentation/features/study-detail.png)
+| Study Management | Study Detail |
+| --- | --- |
+| ![StudyFlow study management](documentation/features/studies.png) | ![StudyFlow study detail](documentation/features/study-detail.png) |
 
 ### Study Document Uploads
 
@@ -631,7 +636,6 @@ The upload form validates file extensions and limits uploads to a maximum size o
 
 Uploaded study documents are stored using Cloudinary.
 
-![StudyFlow document upload](documentation/features/document-upload.png)
 
 ### Participant Management
 
@@ -651,7 +655,9 @@ Participant numbers must be unique and are normalised to uppercase. Form validat
 
 All participant information used within StudyFlow is fictional and must not be interpreted as real clinical or patient data.
 
-![StudyFlow participant management](documentation/features/participants.png)
+| Study Document Upload | Participant Management |
+| --- | --- |
+| ![StudyFlow document upload](documentation/features/document-upload.png) | ![StudyFlow participant management](documentation/features/participants.png) |
 
 ### Visit Management
 
@@ -678,8 +684,9 @@ For sensitive deletion actions, such as deleting a user or fictional participant
 
 This reduces the likelihood of accidental data deletion and demonstrates defensive design within the application.
 
-![StudyFlow delete confirmation](documentation/features/delete-participant-confirm.png)
-![StudyFlow delete confirmation](documentation/features/delete-visit-confirm.png)
+| Participant Deletion | Visit Deletion |
+| --- | --- |
+| ![StudyFlow participant deletion confirmation](documentation/features/delete-participant-confirm.png) | ![StudyFlow visit deletion confirmation](documentation/features/delete-visit-confirm.png) |
 
 ### Notifications
 
