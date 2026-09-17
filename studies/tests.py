@@ -25,3 +25,19 @@ class StudyFormTests(TestCase):
             "The end date cannot be before the start date.",
             form.non_field_errors(),
         )
+
+    def test_valid_study_dates_are_accepted(self):
+        """A study end date after its start date should be valid."""
+        form = StudyForm(
+            data={
+                "protocol_number": "SF-002",
+                "title": "Valid Clinical Study",
+                "description": "Test study description.",
+                "phase": "Phase 2",
+                "status": "Planning",
+                "start_date": "2026-09-01",
+                "end_date": "2026-09-30",
+            }
+        )
+
+        self.assertTrue(form.is_valid())
