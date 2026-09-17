@@ -1,7 +1,10 @@
+from django.contrib.auth.models import User
 from django.test import TestCase
+from django.urls import reverse
+
+from accounts.models import Role
 
 from .forms import StudyForm
-
 
 class StudyFormTests(TestCase):
     """Tests for StudyFlow study form validation."""
@@ -41,3 +44,36 @@ class StudyFormTests(TestCase):
         )
 
         self.assertTrue(form.is_valid())
+
+
+class StudyPermissionTests(TestCase):
+    """Tests for role-based study permissions."""
+
+    def test_standard_user_cannot_access_create_study(self):
+        """A standard user should not access study creation."""
+        role = Role.objects.create(
+            name="Study Coordinator",
+            can_manage_studies=False,
+        )
+
+        user = User.objects.create_user(
+            username="coordinator",
+            email="coordinator@example.com",
+            password="StrongTestPassword123!",
+        )
+
+        user.profile.role = role
+        user.profile.is_approved = True
+        user.profile.save()
+
+        self.client.force_login(user)
+
+        response = self.client.get(
+            reverse("studies:create_study")
+        )
+
+        self.assertRedirects(
+            response,
+            reverse("accounts:login"),
+            fetch_redirect_response=False,
+        )
