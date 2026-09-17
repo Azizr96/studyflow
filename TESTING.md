@@ -881,3 +881,22 @@ The completed automated testing process resulted in:
 
 The final automated test suite therefore completed with **41 out of 41
 tests passing** and no issues reported by Django's system check.
+
+### Colour Contrast Testing
+WebAIM used for contrast testing [https://webaim.org/resources/contrastchecker/](https://webaim.org/resources/contrastchecker/)
+
+Colour contrast was tested using the WebAIM Contrast Checker to ensure that
+the StudyFlow colour palette provides sufficient contrast between foreground
+text and background colours.
+
+The main colour combinations used throughout the application were checked
+against WCAG contrast requirements. This included navigation text, body text,
+primary interface colours, form content and other important text/background
+combinations.
+
+The testing helped verify that colour choices remained readable and accessible.
+StudyFlow also avoids relying on colour alone to communicate important
+information, with text labels and status descriptions used alongside colour
+where appropriate.
+
+![WebAIM colour contrast testing](documentation/accessibility/webaim-contrast.png)
