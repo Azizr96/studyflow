@@ -138,7 +138,7 @@ class StudyListTests(TestCase):
             status="Active",
         )
 
-        unassigned_study = Study.objects.create(
+        Study.objects.create(
             protocol_number="SF-102",
             title="Unassigned Study",
             phase="Phase 3",
