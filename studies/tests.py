@@ -4,8 +4,10 @@ from django.urls import reverse
 
 from accounts.models import Role, UserStudy
 
-from .forms import StudyForm
+from .forms import StudyForm, StudyDocumentForm
 from .models import Study
+from django.core.files.uploadedfile import SimpleUploadedFile
+
 
 class StudyFormTests(TestCase):
     """Tests for StudyFlow study form validation."""
@@ -164,3 +166,187 @@ class StudyListTests(TestCase):
             response,
             "Unassigned Study",
         )
+
+    def test_standard_user_does_not_see_inactive_assignment(self):
+        """A standard user should not see an inactive study assignment."""
+        role = Role.objects.create(
+            name="Study Coordinator",
+            can_manage_studies=False,
+        )
+
+        user = User.objects.create_user(
+            username="inactivecoordinator",
+            email="inactive@example.com",
+            password="StrongTestPassword123!",
+        )
+
+        user.profile.role = role
+        user.profile.is_approved = True
+        user.profile.save()
+
+        study = Study.objects.create(
+            protocol_number="SF-103",
+            title="Inactive Assignment Study",
+            phase="Phase 2",
+            status="Active",
+        )
+
+        UserStudy.objects.create(
+            user=user,
+            study=study,
+            is_active=False,
+        )
+
+        self.client.force_login(user)
+
+        response = self.client.get(
+            reverse("studies:study_list")
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertNotContains(
+            response,
+            "Inactive Assignment Study",
+        )
+
+    def test_manager_sees_all_studies(self):
+        """A study manager should see all studies."""
+        role = Role.objects.create(
+            name="Project Lead",
+            can_manage_studies=True,
+        )
+
+        user = User.objects.create_user(
+            username="projectlead",
+            email="projectlead@example.com",
+            password="StrongTestPassword123!",
+        )
+
+        user.profile.role = role
+        user.profile.is_approved = True
+        user.profile.save()
+
+        Study.objects.create(
+            protocol_number="SF-201",
+            title="First Global Study",
+            phase="Phase 2",
+            status="Active",
+        )
+
+        Study.objects.create(
+            protocol_number="SF-202",
+            title="Second Global Study",
+            phase="Phase 3",
+            status="Recruiting",
+        )
+
+        self.client.force_login(user)
+
+        response = self.client.get(
+            reverse("studies:study_list")
+        )
+
+        self.assertContains(response, "First Global Study")
+        self.assertContains(response, "Second Global Study")
+
+
+class StudyDetailPermissionTests(TestCase):
+    """Tests for access to individual study pages."""
+
+    def test_standard_user_cannot_access_unassigned_study(self):
+        """A standard user should not access an unassigned study."""
+        role = Role.objects.create(
+            name="Study Coordinator",
+            can_manage_studies=False,
+        )
+
+        user = User.objects.create_user(
+            username="coordinator",
+            email="coordinator@example.com",
+            password="StrongTestPassword123!",
+        )
+
+        user.profile.role = role
+        user.profile.is_approved = True
+        user.profile.save()
+
+        assigned_study = Study.objects.create(
+            protocol_number="SF-301",
+            title="Assigned Study",
+            phase="Phase 2",
+            status="Active",
+        )
+
+        unassigned_study = Study.objects.create(
+            protocol_number="SF-302",
+            title="Protected Study",
+            phase="Phase 3",
+            status="Active",
+        )
+
+        UserStudy.objects.create(
+            user=user,
+            study=assigned_study,
+            is_active=True,
+        )
+
+        self.client.force_login(user)
+
+        response = self.client.get(
+            reverse(
+                "studies:study_detail",
+                args=[unassigned_study.id],
+            )
+        )
+
+        self.assertRedirects(
+            response,
+            reverse("studies:study_list"),
+            fetch_redirect_response=False,
+        )
+
+
+class StudyDocumentFormTests(TestCase):
+    """Tests for study document validation."""
+
+    def test_invalid_document_extension_is_rejected(self):
+        """Unsupported study document file types should be rejected."""
+        uploaded_file = SimpleUploadedFile(
+            "malicious.exe",
+            b"test file content",
+            content_type="application/octet-stream",
+        )
+
+        form = StudyDocumentForm(
+            data={
+                "category": "Protocol",
+                "version": "1.0",
+            },
+            files={
+                "file": uploaded_file,
+            },
+        )
+
+        self.assertFalse(form.is_valid())
+        self.assertIn("file", form.errors)
+
+    def test_document_larger_than_ten_mb_is_rejected(self):
+        """Study documents larger than 10 MB should be rejected."""
+        uploaded_file = SimpleUploadedFile(
+            "large-document.pdf",
+            b"x" * (10 * 1024 * 1024 + 1),
+            content_type="application/pdf",
+        )
+
+        form = StudyDocumentForm(
+            data={
+                "category": "Protocol",
+                "version": "1.0",
+            },
+            files={
+                "file": uploaded_file,
+            },
+        )
+
+        self.assertFalse(form.is_valid())
+        self.assertIn("file", form.errors)
