@@ -2,9 +2,10 @@ from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
 
-from accounts.models import Role
+from accounts.models import Role, UserStudy
 
 from .forms import StudyForm
+from .models import Study
 
 class StudyFormTests(TestCase):
     """Tests for StudyFlow study form validation."""
@@ -105,4 +106,61 @@ class StudyPermissionTests(TestCase):
         self.assertTemplateUsed(
             response,
             "studies/create_study.html",
+        )
+
+
+class StudyListTests(TestCase):
+    """Tests for role-based study list visibility."""
+
+    def test_standard_user_sees_only_assigned_studies(self):
+        """A standard user should only see actively assigned studies."""
+        role = Role.objects.create(
+            name="Study Coordinator",
+            can_manage_studies=False,
+        )
+
+        user = User.objects.create_user(
+            username="coordinator",
+            email="coordinator@example.com",
+            password="StrongTestPassword123!",
+        )
+
+        user.profile.role = role
+        user.profile.is_approved = True
+        user.profile.save()
+
+        assigned_study = Study.objects.create(
+            protocol_number="SF-101",
+            title="Assigned Study",
+            phase="Phase 2",
+            status="Active",
+        )
+
+        unassigned_study = Study.objects.create(
+            protocol_number="SF-102",
+            title="Unassigned Study",
+            phase="Phase 3",
+            status="Recruiting",
+        )
+
+        UserStudy.objects.create(
+            user=user,
+            study=assigned_study,
+            is_active=True,
+        )
+
+        self.client.force_login(user)
+
+        response = self.client.get(
+            reverse("studies:study_list")
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(
+            response,
+            "Assigned Study",
+        )
+        self.assertNotContains(
+            response,
+            "Unassigned Study",
         )
