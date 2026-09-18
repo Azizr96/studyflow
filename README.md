@@ -8,7 +8,29 @@ Developer: Rauhan Aziz ([Azizr96](https://www.github.com/Azizr96))
 [![Heroku Deployment](https://img.shields.io/badge/deployment-Heroku-purple)](https://studyflow-83c0183db652.herokuapp.com)
 
 ![StudyFlow responsive mockup](documentation/mockup2.png)
+## Demo Account
 
+A demonstration account is available for users who would like to explore the
+deployed StudyFlow application without creating a new account.
+
+### Standard User
+
+| Credential | Details |
+| --- | --- |
+| Username | `studyflow_demo` |
+| Password | `demopassword1` |
+| Role | Study Coordinator |
+
+The demo account represents a standard StudyFlow user. It has access only to
+the studies assigned to the account and can be used to explore features such
+as the dashboard, studies, fictional participants, visits, study documents
+and notifications.
+
+[Open the StudyFlow Live Site](https://studyflow-83c0183db652.herokuapp.com)
+
+> **Note:** This account is provided for demonstration and assessment purposes
+> only. All participant and study information within the demonstration
+> environment is fictional.
 ## Table of Contents
 
 - [Project Introduction and Rationale](#project-introduction-and-rationale)
