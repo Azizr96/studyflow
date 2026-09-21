@@ -1,17 +1,24 @@
+"""Define clinical study and study document models."""
+
 from django.contrib.auth.models import User
 from django.db import models
 from cloudinary_storage.storage import RawMediaCloudinaryStorage
 
 
 class Study(models.Model):
+    """Represent a clinical study managed within StudyFlow."""
 
     class Phase(models.TextChoices):
+        """Define the available clinical study phases."""
+
         PHASE_1 = "Phase 1", "Phase 1"
         PHASE_2 = "Phase 2", "Phase 2"
         PHASE_3 = "Phase 3", "Phase 3"
         PHASE_4 = "Phase 4", "Phase 4"
 
     class Status(models.TextChoices):
+        """Define the available study status choices."""
+
         PLANNING = "Planning", "Planning"
         RECRUITING = "Recruiting", "Recruiting"
         ACTIVE = "Active", "Active"
@@ -36,12 +43,16 @@ class Study(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
+        """Return the study protocol number and title."""
         return f"{self.protocol_number} - {self.title}"
 
 
 class StudyDocument(models.Model):
+    """Represent a document uploaded to a clinical study."""
 
     class Category(models.TextChoices):
+        """Define the available study document categories."""
+
         PROTOCOL = "Protocol", "Protocol"
         INVESTIGATOR_BROCHURE = (
             "Investigator Brochure",
@@ -66,6 +77,8 @@ class StudyDocument(models.Model):
         null=True,
         related_name="uploaded_study_documents",
     )
+
+    # Store uploaded study documents using Cloudinary raw media storage.
     file = models.FileField(
         upload_to="study_documents/",
         storage=RawMediaCloudinaryStorage(),
@@ -78,4 +91,5 @@ class StudyDocument(models.Model):
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
+        """Return the study protocol number and uploaded filename."""
         return f"{self.study.protocol_number} - {self.file.name}"

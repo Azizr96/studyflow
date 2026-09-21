@@ -1,3 +1,5 @@
+"""Define URL routes for study management features."""
+
 from django.urls import path
 from . import views
 
