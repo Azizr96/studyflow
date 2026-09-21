@@ -1,3 +1,5 @@
+"""Handle account authentication and user management views."""
+
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -14,6 +16,10 @@ from .models import Role, UserStudy
 
 
 def can_manage_users(user):
+    """Check whether a user has permission to manage other users."""
+
+    # Check each requirement separately to safely handle users
+    # who are not authenticated or do not yet have a role.
     if not user.is_authenticated:
         return False
 
@@ -27,6 +33,8 @@ def can_manage_users(user):
 
 
 def register(request):
+    """Register a new user account awaiting administrator approval."""
+
     if request.method == "POST":
         form = RegistrationForm(request.POST)
 
@@ -59,6 +67,9 @@ def register(request):
 
 @login_required
 def pending_users(request):
+    """Display users waiting for account approval."""
+
+    # Only users with user-management permission can access this page.
     if not can_manage_users(request.user):
         messages.error(
             request,
@@ -73,6 +84,8 @@ def pending_users(request):
         "profile__role",
     )
 
+    # Superusers can assign any role, while other managers
+    # are limited to non-elevated roles.
     if request.user.is_superuser:
         roles = Role.objects.all()
     else:
@@ -95,6 +108,8 @@ def pending_users(request):
 
 @login_required
 def approve_user(request, user_id):
+    """Approve a pending user and assign their selected role."""
+
     if not can_manage_users(request.user):
         messages.error(
             request,
@@ -139,6 +154,7 @@ def approve_user(request, user_id):
             )
             return redirect("accounts:pending_users")
 
+        # Store the selected role and allow the user to access StudyFlow.
         user.profile.role = role
         user.profile.is_approved = True
         user.profile.save()
@@ -153,6 +169,8 @@ def approve_user(request, user_id):
 
 @login_required
 def reject_user(request, user_id):
+    """Reject a pending registration and remove the user account."""
+
     if not can_manage_users(request.user):
         messages.error(
             request,
@@ -175,6 +193,8 @@ def reject_user(request, user_id):
 
 
 def user_login(request):
+    """Authenticate approved users with an assigned StudyFlow role."""
+
     if request.user.is_authenticated:
         return render(
             request,
@@ -198,6 +218,8 @@ def user_login(request):
             )
             return redirect("accounts:login")
 
+        # StudyFlow requires a profile, approval, and assigned role
+        # in addition to Django's normal authentication.
         if not hasattr(user, "profile"):
             messages.error(
                 request,
@@ -236,6 +258,8 @@ def user_login(request):
 
 @login_required
 def user_logout(request):
+    """Log out the current user when a POST request is submitted."""
+
     if request.method == "POST":
         logout(request)
 
@@ -249,6 +273,8 @@ def user_logout(request):
 
 @login_required
 def user_list(request):
+    """Display and search approved users for authorised managers."""
+
     if not can_manage_users(request.user):
         messages.error(
             request,
@@ -258,6 +284,8 @@ def user_list(request):
 
     search_query = request.GET.get("q", "").strip()
 
+    # Load approved users together with their profile, role, and
+    # active study assignments to reduce additional database queries.
     users = User.objects.filter(
         profile__is_approved=True,
     ).select_related(
@@ -273,6 +301,7 @@ def user_list(request):
         )
     )
 
+    # Search across the main user and role fields when a query is provided.
     if search_query:
         users = users.filter(
             Q(username__icontains=search_query)
@@ -307,6 +336,8 @@ def user_list(request):
 
 @login_required
 def assign_user_to_study(request, user_id):
+    """Assign or reactivate a user's assignment to a study."""
+
     if not can_manage_users(request.user):
         messages.error(
             request,
@@ -331,6 +362,8 @@ def assign_user_to_study(request, user_id):
 
         study = get_object_or_404(Study, id=study_id)
 
+        # Reuse an existing assignment where possible instead of
+        # creating a duplicate user and study relationship.
         assignment, created = UserStudy.objects.get_or_create(
             user=user,
             study=study,
@@ -341,6 +374,7 @@ def assign_user_to_study(request, user_id):
         )
 
         if created:
+            # Notify the user when they receive a new study assignment.
             create_notification(
                 user=user,
                 title="New Study Assignment",
@@ -370,6 +404,8 @@ def assign_user_to_study(request, user_id):
                 )
 
             else:
+                # Reactivate the existing assignment rather than
+                # creating another database record.
                 assignment.is_active = True
                 assignment.assigned_by = request.user
                 assignment.save()
@@ -400,6 +436,8 @@ def assign_user_to_study(request, user_id):
 
 @login_required
 def unassign_user_from_study(request, assignment_id):
+    """Deactivate a user's active study assignment."""
+
     if not can_manage_users(request.user):
         messages.error(
             request,
@@ -419,6 +457,7 @@ def unassign_user_from_study(request, assignment_id):
     if request.method == "POST":
         user_id = assignment.user.id
 
+        # Keep the assignment record for history but mark it inactive.
         assignment.is_active = False
         assignment.assigned_by = request.user
         assignment.save()
@@ -447,6 +486,8 @@ def unassign_user_from_study(request, assignment_id):
 
 @login_required
 def delete_user(request, user_id):
+    """Delete a user after confirmation and password verification."""
+
     if not can_manage_users(request.user):
         messages.error(
             request,
@@ -456,6 +497,7 @@ def delete_user(request, user_id):
 
     user_to_delete = get_object_or_404(User, id=user_id)
 
+    # Prevent managers from accidentally deleting their own account.
     if user_to_delete == request.user:
         messages.error(
             request,
@@ -467,6 +509,7 @@ def delete_user(request, user_id):
         password = request.POST.get("password")
         confirmation = request.POST.get("confirm_delete")
 
+        # Require the word DELETE as an additional safeguard.
         if confirmation != "DELETE":
             messages.error(
                 request,
@@ -477,6 +520,7 @@ def delete_user(request, user_id):
                 user_id=user_to_delete.id,
             )
 
+        # Re-authenticate the current manager before allowing deletion.
         authenticated_user = authenticate(
             request,
             username=request.user.username,
@@ -516,6 +560,8 @@ def delete_user(request, user_id):
 
 @login_required
 def user_detail(request, user_id):
+    """Display a user's details and available study assignments."""
+
     if not can_manage_users(request.user):
         messages.error(
             request,
@@ -531,6 +577,7 @@ def user_detail(request, user_id):
         id=user_id,
     )
 
+    # Retrieve only the user's currently active study assignments.
     active_study_assignments = (
         UserStudy.objects
         .filter(
@@ -546,6 +593,7 @@ def user_detail(request, user_id):
         flat=True,
     )
 
+    # Only show studies that are not already actively assigned.
     available_studies = (
         Study.objects
         .exclude(id__in=assigned_study_ids)

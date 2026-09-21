@@ -1,3 +1,5 @@
+"""Define URL routes for account and user management features."""
+
 from django.urls import path
 from . import views
 

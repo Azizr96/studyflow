@@ -1,3 +1,5 @@
+"""Register account-related models with the Django admin site."""
+
 from django.contrib import admin
 from .models import Role, UserProfile, UserStudy
 
