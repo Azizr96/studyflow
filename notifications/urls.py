@@ -1,3 +1,5 @@
+"""Define URL routes for notification features."""
+
 from django.urls import path
 from . import views
 

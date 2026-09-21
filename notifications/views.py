@@ -1,3 +1,5 @@
+"""Handle notification viewing and read-status updates for users."""
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
@@ -7,10 +9,14 @@ from .models import Notification
 
 @login_required
 def notification_list(request):
+    """Display notifications belonging to the logged-in user."""
+
+    # Only retrieve notifications owned by the current user.
     notifications = Notification.objects.filter(
         user=request.user,
     ).order_by("-created_at")
 
+    # Count unread notifications for display on the page.
     unread_count = notifications.filter(
         is_read=False,
     ).count()
@@ -29,6 +35,10 @@ def notification_list(request):
 
 @login_required
 def mark_notification_read(request, notification_id):
+    """Mark one of the logged-in user's notifications as read."""
+
+    # Including the current user in the lookup prevents users from
+    # accessing or changing another user's notification.
     notification = get_object_or_404(
         Notification,
         id=notification_id,
@@ -49,7 +59,10 @@ def mark_notification_read(request, notification_id):
 
 @login_required
 def mark_all_notifications_read(request):
+    """Mark all unread notifications for the logged-in user as read."""
+
     if request.method == "POST":
+        # Update only unread notifications owned by the current user.
         Notification.objects.filter(
             user=request.user,
             is_read=False,

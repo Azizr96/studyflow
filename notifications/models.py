@@ -1,10 +1,15 @@
+"""Define the notification model used to store user notifications."""
+
 from django.contrib.auth.models import User
 from django.db import models
 
 
 class Notification(models.Model):
+    """Represent a notification sent to a StudyFlow user."""
 
     class Type(models.TextChoices):
+        """Define the available notification types."""
+
         VISIT_REMINDER = "Visit Reminder", "Visit Reminder"
         PARTICIPANT_ADDED = "Participant Added", "Participant Added"
         DOCUMENT_UPLOADED = "Document Uploaded", "Document Uploaded"
@@ -28,4 +33,5 @@ class Notification(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
+        """Return the username and notification title."""
         return f"{self.user.username} - {self.title}"
