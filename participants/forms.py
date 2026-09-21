@@ -1,3 +1,5 @@
+"""Define forms and validation for participants and visits."""
+
 from datetime import date
 
 from django import forms
@@ -6,8 +8,11 @@ from .models import Participant, Visit
 
 
 class ParticipantForm(forms.ModelForm):
+    """Provide a form for creating and updating participants."""
 
     class Meta:
+        """Define the model, fields, and widgets used by the form."""
+
         model = Participant
         fields = [
             "participant_number",
@@ -31,10 +36,12 @@ class ParticipantForm(forms.ModelForm):
         }
 
     def clean_participant_number(self):
+        """Remove spaces and convert the participant number to uppercase."""
         participant_number = self.cleaned_data.get(
             "participant_number"
         )
 
+        # Store participant numbers in a consistent uppercase format.
         if participant_number:
             participant_number = (
                 participant_number.strip().upper()
@@ -43,6 +50,7 @@ class ParticipantForm(forms.ModelForm):
         return participant_number
 
     def clean(self):
+        """Validate the participant's date of birth and enrolment date."""
         cleaned_data = super().clean()
 
         date_of_birth = cleaned_data.get(
@@ -52,6 +60,7 @@ class ParticipantForm(forms.ModelForm):
             "enrolled_date"
         )
 
+        # A participant cannot be enrolled before or on their birth date.
         if date_of_birth and enrolled_date:
             if enrolled_date <= date_of_birth:
                 raise forms.ValidationError(
@@ -63,8 +72,11 @@ class ParticipantForm(forms.ModelForm):
 
 
 class VisitForm(forms.ModelForm):
+    """Provide a form for creating and updating participant visits."""
 
     class Meta:
+        """Define the model, fields, and widgets used by the form."""
+
         model = Visit
         fields = [
             "visit_number",
@@ -85,18 +97,22 @@ class VisitForm(forms.ModelForm):
         }
 
     def __init__(self, *args, participant=None, **kwargs):
+        """Store the participant so visit validation can use it."""
         super().__init__(*args, **kwargs)
         self.participant = participant
 
     def clean_visit_number(self):
+        """Prevent duplicate visit numbers for the same participant."""
         visit_number = self.cleaned_data.get("visit_number")
 
         if self.participant and visit_number:
+            # Check whether this participant already has this visit number.
             existing_visit = Visit.objects.filter(
                 participant=self.participant,
                 visit_number=visit_number,
             )
 
+            # When editing, exclude the current visit from the duplicate check.
             if self.instance.pk:
                 existing_visit = existing_visit.exclude(
                     pk=self.instance.pk,
@@ -111,12 +127,14 @@ class VisitForm(forms.ModelForm):
         return visit_number
 
     def clean(self):
+        """Validate visit dates and completed visit requirements."""
         cleaned_data = super().clean()
 
         scheduled_date = cleaned_data.get("scheduled_date")
         actual_date = cleaned_data.get("actual_date")
         status = cleaned_data.get("status")
 
+        # The actual visit cannot take place before its scheduled date.
         if actual_date and scheduled_date:
             if actual_date < scheduled_date:
                 raise forms.ValidationError(
@@ -124,6 +142,7 @@ class VisitForm(forms.ModelForm):
                     "the scheduled date."
                 )
 
+        # Completed visits must record the date they actually occurred.
         if status == Visit.Status.COMPLETED and not actual_date:
             raise forms.ValidationError(
                 "A completed visit must have an actual visit date."
