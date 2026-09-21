@@ -1,3 +1,5 @@
+"""Handle dashboard data and display based on the user's role."""
+
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 from django.utils import timezone
@@ -10,16 +12,21 @@ from studies.models import Study, StudyDocument
 
 @login_required
 def dashboard_home(request):
+    """Display dashboard information based on the user's role and access."""
+
+    # Safely retrieve the user's role in case their profile is missing.
     try:
         role = request.user.profile.role
     except AttributeError:
         role = None
 
+    # Users without an assigned role cannot access the dashboard.
     if not role:
         return redirect("accounts:login")
 
     today = timezone.localdate()
 
+    # Notifications are always limited to the currently logged-in user.
     recent_notifications = Notification.objects.filter(
         user=request.user,
     ).order_by("-created_at")[:5]
@@ -29,6 +36,7 @@ def dashboard_home(request):
         is_read=False,
     ).count()
 
+    # Elevated roles can view information across all studies.
     is_elevated = (
         role.is_admin
         or role.can_manage_users
@@ -44,6 +52,7 @@ def dashboard_home(request):
             is_approved=False,
         ).count()
 
+        # Show the next five scheduled visits across all studies.
         upcoming_visits = Visit.objects.select_related(
             "participant",
             "participant__study",
@@ -54,6 +63,7 @@ def dashboard_home(request):
             "scheduled_date",
         )[:5]
 
+        # Show the five most recently uploaded study documents.
         recent_documents = StudyDocument.objects.select_related(
             "study",
             "uploaded_by",
@@ -64,6 +74,7 @@ def dashboard_home(request):
         dashboard_type = "elevated"
 
     else:
+        # Standard users can only see studies actively assigned to them.
         assigned_studies = Study.objects.filter(
             user_assignments__user=request.user,
             user_assignments__is_active=True,
@@ -71,6 +82,7 @@ def dashboard_home(request):
 
         total_studies = assigned_studies.count()
 
+        # Participant and visit totals are restricted to assigned studies.
         total_participants = Participant.objects.filter(
             study__in=assigned_studies,
         ).count()
@@ -81,6 +93,7 @@ def dashboard_home(request):
 
         pending_users = None
 
+        # Only show upcoming visits from the user's assigned studies.
         upcoming_visits = Visit.objects.select_related(
             "participant",
             "participant__study",
@@ -92,6 +105,7 @@ def dashboard_home(request):
             "scheduled_date",
         )[:5]
 
+        # Only show documents from studies assigned to the user.
         recent_documents = StudyDocument.objects.select_related(
             "study",
             "uploaded_by",
