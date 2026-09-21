@@ -1,3 +1,5 @@
+"""Handle participant and visit management views and permissions."""
+
 from django.contrib import messages
 from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
@@ -12,6 +14,9 @@ from .models import Participant, Visit
 
 
 def can_access_study(user, study):
+    """Check whether a user has permission to access a study."""
+
+    # Users must be authenticated and have a profile with an assigned role.
     if not user.is_authenticated:
         return False
 
@@ -21,9 +26,11 @@ def can_access_study(user, study):
     if not user.profile.role:
         return False
 
+    # Users who manage studies are allowed to access all studies.
     if user.profile.role.can_manage_studies:
         return True
 
+    # Standard users can only access studies actively assigned to them.
     return study.user_assignments.filter(
         user=user,
         is_active=True,
@@ -32,11 +39,14 @@ def can_access_study(user, study):
 
 @login_required
 def add_participant(request, study_id):
+    """Add a participant to a study the user can access."""
+
     study = get_object_or_404(
         Study,
         id=study_id,
     )
 
+    # Prevent users from adding participants to unauthorised studies.
     if not can_access_study(request.user, study):
         messages.error(
             request,
@@ -49,10 +59,12 @@ def add_participant(request, study_id):
         form = ParticipantForm(request.POST)
 
         if form.is_valid():
+            # Add the study before saving because it is not a form field.
             participant = form.save(commit=False)
             participant.study = study
             participant.save()
 
+            # Notify other eligible users assigned to the same study.
             notify_study_users(
                 study=study,
                 title="Participant Added",
@@ -94,6 +106,8 @@ def add_participant(request, study_id):
 
 @login_required
 def participant_list(request):
+    """Display participants based on the user's study access."""
+
     if not hasattr(request.user, "profile"):
         messages.error(
             request,
@@ -108,6 +122,7 @@ def participant_list(request):
         )
         return redirect("accounts:login")
 
+    # Study managers can view participants across all studies.
     if request.user.profile.role.can_manage_studies:
         participants = Participant.objects.select_related(
             "study"
@@ -115,6 +130,7 @@ def participant_list(request):
             "participant_number"
         )
     else:
+        # Standard users only see participants from actively assigned studies.
         participants = Participant.objects.select_related(
             "study"
         ).filter(
@@ -137,11 +153,14 @@ def participant_list(request):
 
 @login_required
 def update_participant(request, participant_id):
+    """Update a participant when the user can access their study."""
+
     participant = get_object_or_404(
         Participant.objects.select_related("study"),
         id=participant_id,
     )
 
+    # Check study access before allowing participant changes.
     if not can_access_study(
         request.user,
         participant.study,
@@ -197,11 +216,14 @@ def update_participant(request, participant_id):
 
 @login_required
 def delete_participant(request, participant_id):
+    """Delete a participant after confirmation and password verification."""
+
     participant = get_object_or_404(
         Participant.objects.select_related("study"),
         id=participant_id,
     )
 
+    # Check study access before allowing participant deletion.
     if not can_access_study(
         request.user,
         participant.study,
@@ -218,6 +240,7 @@ def delete_participant(request, participant_id):
         confirmation = request.POST.get("confirm_delete")
         password = request.POST.get("password")
 
+        # Require an exact confirmation before performing the deletion.
         if confirmation != "DELETE":
             messages.error(
                 request,
@@ -228,6 +251,7 @@ def delete_participant(request, participant_id):
                 participant_id=participant.id,
             )
 
+        # Re-authenticate the current user as an extra deletion safeguard.
         authenticated_user = authenticate(
             request,
             username=request.user.username,
@@ -244,6 +268,7 @@ def delete_participant(request, participant_id):
                 participant_id=participant.id,
             )
 
+        # Save these values because the participant is about to be deleted.
         participant_number = participant.participant_number
         study_id = participant.study.id
 
@@ -276,6 +301,8 @@ def delete_participant(request, participant_id):
 
 @login_required
 def add_visit(request, participant_id):
+    """Add a visit for a participant the user can access."""
+
     participant = get_object_or_404(
         Participant.objects.select_related("study"),
         id=participant_id,
@@ -283,6 +310,7 @@ def add_visit(request, participant_id):
 
     study = participant.study
 
+    # Visit access is controlled through the participant's study.
     if not can_access_study(request.user, study):
         messages.error(
             request,
@@ -297,10 +325,12 @@ def add_visit(request, participant_id):
         )
 
         if form.is_valid():
+            # Add the participant before saving because it is not a form field.
             visit = form.save(commit=False)
             visit.participant = participant
             visit.save()
 
+            # Notify other eligible study users about the scheduled visit.
             notify_study_users(
                 study=study,
                 title="Upcoming Visit",
@@ -341,6 +371,9 @@ def add_visit(request, participant_id):
 
 @login_required
 def visit_list(request):
+    """Display visits based on the user's role and study assignments."""
+
+    # Safely retrieve the role in case the user's profile is missing.
     try:
         role = request.user.profile.role
     except AttributeError:
@@ -353,12 +386,14 @@ def visit_list(request):
         )
         return redirect("accounts:login")
 
+    # Study managers can view visits across all studies.
     if role.can_manage_studies:
         visits = Visit.objects.select_related(
             "participant",
             "participant__study",
         ).all()
     else:
+        # Standard users only see visits from actively assigned studies.
         visits = Visit.objects.select_related(
             "participant",
             "participant__study",
@@ -383,6 +418,8 @@ def visit_list(request):
 
 @login_required
 def update_visit(request, visit_id):
+    """Update a visit and notify users when it becomes completed."""
+
     visit = get_object_or_404(
         Visit.objects.select_related(
             "participant",
@@ -393,6 +430,8 @@ def update_visit(request, visit_id):
 
     participant = visit.participant
     study = participant.study
+
+    # Store the current status before the form can change the visit.
     original_status = visit.status
 
     if not can_access_study(request.user, study):
@@ -412,6 +451,8 @@ def update_visit(request, visit_id):
         if form.is_valid():
             updated_visit = form.save()
 
+            # Send a notification only when the visit changes from
+            # another status to completed.
             if (
                 original_status != Visit.Status.COMPLETED
                 and updated_visit.status == Visit.Status.COMPLETED
@@ -456,6 +497,8 @@ def update_visit(request, visit_id):
 
 @login_required
 def delete_visit(request, visit_id):
+    """Delete a visit after confirmation and password verification."""
+
     visit = get_object_or_404(
         Visit.objects.select_related(
             "participant",
@@ -467,6 +510,7 @@ def delete_visit(request, visit_id):
     participant = visit.participant
     study = participant.study
 
+    # Check study access before allowing visit deletion.
     if not can_access_study(request.user, study):
         messages.error(
             request,
@@ -478,6 +522,7 @@ def delete_visit(request, visit_id):
         confirm_delete = request.POST.get("confirm_delete", "").strip()
         password = request.POST.get("password", "")
 
+        # Require an exact confirmation before performing the deletion.
         if confirm_delete != "DELETE":
             messages.error(
                 request,
@@ -493,6 +538,7 @@ def delete_visit(request, visit_id):
                 },
             )
 
+        # Re-authenticate the current user as an extra deletion safeguard.
         authenticated_user = authenticate(
             request,
             username=request.user.username,
@@ -514,6 +560,7 @@ def delete_visit(request, visit_id):
                 },
             )
 
+        # Store the visit number before deleting the database record.
         visit_number = visit.visit_number
 
         visit.delete()

@@ -1,15 +1,22 @@
+"""Define participant and visit models for clinical studies."""
+
 from django.db import models
 
 from studies.models import Study
 
 
 class Participant(models.Model):
+    """Represent a participant enrolled in a clinical study."""
 
     class Sex(models.TextChoices):
+        """Define the available participant sex choices."""
+
         MALE = "Male", "Male"
         FEMALE = "Female", "Female"
 
     class Status(models.TextChoices):
+        """Define the available participant status choices."""
+
         SCREENING = "Screening", "Screening"
         ENROLLED = "Enrolled", "Enrolled"
         ACTIVE = "Active", "Active"
@@ -42,6 +49,7 @@ class Participant(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
+        """Return the participant number and full name."""
         return (
             f"{self.participant_number} - "
             f"{self.first_name} {self.last_name}"
@@ -49,8 +57,11 @@ class Participant(models.Model):
 
 
 class Visit(models.Model):
+    """Represent a scheduled or completed visit for a participant."""
 
     class VisitType(models.TextChoices):
+        """Define the available clinical visit types."""
+
         SCREENING = "Screening", "Screening"
         BASELINE = "Baseline", "Baseline"
         FOLLOW_UP = "Follow Up", "Follow Up"
@@ -58,6 +69,8 @@ class Visit(models.Model):
         END_OF_STUDY = "End of Study", "End of Study"
 
     class Status(models.TextChoices):
+        """Define the available visit status choices."""
+
         SCHEDULED = "Scheduled", "Scheduled"
         COMPLETED = "Completed", "Completed"
         MISSED = "Missed", "Missed"
@@ -88,6 +101,10 @@ class Visit(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
+        """Define database constraints for participant visits."""
+
+        # Prevent the same visit number being stored twice
+        # for a single participant.
         constraints = [
             models.UniqueConstraint(
                 fields=["participant", "visit_number"],
@@ -96,6 +113,7 @@ class Visit(models.Model):
         ]
 
     def __str__(self):
+        """Return the participant number and visit number."""
         return (
             f"{self.participant.participant_number} - "
             f"Visit {self.visit_number}"
