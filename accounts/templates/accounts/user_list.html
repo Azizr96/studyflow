@@ -249,8 +249,12 @@
                                         href="{% url 'accounts:user_detail' account.id %}"
                                         class="text-decoration-none fw-semibold"
                                     >
-                                        {{ account.first_name }}
-                                        {{ account.last_name }}
+                                        {% if account.first_name or account.last_name %}
+                                            {{ account.first_name }}
+                                            {{ account.last_name }}
+                                        {% else %}
+                                            {{ account.username }}
+                                        {% endif %}
                                     </a>
                                 </td>
 
