@@ -185,23 +185,68 @@ evidence.
 
 ---
 
-## Lighthouse Audit
+## Lighthouse Testing
 
-Google Chrome Lighthouse was used to audit the deployed StudyFlow
-application for performance, accessibility, best practices, and SEO.
+Chrome Lighthouse was used to assess the deployed StudyFlow application for
+Performance, Accessibility, Best Practices, and SEO.
 
-Testing was carried out using both desktop and mobile Lighthouse
-configurations. The public Login page and authenticated Dashboard were
-selected as representative pages.
+Testing was completed on eight  core pages of the application.
+Each page was tested using both mobile and desktop Lighthouse configurations.
+
+The authenticated pages were tested using a dedicated elevated test account so
+that role-protected areas of the application could also be assessed.
+
+
+During testing, the User Management page initially received an Accessibility
+score of 95. Lighthouse identified a user detail link without a discernible
+accessible name. This occurred when a user account did not contain a first or
+last name.
+
+The template was updated to display the username as a fallback when the user's
+name is unavailable. After deployment and retesting, the Accessibility score
+increased to 100 on both mobile and desktop.
+
+Performance scores showed some variation between Lighthouse runs. For example,
+the Visits desktop audit initially returned a Performance score of 77 and
+returned 93 when retested without changes to the Visits functionality. For this
+reason, Lighthouse performance results are treated as measurements from the
+recorded test runs rather than fixed application values.
 
 ### Lighthouse Results
 
 | Page | Device | Performance | Accessibility | Best Practices | SEO | Evidence |
 | --- | --- | ---: | ---: | ---: | ---: | --- |
-| Login | Desktop | 100 | 100 | 100 | 100 | ![Login desktop Lighthouse](documentation/lighthouse/login-desktop-lighthouse.png) |
-| Login | Mobile | 98 | 100 | 100 | 100 | ![Login mobile Lighthouse](documentation/lighthouse/login-mobile-lighthouse.png) |
-| Dashboard | Desktop | 99 | 100 | 100 | 100 | ![Dashboard desktop Lighthouse](documentation/lighthouse/dashboard-desktop-lighthouse.png) |
-| Dashboard | Mobile | 97 | 100 | 100 | 100 | ![Dashboard mobile Lighthouse](documentation/lighthouse/dashboard-mobile-lighthouse.png) |
+| Dashboard | Mobile | 100 | 100 | 100 | 100 | ![Dashboard Mobile Lighthouse](documentation/lighthouse/dashboard-mobile.png) |
+| Dashboard | Desktop | 93 | 100 | 100 | 100 | ![Dashboard Desktop Lighthouse](documentation/lighthouse/dashboard-desktop.png) |
+| User Management | Mobile | 99 | 100 | 100 | 100 | ![Users Mobile Lighthouse](documentation/lighthouse/users-mobile.png) |
+| User Management | Desktop | 87 | 100 | 100 | 100 | ![Users Desktop Lighthouse](documentation/lighthouse/users-desktop.png) |
+| Notifications | Mobile | 100 | 100 | 100 | 100 | ![Notifications Mobile Lighthouse](documentation/lighthouse/notifications-mobile.png) |
+| Notifications | Desktop | 95 | 100 | 100 | 100 | ![Notifications Desktop Lighthouse](documentation/lighthouse/notifications-desktop.png) |
+| Participants | Mobile | 100 | 100 | 100 | 100 | ![Participants Mobile Lighthouse](documentation/lighthouse/participants-mobile.png) |
+| Participants | Desktop | 92 | 100 | 100 | 100 | ![Participants Desktop Lighthouse](documentation/lighthouse/participants-desktop.png) |
+| Visits | Mobile | 100 | 100 | 100 | 100 | ![Visits Mobile Lighthouse](documentation/lighthouse/visits-mobile.png) |
+| Visits | Desktop | 93 | 100 | 100 | 100 | ![Visits Desktop Lighthouse](documentation/lighthouse/visits-desktop.png) |
+| Studies | Mobile | 100 | 100 | 100 | 100 | ![Studies Mobile Lighthouse](documentation/lighthouse/studies-mobile.png) |
+| Studies | Desktop | 93 | 100 | 100 | 100 | ![Studies Desktop Lighthouse](documentation/lighthouse/studies-desktop.png) |
+| Login | Mobile | 100 | 100 | 100 | 100 | ![Login Mobile Lighthouse](documentation/lighthouse/login-mobile.png) |
+| Login | Desktop | 96 | 100 | 100 | 100 | ![Login Desktop Lighthouse](documentation/lighthouse/login-desktop.png) |
+| Registration | Mobile | 100 | 100 | 100 | 100 | ![Registration Mobile Lighthouse](documentation/lighthouse/register-mobile.png) |
+| Registration | Desktop | 96 | 100 | 100 | 100 | ![Registration Desktop Lighthouse](documentation/lighthouse/register-desktop.png) |
+
+### Lighthouse Testing Outcome
+
+The final Lighthouse testing showed:
+
+- All tested pages achieved an Accessibility score of **100** after the identified
+  User Management accessibility issue was corrected.
+- All tested pages achieved **100 for Best Practices**.
+- All tested pages achieved **100 for SEO**.
+- Mobile Performance scores were between **99 and 100** across the recorded final
+  results.
+- Desktop Performance scores varied between **87 and 96** across the recorded
+  final results.
+- The testing covered both public and authenticated areas of StudyFlow using
+  mobile and desktop configurations.
 
 ### SEO Improvement
 
